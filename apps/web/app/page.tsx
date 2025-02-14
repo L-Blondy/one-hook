@@ -1,6 +1,8 @@
+"use client";
 import Image, { type ImageProps } from "next/image";
 import { Button } from "@repo/ui/button";
 import styles from "./page.module.css";
+import { useEffect, useState } from "react";
 
 type Props = Omit<ImageProps, "src"> & {
   srcLight: string;
@@ -9,6 +11,11 @@ type Props = Omit<ImageProps, "src"> & {
 
 const ThemeImage = (props: Props) => {
   const { srcLight, srcDark, ...rest } = props;
+  const [state, setState] = useState("");
+
+  useEffect(() => {
+    console.log(state);
+  }, []);
 
   return (
     <>

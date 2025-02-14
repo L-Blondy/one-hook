@@ -13,7 +13,6 @@
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@repo/config-eslint": "workspace:*",
     "@repo/config-typescript": "workspace:*",
     "@turbo/gen": "^2.4.0",
     "@types/node": "^22.13.0",

@@ -1,0 +1,37 @@
+{
+  "name": "@repo/hooks",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "lint": "eslint . && tsx --noEmit",
+    "lint:eslint": "eslint .",
+    "lint:typescript": "tsx --noEmit"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^22.10.10",
+    "@vitejs/plugin-react": "^4.3.1",
+    "jsdom": "^26.0.0",
+    "knip": "^5.42.2",
+    "prettier": "^3.3.2",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "tsup": "^8.3.5",
+    "vitest": "^3.0.3"
+  },
+  "peerDependencies": {
+    "@types/react": ">=18.0.0 || >=19.0.0",
+    "@types/react-dom": ">=18.0.0 || >=19.0.0",
+    "react": ">=18.0.0 || >=19.0.0",
+    "react-dom": ">=18.0.0 || >=19.0.0"
+  }
+}

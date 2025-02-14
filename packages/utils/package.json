@@ -15,9 +15,7 @@
     "lint:typescript": "tsx --noEmit"
   },
   "devDependencies": {
-    "@repo/config-typescript": "workspace:*",
     "@types/node": "^22.13.0",
-    "tsup": "^8.3.6",
-    "typescript": "5.7.3"
+    "tsup": "^8.3.6"
   }
 }

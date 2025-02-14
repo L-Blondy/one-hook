@@ -33,5 +33,5 @@
     "types": ["node"],
     "verbatimModuleSyntax": true
   },
-  "include": ["../../eslint.config.mjs"]
+  "include": ["eslint.config.mjs"]
 }

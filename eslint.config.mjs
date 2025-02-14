@@ -1,14 +1,22 @@
+// @ts-check
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import eslint from "@eslint/js";
 import * as tseslint from "typescript-eslint";
+// @ts-expect-error invalid types
 import reactCompilerPlugin from "eslint-plugin-react-compiler";
+// @ts-expect-error invalid types
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import reactPlugin from "eslint-plugin-react";
+// @ts-expect-error invalid types
 import tailwindPlugin from "eslint-plugin-tailwindcss";
+// @ts-expect-error invalid types
 import nextPlugin from "@next/eslint-plugin-next";
 import vitestPlugin from "@vitest/eslint-plugin";
 import globals from "globals";
 
-export default tseslint.config(
+/** @type {any} */
+const config = tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {
@@ -17,7 +25,7 @@ export default tseslint.config(
         ...globals.serviceworker,
       },
       parserOptions: {
-        project: ["./packages/*/tsconfig.json"],
+        project: ["./tsconfig.json", "./packages/*/tsconfig.json"],
         tsconfigRootDir: import.meta.dirname,
         ecmaFeatures: { jsx: true },
       },
@@ -220,3 +228,5 @@ export default tseslint.config(
     },
   }
 );
+
+export default config;

@@ -1,8 +1,12 @@
 {
   "extends": "@repo/config-typescript/base.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "baseUrl": ".",
+    "rootDir": "."
   },
-  "include": ["src"],
+  "paths": {
+    "src/*": ["./src/*"]
+  },
+  "include": ["src", "tsup.config.ts", "eslint.config.mjs"],
   "exclude": ["node_modules", "dist"]
 }

@@ -10,6 +10,7 @@
     }
   },
   "scripts": {
+    "dev": "tsup --watch",
     "lint": "eslint . && tsx --noEmit",
     "lint:eslint": "eslint .",
     "lint:typescript": "tsx --noEmit"

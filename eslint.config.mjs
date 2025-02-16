@@ -1,11 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import eslint from "@eslint/js";
 // @ts-check
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import eslint from "@eslint/js";
 import * as tseslint from "typescript-eslint";
-// @ts-expect-error invalid types
-import tailwindPlugin from "eslint-plugin-tailwindcss";
 import globals from "globals";
 import { config_js } from "./eslint/config-js.mjs";
 import { config_ts } from "./eslint/config-ts.mjs";

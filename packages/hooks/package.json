@@ -2,6 +2,7 @@
   "name": "@repo/hooks",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -14,8 +15,10 @@
     "lint:eslint": "eslint .",
     "lint:typescript": "tsx --noEmit"
   },
+  "dependencies": {
+    "@repo/utils": "workspace:*"
+  },
   "devDependencies": {
-    "@repo/utils": "*",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",

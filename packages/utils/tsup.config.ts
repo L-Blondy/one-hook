@@ -9,7 +9,7 @@ export const tsupConfig: Options = {
   dts: true,
   format: ["esm"],
   outDir: "dist",
-  treeshake: true, // rollup
+  treeshake: true,
 };
 
 export default defineConfig(tsupConfig);

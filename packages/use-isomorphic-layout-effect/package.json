@@ -17,8 +17,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "dev:build": "tsup --watch",
-    "dev:test": "vitest",
+    "dev": "tsup --watch",
     "test": "vitest run && tsc --noEmit",
     "lint": "eslint . && tsc --noEmit",
     "lint:eslint": "eslint .",

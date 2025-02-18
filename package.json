@@ -4,8 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "turbo --filter \"./packages/*\" build",
-    "dev:build": "turbo dev:build",
-    "dev:test": "turbo dev:test",
+    "dev": "turbo dev",
     "test": "turbo test",
     "lint": "turbo lint",
     "lint:eslint": "turbo lint:eslint",

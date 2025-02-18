@@ -8,8 +8,8 @@ type ValidTag = (typeof validTags)[number];
 const schema = v.looseObject({
   name: v.string(),
   version: v.string(),
-  files: v.tuple([v.literal("dist"), v.literal("README.md")]),
-  type: v.literal("module"),
+  files: v.optional(v.array(v.string())),
+  type: v.optional(v.literal("module")),
   exports: v.optional(
     v.record(
       v.string(),

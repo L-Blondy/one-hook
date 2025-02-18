@@ -9,6 +9,7 @@ export async function updateSinglePackageJson() {
   const packageJson = await getPackageJson();
   await setScripts(packageJson);
   await setPeerDependencies(packageJson);
+  await setFiles(packageJson);
   await setExports(packageJson);
   fs.writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
   consola.success("Exports updated successfully.");
@@ -24,6 +25,12 @@ async function setScripts(packageJson: PackageJson) {
     "lint:typescript": "tsc --noEmit",
     release: "bun ../../scripts/release-single-package.ts",
   };
+}
+
+async function setFiles(packageJson: PackageJson) {
+  packageJson.files = packageJson.files || [];
+  packageJson.files.push("dist", "README.md");
+  packageJson.files = Array.from(new Set(packageJson.files));
 }
 
 async function setPeerDependencies(packageJson: PackageJson) {

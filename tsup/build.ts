@@ -8,40 +8,27 @@ export const minExtension = ".min.js";
 
 export const tsupBuildConfig = (
   entry: Options["entry"] = { index: "./src/index.ts" }
-): Options[] => [
-  /**
-   * build exports
-   */
-  {
+): Options[] => {
+  const buildOptions: Options = {
     entry,
     sourcemap: true,
-    /**
-     * Preserve the dist folders when starting the dev server
-     * override it in the build script
-     */
-    clean: false,
     dts: true,
+    minify: false,
+    clean: process.env.NODE_ENV === "production",
     format: ["esm"],
     outDir,
     treeshake: true,
     tsconfig: "./tsconfig.json",
-  },
-  /**
-   * build gzipped files
-   */
-  {
-    entry,
+  };
+
+  const gzipOptions: Options = {
+    ...buildOptions,
     sourcemap: false,
-    clean: false,
     dts: false,
-    format: ["esm"],
-    outDir,
-    treeshake: true,
     minify: true,
     outExtension: () => ({
       js: minExtension,
     }),
-    tsconfig: "./tsconfig.json",
     async onSuccess() {
       const files = (await fs.promises.readdir(outDir)).filter((file) =>
         file.endsWith(minExtension)
@@ -53,8 +40,11 @@ export const tsupBuildConfig = (
         })
       );
     },
-  },
-];
+  };
+  return process.env.NODE_ENV === "production"
+    ? [buildOptions, gzipOptions]
+    : [buildOptions];
+};
 
 async function toGzip(fileName: string) {
   // Input and output file paths

@@ -40,7 +40,7 @@
     }
   },
   "scripts": {
-    "build": "tsup --clean",
+    "build": "NODE_ENV=production tsup",
     "dev": "concurrently \"tsup --watch\" \"vitest\"",
     "test": "vitest run && tsc --noEmit",
     "lint": "eslint . && tsc --noEmit",

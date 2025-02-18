@@ -33,5 +33,5 @@
     "types": ["node"],
     "verbatimModuleSyntax": true
   },
-  "include": ["eslint.config.mjs", "eslint/*"]
+  "include": ["eslint.config.mjs", "eslint/*", "tsup/*"]
 }

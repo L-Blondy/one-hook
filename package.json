@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+    "dev:build": "turbo dev:build",
+    "dev:test": "turbo dev:test",
+    "test": "turbo test",
     "lint": "turbo lint",
     "lint:eslint": "turbo lint:eslint",
     "lint:typescript": "turbo lint:typescript",
@@ -14,19 +16,31 @@
   "devDependencies": {
     "@eslint/js": "^9.20.0",
     "@next/eslint-plugin-next": "^15.1.6",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^22.13.4",
+    "@types/react": ">=18.0.0 || >=19.0.0",
+    "@types/react-dom": ">=18.0.0 || >=19.0.0",
     "@vitest/eslint-plugin": "^1.1.31",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint-plugin-react-compiler": "19.0.0-beta-30d8a17-20250209",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-tailwindcss": "^3.18.0",
     "eslint-plugin-turbo": "^2.4.0",
     "globals": "^15.15.0",
+    "jsdom": "^26.0.0",
     "prettier": "^3.5.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "tsup": "^8.3.6",
     "turbo": "^2.4.2",
     "typescript": "5.7.3",
-    "typescript-eslint": "^8.23.0"
+    "typescript-eslint": "^8.23.0",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.3"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.4.1",
   "engines": {
     "node": ">=18"
   }

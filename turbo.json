@@ -2,9 +2,16 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "tasks": {
-    "dev": {
+    "dev:build": {
       "cache": false,
       "persistent": true
+    },
+    "dev:test": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "cache": false
     },
     "build": {
       "dependsOn": ["^build"],

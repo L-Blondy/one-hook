@@ -1,0 +1,30 @@
+{
+  "name": "@repo/use-isomorphic-layout-effect",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev:build": "tsup --watch",
+    "dev:test": "vitest",
+    "test": "vitest run",
+    "lint": "eslint . && tsx --noEmit",
+    "lint:eslint": "eslint .",
+    "lint:typescript": "tsx --noEmit"
+  },
+  "dependencies": {
+    "@repo/utils": "workspace:*"
+  },
+  "peerDependencies": {
+    "@types/react": ">=18.0.0 || >=19.0.0",
+    "@types/react-dom": ">=18.0.0 || >=19.0.0",
+    "react": ">=18.0.0 || >=19.0.0",
+    "react-dom": ">=18.0.0 || >=19.0.0"
+  }
+}

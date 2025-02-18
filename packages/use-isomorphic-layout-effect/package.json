@@ -1,6 +1,12 @@
 {
+  "tag": "beta",
+  "shortName": "use-isomorphic-layout-effect",
   "name": "@rebase.io/use-isomorphic-layout-effect",
   "version": "0.0.0-beta.0",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "type": "module",
   "exports": {
     "./package.json": "./package.json",

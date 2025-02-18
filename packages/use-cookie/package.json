@@ -1,6 +1,12 @@
 {
+  "tag": "beta",
+  "shortName": "use-cookie",
   "name": "@rebase.io/use-cookie",
   "version": "0.0.0-beta.0",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "type": "module",
   "exports": {
     "./package.json": "./package.json",

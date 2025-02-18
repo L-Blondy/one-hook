@@ -38,6 +38,9 @@ importers:
       '@vitest/eslint-plugin':
         specifier: ^1.1.31
         version: 1.1.31(@typescript-eslint/utils@8.24.0(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3))(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)(vitest@3.0.5(@types/node@22.13.4)(jiti@2.4.2)(jsdom@26.0.0)(tsx@4.19.2)(yaml@2.7.0))
+      consola:
+        specifier: ^3.4.0
+        version: 3.4.0
       eslint:
         specifier: ^9.20.1
         version: 9.20.1(jiti@2.4.2)
@@ -83,6 +86,9 @@ importers:
       typescript-eslint:
         specifier: ^8.23.0
         version: 8.24.0(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)
+      valibot:
+        specifier: ^1.0.0-rc.1
+        version: 1.0.0-rc.1(typescript@5.7.3)
       vite-tsconfig-paths:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.7.3)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))
@@ -2463,6 +2469,14 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  valibot@1.0.0-rc.1:
+    resolution: {integrity: sha512-bTHNpeeQ403xS7qGHF/tw3EC/zkZOU5VdkfIsmRDu1Sp+BJNTNCm6m5HlwOgyW/03lofP+uQiq3R+Poo9wiCEg==}
+    peerDependencies:
+      typescript: '>=5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   vite-node@3.0.5:
     resolution: {integrity: sha512-02JEJl7SbtwSDJdYS537nU6l+ktdvcREfLksk/NDAqtdKWGqHl+joXzEubHROmS3E6pip+Xgu2tFezMu75jH7A==}
@@ -5130,6 +5144,10 @@ snapshots:
       punycode: 2.3.1
 
   util-deprecate@1.0.2: {}
+
+  valibot@1.0.0-rc.1(typescript@5.7.3):
+    optionalDependencies:
+      typescript: 5.7.3
 
   vite-node@3.0.5(@types/node@22.13.4)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0):
     dependencies:

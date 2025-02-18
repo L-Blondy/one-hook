@@ -41,11 +41,7 @@
     "lint": "eslint . && tsc --noEmit",
     "lint:eslint": "eslint .",
     "lint:typescript": "tsc --noEmit",
-    "yep:pre:beta": "git pull && bun ../../scripts/check-version.ts beta",
-    "release:beta": "pnpm run release:pre:beta && pnpm publish --tag beta && pnpm run release:post",
-    "release:post": "git add . && git commit -a && git tag v$npm_package_version && git push --tags && git push",
-    "release:pre:beta": "git pull && bun ../../scripts/check-beta-version.ts && pnpm run test && pnpm run build && bun ../../scripts/update-exports.ts",
-    "release:pre:stable": "git pull && bun ../../scripts/check-stable-version.ts && pnpm run test && pnpm run build && bun ../../scripts/update-exports.ts",
-    "release:stable": "pnpm run release:pre:stable && pnpm publish && pnpm run release:post"
+    "release:beta": "bun ../../scripts/release-single-package.ts",
+    "release:stable": "bun ../../scripts/release-single-package.ts"
   }
 }

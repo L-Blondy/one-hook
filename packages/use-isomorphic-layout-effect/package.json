@@ -16,7 +16,9 @@
     "test": "vitest run && tsc --noEmit",
     "lint": "eslint . && tsc --noEmit",
     "lint:eslint": "eslint .",
-    "lint:typescript": "tsc --noEmit"
+    "lint:typescript": "tsc --noEmit",
+    "release:beta": "bun ../../scripts/release-single-package.ts",
+    "release:stable": "bun ../../scripts/release-single-package.ts"
   },
   "dependencies": {
     "@rebase.io/utils": "workspace:*"

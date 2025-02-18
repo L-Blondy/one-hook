@@ -1,6 +1,5 @@
 {
   "tag": "beta",
-  "shortName": "use-cookie",
   "name": "@rebase.io/use-cookie",
   "version": "0.0.0-beta.1",
   "files": [
@@ -24,14 +23,14 @@
     "lint:typescript": "tsc --noEmit",
     "release": "bun ../../scripts/release-single-package.ts"
   },
-  "dependencies": {
-    "@rebase.io/utils": "workspace:*",
-    "@rebase.io/use-isomorphic-layout-effect": "workspace:*"
-  },
   "peerDependencies": {
     "@types/react": ">=18.0.0 || >=19.0.0",
     "@types/react-dom": ">=18.0.0 || >=19.0.0",
     "react": ">=18.0.0 || >=19.0.0",
     "react-dom": ">=18.0.0 || >=19.0.0"
+  },
+  "dependencies": {
+    "@rebase.io/utils": "workspace:*",
+    "@rebase.io/use-isomorphic-layout-effect": "workspace:*"
   }
 }

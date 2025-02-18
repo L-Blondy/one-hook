@@ -1,6 +1,5 @@
 {
   "tag": "beta",
-  "shortName": "use-isomorphic-layout-effect",
   "name": "@rebase.io/use-isomorphic-layout-effect",
   "version": "0.0.0-beta.1",
   "files": [
@@ -15,22 +14,7 @@
       "default": "./dist/index.js"
     }
   },
-  "scripts": {
-    "build": "NODE_ENV=production tsup",
-    "dev": "concurrently \"tsup --watch\" \"vitest\"",
-    "test": "vitest run && tsc --noEmit",
-    "lint": "eslint . && tsc --noEmit",
-    "lint:eslint": "eslint .",
-    "lint:typescript": "tsc --noEmit",
-    "release": "bun ../../scripts/release-single-package.ts"
-  },
   "dependencies": {
     "@rebase.io/utils": "workspace:*"
-  },
-  "peerDependencies": {
-    "@types/react": ">=18.0.0 || >=19.0.0",
-    "@types/react-dom": ">=18.0.0 || >=19.0.0",
-    "react": ">=18.0.0 || >=19.0.0",
-    "react-dom": ">=18.0.0 || >=19.0.0"
   }
 }

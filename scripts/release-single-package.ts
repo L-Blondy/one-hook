@@ -4,7 +4,8 @@ import { consola } from "consola";
 import { getPackageJson } from "./get-package-json";
 import { updateSinglePackageJson } from "./update-single-package-json";
 
-const { tag, shortName, version } = await getPackageJson();
+const { tag, version, name } = await getPackageJson();
+const shortName = name.replace("@rebase.io/", "");
 await updateSinglePackageJson();
 
 try {

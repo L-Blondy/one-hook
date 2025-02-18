@@ -23,6 +23,7 @@ const schema = v.looseObject({
     )
   ),
   scripts: v.optional(v.record(v.string(), v.string())),
+  peerDependencies: v.optional(v.record(v.string(), v.string())),
 });
 
 export async function getPackageJson() {
@@ -38,8 +39,7 @@ export async function getPackageJson() {
             `Invalid version tag for package ${data.name}@${data.version}`
           );
         }
-        const shortName = String(String(packageJson.name).split("/")[1]);
-        return { tag, shortName, ...data };
+        return { tag, ...data };
       })
     ),
     packageJson

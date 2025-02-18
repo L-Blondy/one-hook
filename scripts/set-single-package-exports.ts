@@ -2,7 +2,7 @@
 import path from "path";
 import fs from "fs";
 import consola from "consola";
-import { tsupBuildConfig } from "../tsup/build";
+import { outDir } from "../tsup/build";
 import { getPackageJson } from "./get-package-json";
 
 export async function setSinglePackageExports() {
@@ -14,8 +14,6 @@ export async function setSinglePackageExports() {
   const entry: Record<string, string> = Array.isArray(buildConfig)
     ? buildConfig[0].entry
     : buildConfig.entry;
-
-  const outDir = tsupBuildConfig().outDir;
 
   const packageExports = Object.keys(entry).reduce(
     (acc, name) => {

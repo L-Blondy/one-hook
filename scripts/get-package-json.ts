@@ -22,6 +22,7 @@ const schema = v.looseObject({
       ])
     )
   ),
+  scripts: v.optional(v.record(v.string(), v.string())),
 });
 
 export async function getPackageJson() {
@@ -44,3 +45,5 @@ export async function getPackageJson() {
     packageJson
   );
 }
+
+export type PackageJson = Awaited<ReturnType<typeof getPackageJson>>;

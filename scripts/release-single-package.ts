@@ -1,11 +1,11 @@
 /* eslint-disable */
 import { execSync } from "child_process";
 import { consola } from "consola";
-import { setSinglePackageExports } from "./set-single-package-exports";
 import { getPackageJson } from "./get-package-json";
+import { updateSinglePackageJson } from "./update-single-package-json";
 
 const { tag, shortName, version } = await getPackageJson();
-await setSinglePackageExports();
+await updateSinglePackageJson();
 
 try {
   execSync("pnpm run build");

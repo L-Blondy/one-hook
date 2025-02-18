@@ -4,12 +4,12 @@ import {
   type CookieServiceOptions,
   type CookieAttributes,
 } from "./vanilla";
-import type { KeyOf, ValueOf } from "@repo/utils/types";
-import { createEmitter } from "@repo/utils/emitter";
-import { isServer } from "@repo/utils/is-server";
-import { entriesOf } from "@repo/utils/entries-of";
-import { keysOf } from "@repo/utils/keys-of";
-import { useIsomorphicLayoutEffect } from "@repo/use-isomorphic-layout-effect";
+import type { KeyOf, ValueOf } from "@rebase.io/utils/types";
+import { createEmitter } from "@rebase.io/utils/emitter";
+import { isServer } from "@rebase.io/utils/is-server";
+import { entriesOf } from "@rebase.io/utils/entries-of";
+import { keysOf } from "@rebase.io/utils/keys-of";
+import { useIsomorphicLayoutEffect } from "@rebase.io/use-isomorphic-layout-effect";
 
 type BaseConfig = {
   [TName in string]: CookieAttributes & {

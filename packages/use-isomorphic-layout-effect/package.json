@@ -1,5 +1,5 @@
 {
-  "name": "@repo/use-isomorphic-layout-effect",
+  "name": "@rebase.io/use-isomorphic-layout-effect",
   "version": "0.0.0",
   "type": "module",
   "exports": {
@@ -19,7 +19,7 @@
     "lint:typescript": "tsx --noEmit"
   },
   "dependencies": {
-    "@repo/utils": "workspace:*"
+    "@rebase.io/utils": "workspace:*"
   },
   "peerDependencies": {
     "@types/react": ">=18.0.0 || >=19.0.0",

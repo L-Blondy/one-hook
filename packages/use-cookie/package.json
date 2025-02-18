@@ -1,5 +1,5 @@
 {
-  "name": "@repo/use-cookie",
+  "name": "@rebase.io/use-cookie",
   "version": "0.0.0",
   "type": "module",
   "exports": {
@@ -19,8 +19,8 @@
     "lint:typescript": "tsx --noEmit"
   },
   "dependencies": {
-    "@repo/utils": "workspace:*",
-    "@repo/use-isomorphic-layout-effect": "workspace:*"
+    "@rebase.io/utils": "workspace:*",
+    "@rebase.io/use-isomorphic-layout-effect": "workspace:*"
   },
   "peerDependencies": {
     "@types/react": ">=18.0.0 || >=19.0.0",

@@ -2,7 +2,7 @@
   "tag": "beta",
   "shortName": "use-isomorphic-layout-effect",
   "name": "@rebase.io/use-isomorphic-layout-effect",
-  "version": "0.0.0-beta.0",
+  "version": "0.0.0-beta.1",
   "files": [
     "dist",
     "README.md"

@@ -1,6 +1,6 @@
 {
   "name": "@rebase.io/use-cookie",
-  "version": "0.0.0",
+  "version": "0.0.0-beta.0",
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
@@ -13,10 +13,10 @@
     "build": "tsup",
     "dev:build": "tsup --watch",
     "dev:test": "vitest",
-    "test": "vitest run",
-    "lint": "eslint . && tsx --noEmit",
+    "test": "vitest run && tsc --noEmit",
+    "lint": "eslint . && tsc --noEmit",
     "lint:eslint": "eslint .",
-    "lint:typescript": "tsx --noEmit"
+    "lint:typescript": "tsc --noEmit"
   },
   "dependencies": {
     "@rebase.io/utils": "workspace:*",

@@ -19,3 +19,5 @@ export async function getReleaseTag(): Promise<(typeof validTags)[number]> {
     );
   return tag;
 }
+
+console.log(validTags);

@@ -3,13 +3,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "turbo build",
+    "build": "turbo --filter \"./packages/*\" build",
     "dev:build": "turbo dev:build",
     "dev:test": "turbo dev:test",
     "test": "turbo test",
     "lint": "turbo lint",
     "lint:eslint": "turbo lint:eslint",
-    "lint:typescript": "turbo lint:typescript"
+    "lint:typescript": "turbo lint:typescript",
+    "release": "bun scripts/pre-release-all.ts && pnpm --filter \"./packages/*\" rest && bun scripts/post-release-all.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",

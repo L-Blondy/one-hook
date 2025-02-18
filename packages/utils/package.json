@@ -45,5 +45,6 @@
     "lint:eslint": "eslint .",
     "lint:typescript": "tsc --noEmit",
     "release": "bun ../../scripts/release-single-package.ts"
-  }
+  },
+  "type": "module"
 }

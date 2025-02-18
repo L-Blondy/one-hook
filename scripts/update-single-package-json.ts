@@ -10,6 +10,7 @@ export async function updateSinglePackageJson() {
   await setScripts(packageJson);
   await setPeerDependencies(packageJson);
   await setFiles(packageJson);
+  await setType(packageJson);
   await setExports(packageJson);
   fs.writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
   consola.success("Exports updated successfully.");
@@ -31,6 +32,10 @@ async function setFiles(packageJson: PackageJson) {
   packageJson.files = packageJson.files || [];
   packageJson.files.push("dist", "README.md");
   packageJson.files = Array.from(new Set(packageJson.files));
+}
+
+async function setType(packageJson: PackageJson) {
+  packageJson.type = "module";
 }
 
 async function setPeerDependencies(packageJson: PackageJson) {

@@ -7,6 +7,7 @@ export default defineConfig(
     "entries-of": "./src/entries-of/index.ts",
     "is-server": "./src/is-server/index.ts",
     "keys-of": "./src/keys-of/index.ts",
+    noop: "./src/noop/index.ts",
     types: "./src/types/index.ts",
     "values-of": "./src/values-of/index.ts",
   })

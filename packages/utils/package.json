@@ -21,6 +21,10 @@
       "types": "./dist/keys-of.d.ts",
       "default": "./dist/keys-of.js"
     },
+    "./noop": {
+      "types": "./dist/noop.d.ts",
+      "default": "./dist/noop.js"
+    },
     "./types": {
       "types": "./dist/types.d.ts",
       "default": "./dist/types.js"

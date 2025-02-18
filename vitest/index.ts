@@ -9,6 +9,5 @@ export const vitestConfig = (): ViteUserConfig => {
       environment: "jsdom",
       setupFiles: ["../../vitest/setup.ts"],
     },
-    base: "./",
   };
 };

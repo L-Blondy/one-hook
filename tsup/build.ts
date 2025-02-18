@@ -9,9 +9,16 @@ export const minExtension = ".min.js";
 export const tsupBuildConfig = (
   entry: Options["entry"] = { index: "./src/index.ts" }
 ): Options[] => [
+  /**
+   * build exports
+   */
   {
     entry,
     sourcemap: true,
+    /**
+     * Preserve the dist folders when starting the dev server
+     * override it in the build script
+     */
     clean: false,
     dts: true,
     format: ["esm"],
@@ -19,6 +26,9 @@ export const tsupBuildConfig = (
     treeshake: true,
     tsconfig: "./tsconfig.json",
   },
+  /**
+   * build gzipped files
+   */
   {
     entry,
     sourcemap: false,

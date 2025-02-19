@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import * as v from "valibot";
@@ -5,6 +7,7 @@ import fs from "fs";
 import path from "path";
 import consola from "consola";
 import { type Options as TsupOptions } from "tsup";
+import ignore from "ignore";
 
 const packageJsonSchema = v.looseObject({
   name: v.string(),
@@ -31,43 +34,18 @@ type PackageJson = v.InferOutput<typeof packageJsonSchema>;
 type PackageExports = NonNullable<PackageJson["exports"]>;
 
 /**
- * returns .gitignore content as an array of strings
- */
-function getGitIgnores() {
-  const gitIgnore = fs.readFileSync(".gitignore", "utf-8");
-  return gitIgnore
-    .split("\n")
-    .filter((line) => line.trim() !== "")
-    .filter((line) => !line.startsWith("#"))
-    .map((ignore) => ignore.replace(/\//g, ""));
-}
-
-/**
  * returns an array of paths to all package.json files in the given folder
  */
 export function getAllPackageJsonPaths(folder: string) {
-  const files = fs.readdirSync(folder, { recursive: true });
-  const ignores = getGitIgnores();
-  return files
+  const files = fs
+    .readdirSync(folder, { recursive: true })
     .filter((file) => typeof file === "string")
-    .filter((file) => {
-      return !file.split("/").some((fileSlice) =>
-        ignores.some((ignoreSlice) => {
-          if (ignoreSlice.startsWith("*") && ignoreSlice.endsWith("*")) {
-            return fileSlice.includes(ignoreSlice);
-          }
-          if (ignoreSlice.startsWith("*")) {
-            return fileSlice.endsWith(ignoreSlice);
-          }
-          if (ignoreSlice.endsWith("*")) {
-            return fileSlice.startsWith(ignoreSlice);
-          }
-          return fileSlice === ignoreSlice;
-        })
-      );
-    })
-    .filter((file) => file.endsWith("package.json"))
     .map((file) => path.join(folder, file));
+  const ig = ignore().add(
+    fs.readFileSync(path.join(process.cwd(), ".gitignore")).toString()
+  );
+  console.log(ig.filter(files));
+  return [];
 }
 
 export function readPackageJson(filePath: string) {

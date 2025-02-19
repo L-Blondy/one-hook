@@ -3,10 +3,10 @@ import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
 
-export const outDir = "dist";
-export const minExtension = ".min.js";
+const outDir = "dist";
+const minExtension = ".min.js";
 
-export const tsupBuildConfig = (
+export const tsupBuildOptions = (
   entry: Options["entry"] = { index: "./src/index.ts" }
 ): Options[] => {
   const buildOptions: Options = {
@@ -48,8 +48,8 @@ export const tsupBuildConfig = (
 
 async function toGzip(fileName: string) {
   // Input and output file paths
-  const inputFile = path.join(process.cwd(), "dist", fileName);
-  const outputFile = path.join(process.cwd(), "dist", `${fileName}.gz`); // The gzipped output file
+  const inputFile = path.join(process.cwd(), outDir, fileName);
+  const outputFile = path.join(process.cwd(), outDir, `${fileName}.gz`); // The gzipped output file
 
   // Check if the input file exists
   await fs.promises.access(inputFile, fs.constants.F_OK);

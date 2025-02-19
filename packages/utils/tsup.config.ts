@@ -1,7 +1,7 @@
-import { tsupBuildConfig } from "../../tsup/build";
+import { tsupBuildOptions } from "../../tsup/build";
 import { defineConfig } from "tsup";
 
-export const buildConfig = tsupBuildConfig({
+export const buildOptions = tsupBuildOptions({
   emitter: "./src/emitter/index.ts",
   "entries-of": "./src/entries-of/index.ts",
   "is-server": "./src/is-server/index.ts",
@@ -10,4 +10,4 @@ export const buildConfig = tsupBuildConfig({
   types: "./src/types/index.ts",
   "values-of": "./src/values-of/index.ts",
 });
-export default defineConfig(buildConfig);
+export default defineConfig(buildOptions);

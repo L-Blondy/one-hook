@@ -1,5 +1,5 @@
-import { tsupBuildConfig } from "../../tsup/build";
+import { tsupBuildOptions } from "../../tsup/build";
 import { defineConfig } from "tsup";
 
-export const buildConfig = tsupBuildConfig();
-export default defineConfig(buildConfig);
+export const buildOptions = tsupBuildOptions();
+export default defineConfig(buildOptions);

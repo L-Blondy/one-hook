@@ -23,8 +23,8 @@ await Promise.all(
           "pnpm run build",
           "pnpm run test",
           tag
-            ? `pnpm publish --access public --tag ${tag}`
-            : `pnpm publish --access public`,
+            ? `pnpm publish --quiet --access public --tag ${tag}`
+            : `pnpm publish --quiet --access public`,
         ].join(" && ")
       );
       consola.box(

@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "align": "bun scripts/align-all-package-json.ts",
-    "build": "turbo --filter \"./packages/*\" build",
+    "build": "pnpm run align && turbo --filter \"./packages/*\" build",
     "dev": "pnpm run align && turbo dev",
     "test": "turbo test",
     "lint": "turbo lint",

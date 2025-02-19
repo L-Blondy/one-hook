@@ -43,8 +43,7 @@ export function getAllPackageJsonPaths(folder: string) {
   const ig = ignore().add(
     fs.readFileSync(path.join(process.cwd(), ".gitignore")).toString()
   );
-  console.log(ig.filter(files));
-  return [];
+  return ig.filter(files);
 }
 
 export function readPackageJson(filePath: string) {

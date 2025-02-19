@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import * as v from "valibot";
@@ -40,6 +38,7 @@ export function getAllPackageJsonPaths(folder: string) {
   const files = fs
     .readdirSync(folder, { recursive: true })
     .filter((file) => typeof file === "string")
+    .filter((file) => file.endsWith("package.json"))
     .map((file) => path.join(folder, file));
   const ig = ignore().add(
     fs.readFileSync(path.join(process.cwd(), ".gitignore")).toString()

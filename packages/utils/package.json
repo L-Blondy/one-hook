@@ -16,6 +16,10 @@
       "types": "./dist/entries-of.d.ts",
       "default": "./dist/entries-of.js"
     },
+    "./invariant": {
+      "types": "./dist/invariant.d.ts",
+      "default": "./dist/invariant.js"
+    },
     "./is-server": {
       "types": "./dist/is-server.d.ts",
       "default": "./dist/is-server.js"
@@ -27,6 +31,10 @@
     "./noop": {
       "types": "./dist/noop.d.ts",
       "default": "./dist/noop.js"
+    },
+    "./standard-schema": {
+      "types": "./dist/standard-schema.d.ts",
+      "default": "./dist/standard-schema.js"
     },
     "./types": {
       "types": "./dist/types.d.ts",
@@ -44,6 +52,12 @@
     "lint": "eslint . && tsc --noEmit",
     "lint:eslint": "eslint .",
     "lint:typescript": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@standard-schema/spec": "^1.0.0"
+  },
+  "devDependencies": {
+    "valibot": "^1.0.0-rc.1"
   },
   "tag": "beta"
 }

@@ -32,6 +32,10 @@
       "types": "./dist/noop.d.ts",
       "default": "./dist/noop.js"
     },
+    "./timeout": {
+      "types": "./dist/timeout.d.ts",
+      "default": "./dist/timeout.js"
+    },
     "./types": {
       "types": "./dist/types.d.ts",
       "default": "./dist/types.js"

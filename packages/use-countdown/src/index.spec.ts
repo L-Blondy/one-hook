@@ -9,7 +9,7 @@ import {
   vi,
 } from 'vitest'
 import { useCountdown } from '.'
-import { resetIntervalSync } from 'src/hooks/use-interval/test-utils'
+import { resetIntervalSync } from '@rebase.io/use-interval/test-utils'
 
 beforeAll(() => {
   vi.useFakeTimers()

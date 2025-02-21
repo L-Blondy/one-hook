@@ -3,8 +3,8 @@ import { useEventListener } from '.'
 import { fireEvent, renderHook } from '@testing-library/react'
 import { clearEventListeners } from './test-utils'
 import { instanceMap } from './vanilla'
-import { timeout } from 'src/utils'
 import React from 'react'
+import { scheduler } from 'timers/promises'
 
 afterEach(() => {
   clearEventListeners()
@@ -174,7 +174,7 @@ test('Calling add() multiple times should change nothing', async () => {
   result.current.add()
   result.current.add()
   result.current.add()
-  await timeout(100)
+  await scheduler.wait(100)
   result.current.add()
   result.current.add()
   result.current.add()

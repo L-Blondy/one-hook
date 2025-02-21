@@ -1,4 +1,4 @@
-import 'src/hooks/_test-utils/intersection-observer'
+import '../../../test-utils/intersection-observer'
 import { afterEach, expect, test } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import { getEventListener } from './vanilla'

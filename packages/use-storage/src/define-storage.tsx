@@ -13,9 +13,6 @@ type BaseConfig = {
   }
 }
 
-/**
- * https://crustack.vercel.app/hooks/define-storage/
- */
 export function defineStorage<
   TDeserialized,
   TConfig extends BaseConfig,

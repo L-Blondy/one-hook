@@ -5,7 +5,7 @@
   "scripts": {
     "align": "bun scripts/align-all-package-json.ts",
     "build": "pnpm run align && turbo --filter \"./packages/*\" build",
-    "dev": "pnpm run align && turbo dev",
+    "dev": "pnpm run align && turbo dev --concurrency 40",
     "test": "turbo test",
     "lint": "turbo lint",
     "lint:eslint": "turbo lint:eslint",

@@ -110,6 +110,9 @@ importers:
       '@rebase.io/use-cookie':
         specifier: workspace:*
         version: link:../../packages/use-cookie
+      '@rebase.io/use-is-hydrated':
+        specifier: workspace:*
+        version: link:../../packages/use-is-hydrated
       '@rebase.io/use-storage':
         specifier: workspace:*
         version: link:../../packages/use-storage
@@ -166,6 +169,57 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.0(react@19.0.0)
 
+  packages/use-event-handler:
+    dependencies:
+      '@rebase.io/use-latest-ref':
+        specifier: workspace:*
+        version: link:../use-latest-ref
+      '@rebase.io/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@types/react':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.9
+      '@types/react-dom':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.3(@types/react@19.0.9)
+      react:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0
+      react-dom:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0(react@19.0.0)
+
+  packages/use-get-is-mounted:
+    dependencies:
+      '@types/react':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.9
+      '@types/react-dom':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.3(@types/react@19.0.9)
+      react:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0
+      react-dom:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0(react@19.0.0)
+
+  packages/use-invariant-context:
+    dependencies:
+      '@types/react':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.9
+      '@types/react-dom':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.3(@types/react@19.0.9)
+      react:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0
+      react-dom:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0(react@19.0.0)
+
   packages/use-is-hydrated:
     dependencies:
       '@rebase.io/use-isomorphic-layout-effect':
@@ -189,6 +243,39 @@ importers:
       '@rebase.io/utils':
         specifier: workspace:*
         version: link:../utils
+      '@types/react':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.9
+      '@types/react-dom':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.3(@types/react@19.0.9)
+      react:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0
+      react-dom:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0(react@19.0.0)
+
+  packages/use-latest-ref:
+    dependencies:
+      '@rebase.io/use-isomorphic-layout-effect':
+        specifier: workspace:*
+        version: link:../use-isomorphic-layout-effect
+      '@types/react':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.9
+      '@types/react-dom':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.3(@types/react@19.0.9)
+      react:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0
+      react-dom:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0(react@19.0.0)
+
+  packages/use-merge-refs:
+    dependencies:
       '@types/react':
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.9

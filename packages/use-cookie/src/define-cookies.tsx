@@ -18,9 +18,6 @@ type BaseConfig = {
   }
 }
 
-/**
- * https://crustack.vercel.app/hooks/define-cookies/
- */
 export function defineCookies<
   TDeserialized,
   TConfig extends BaseConfig,
@@ -135,21 +132,9 @@ export function defineCookies<
   }
 
   return {
-    /**
-     * https://crustack.vercel.app/hooks/define-cookies/#cookieprovider
-     */
     CookieProvider,
-    /**
-     * https://crustack.vercel.app/hooks/define-cookies/#usecookie
-     */
     useCookie,
-    /**
-     * https://crustack.vercel.app/hooks/define-cookies/#useclearcookies
-     */
     useClearCookies,
-    /**
-     * Low level service that exposes the underlying methods.
-     */
     cookieService,
   }
 }

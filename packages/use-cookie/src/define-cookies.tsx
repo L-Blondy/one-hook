@@ -124,6 +124,7 @@ export function defineCookies<
     return [state, set] as const
   }
 
+  // could be non-hook
   function useClearCookies() {
     return React.useCallback((options?: { keys?: (keyof Store)[] }) => {
       const names = options?.keys ?? keysOf(config)

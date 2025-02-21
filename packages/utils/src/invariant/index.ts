@@ -7,9 +7,6 @@ type Invariant = ((
   message: string | (() => string),
 ) => asserts condition) & { config: (config: InvariantConfig) => void }
 
-/**
- * https://crustack.vercel.app/utils/invariant/
- */
 export const invariant: Invariant = function invariant_(
   condition: any,
   message: string | (() => string),

@@ -8,7 +8,6 @@ import { config_ts } from './eslint/config-ts.mjs'
 import { config_vitest } from './eslint/config-vitest.mjs'
 import { config_react } from './eslint/config-react.mjs'
 import { config_next } from './eslint/config-next.mjs'
-import { config_tailwind } from './eslint/config-tailwind.mjs'
 // import { config_tailwind } from "./eslint/config-tailwind.mjs";
 // import { config_next } from "./eslint/config-next.mjs";
 
@@ -53,10 +52,10 @@ const config = tseslint.config(
     files: ['apps/playground/**'],
     ...config_next,
   },
-  {
-    files: ['apps/playground/**'],
-    ...config_tailwind,
-  },
+  // {
+  //   files: ['apps/playground/**'],
+  //   ...config_tailwind,
+  // },
 )
 
 export default config

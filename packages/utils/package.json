@@ -32,13 +32,13 @@
       "types": "./dist/noop.d.ts",
       "default": "./dist/noop.js"
     },
-    "./standard-schema": {
-      "types": "./dist/standard-schema.d.ts",
-      "default": "./dist/standard-schema.js"
-    },
     "./types": {
       "types": "./dist/types.d.ts",
       "default": "./dist/types.js"
+    },
+    "./validate": {
+      "types": "./dist/validate.d.ts",
+      "default": "./dist/validate.js"
     },
     "./values-of": {
       "types": "./dist/values-of.d.ts",

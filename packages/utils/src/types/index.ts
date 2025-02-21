@@ -21,3 +21,5 @@ export type ValuesOf<O> = O extends unknown
       [Key in KeyOf<O>]: O[Key];
     }[KeyOf<O>][]
   : never;
+
+export type AnyFunction = (...args: any[]) => any;

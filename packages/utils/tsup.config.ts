@@ -8,8 +8,8 @@ export const buildOptions = tsupBuildOptions({
   "is-server": "./src/is-server/index.ts",
   "keys-of": "./src/keys-of/index.ts",
   noop: "./src/noop/index.ts",
-  "standard-schema": "./src/standard-schema/index.ts",
   types: "./src/types/index.ts",
+  validate: "./src/validate/index.ts",
   "values-of": "./src/values-of/index.ts",
 });
 export default defineConfig(buildOptions);

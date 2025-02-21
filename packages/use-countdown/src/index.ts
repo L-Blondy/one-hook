@@ -1,5 +1,5 @@
 import React from 'react'
-import { useInterval } from '../use-interval'
+import { useInterval } from '@rebase.io/use-interval'
 
 type To = string | Date | null | undefined | false
 

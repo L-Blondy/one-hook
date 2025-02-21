@@ -8,9 +8,6 @@ export type UseIntervalOptions = {
   sync?: boolean
 }
 
-/**
- * https://crustack.vercel.app/hooks/use-interval/
- */
 export function useInterval(
   callback: AnyFunction,
   delay: number | null | false | undefined,

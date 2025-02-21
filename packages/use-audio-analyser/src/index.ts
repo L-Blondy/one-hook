@@ -31,9 +31,6 @@ export type AudioAnalyserOptions = {
   onData?: (data: number[]) => void
 }
 
-/**
- * https://crustack.vercel.app/hooks/use-audio-analyser/
- */
 export function useAudioAnalyser(
   source: MediaStream | HTMLMediaElement | null,
   {

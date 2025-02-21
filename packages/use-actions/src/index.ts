@@ -1,9 +1,6 @@
 import React from 'react'
 import type { Prettify } from '@rebase.io/utils/types'
 
-/**
- * https://crustack.vercel.app/hooks/define-actions/
- */
 export function defineActions<
   State,
   ActionsDef extends Record<string, (...args: any[]) => State>,

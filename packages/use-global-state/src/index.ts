@@ -6,9 +6,6 @@ export type DefineGlobalStateConfig<State> = {
   initialState: State
 }
 
-/**
- * https://crustack.vercel.app/hooks/define-global-state/
- */
 export function defineGlobalState<State>(
   config: DefineGlobalStateConfig<State>,
 ) {
@@ -22,9 +19,6 @@ export function defineGlobalState<State>(
     emitter.emit('', next)
   }
 
-  /**
-   * https://crustack.vercel.app/hooks/define-global-state/
-   */
   return [
     () => {
       const [state, setState] = React.useState<State>(store.v)

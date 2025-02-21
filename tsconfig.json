@@ -36,8 +36,10 @@
   "include": [
     "eslint.config.mjs",
     "eslint/*",
+    "test-utils/*",
     "tsup/*",
     "scripts/*",
+    "vitest/*",
     "**/tsup.config.ts",
     "**/vitest.config.mts",
     "**/postcss.config.mjs"

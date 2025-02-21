@@ -1,8 +1,8 @@
-import '../_test-utils/navigator'
+import '../../../test-utils/navigator'
 import { act, renderHook } from '@testing-library/react'
 import { expect, test } from 'vitest'
 import { useDisplayMedia } from '.'
-import { timeout } from 'src/utils'
+import { scheduler } from 'timers/promises'
 
 test('Should return open and close methods', () => {
   const hook = renderHook(() => useDisplayMedia({ audio: true }))
@@ -28,7 +28,7 @@ test('open should trigger the LoadingMedia state', () => {
 test('after loading success we should have the OpenMedia state', async () => {
   const hook = renderHook(() => useDisplayMedia({ audio: true }))
   act(() => hook.result.current.open())
-  await timeout(0)
+  await scheduler.wait(0)
   expect(hook.result.current.state).toEqual('open')
   expect(typeof hook.result.current.stream).toBe('object')
   expect(hook.result.current.error).toEqual(null)
@@ -37,7 +37,7 @@ test('after loading success we should have the OpenMedia state', async () => {
 test('Calling open while in OpenMedia state should be a noop', async () => {
   const hook = renderHook(() => useDisplayMedia({ audio: true }))
   act(() => hook.result.current.open())
-  await timeout(0)
+  await scheduler.wait(0)
   act(() => hook.result.current.open())
   expect(hook.result.current.state).toEqual('open')
 })
@@ -46,7 +46,7 @@ test('Changing the contraints while in OpenMedia state should close the stream',
   let video = false
   const hook = renderHook(() => useDisplayMedia({ audio: true, video }))
   act(() => hook.result.current.open())
-  await timeout(0)
+  await scheduler.wait(0)
   expect(hook.result.current.state).toEqual('open')
   video = true
   hook.rerender()
@@ -56,7 +56,7 @@ test('Changing the contraints while in OpenMedia state should close the stream',
 test('Calling close while in OpenMedia state should close the stream', async () => {
   const hook = renderHook(() => useDisplayMedia({ audio: true }))
   act(() => hook.result.current.open())
-  await timeout(0)
+  await scheduler.wait(0)
   expect(hook.result.current.state).toEqual('open')
   act(() => hook.result.current.close())
   expect(hook.result.current.state).toEqual('closed')
@@ -75,7 +75,7 @@ test('Calling close while in ErrorMedia state should be a noop', async () => {
   const hook = renderHook(() => useDisplayMedia(true))
   act(() => hook.result.current.open())
   expect(hook.result.current.state).toEqual('loading')
-  await timeout(0)
+  await scheduler.wait(0)
   expect(hook.result.current.state).toEqual('error')
   act(() => hook.result.current.close())
   expect(hook.result.current.state).toEqual('error')
@@ -86,7 +86,7 @@ test('Calling open while in ErrorMedia state should trigger the LoadingMedia sta
   const hook = renderHook(() => useDisplayMedia(true))
   act(() => hook.result.current.open())
   expect(hook.result.current.state).toEqual('loading')
-  await timeout(0)
+  await scheduler.wait(0)
   expect(hook.result.current.state).toEqual('error')
   act(() => hook.result.current.open())
   expect(hook.result.current.state).toEqual('loading')
@@ -95,7 +95,7 @@ test('Calling open while in ErrorMedia state should trigger the LoadingMedia sta
 test('toggleAudio should toggle audio tracks when in OpenMedia state', async () => {
   const hook = renderHook(() => useDisplayMedia({ audio: true }))
   act(() => hook.result.current.open())
-  await timeout(0)
+  await scheduler.wait(0)
   expect(hook.result.current.audioState).toBe('enabled')
   act(() => hook.result.current.toggleAudio())
   expect(hook.result.current.audioState).toBe('disabled')
@@ -106,7 +106,7 @@ test('toggleAudio should toggle audio tracks when in OpenMedia state', async () 
 test('toggleVideo should toggle video tracks when in OpenMedia state', async () => {
   const hook = renderHook(() => useDisplayMedia({ video: true }))
   act(() => hook.result.current.open())
-  await timeout(0)
+  await scheduler.wait(0)
   expect(hook.result.current.videoState).toBe('enabled')
   act(() => hook.result.current.toggleVideo())
   expect(hook.result.current.videoState).toBe('disabled')
@@ -133,7 +133,7 @@ test('audioState and videoState should be "none" when stream is closed', async (
   expect(hook.result.current.audioState).toBe('none')
   expect(hook.result.current.videoState).toBe('none')
   act(() => hook.result.current.open())
-  await timeout(0)
+  await scheduler.wait(0)
   expect(hook.result.current.audioState).toBe('enabled')
   expect(hook.result.current.videoState).toBe('enabled')
   act(() => hook.result.current.close())
@@ -146,7 +146,7 @@ test('audioState and videoState should be "none" when stream is loading', async 
   act(() => hook.result.current.open())
   expect(hook.result.current.audioState).toBe('none')
   expect(hook.result.current.videoState).toBe('none')
-  await timeout(0)
+  await scheduler.wait(0)
   expect(hook.result.current.audioState).toBe('enabled')
   expect(hook.result.current.videoState).toBe('enabled')
 })
@@ -157,7 +157,7 @@ test('audioState and videoState should be "none" when stream is in error state',
   act(() => hook.result.current.open())
   expect(hook.result.current.audioState).toBe('none')
   expect(hook.result.current.videoState).toBe('none')
-  await timeout(0)
+  await scheduler.wait(0)
   expect(hook.result.current.state).toBe('error')
   expect(hook.result.current.audioState).toBe('none')
   expect(hook.result.current.videoState).toBe('none')

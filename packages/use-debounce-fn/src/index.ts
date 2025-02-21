@@ -1,8 +1,5 @@
 import React from 'react'
 
-/**
- * https://crustack.vercel.app/hooks/use-debounce-fn/
- */
 export function useDebounceFn(defaultDelay: number) {
   const timeoutRef = React.useRef<NodeJS.Timeout | number>(0)
 

@@ -1,5 +1,5 @@
 {
-  "name": "@rebase.io/use-display-media",
+  "name": "@rebase.io/use-dom-id",
   "version": "0.0.0-beta.1",
   "files": [
     "dist",
@@ -26,9 +26,6 @@
     "@types/react-dom": ">=18.0.0 || >=19.0.0",
     "react": ">=18.0.0 || >=19.0.0",
     "react-dom": ">=18.0.0 || >=19.0.0"
-  },
-  "dependencies": {
-    "@rebase.io/use-get-is-mounted": "workspace:*"
   },
   "tag": "beta"
 }

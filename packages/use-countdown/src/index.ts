@@ -21,9 +21,6 @@ type UseCountdownOptions<T = number> = {
   sync?: boolean
 }
 
-/**
- * https://crustack.vercel.app/hooks/use-countdown/
- */
 export function useCountdown<T = number>({
   to,
   transform = (ms) => ms as T,

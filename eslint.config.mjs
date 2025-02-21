@@ -9,7 +9,6 @@ import { config_vitest } from './eslint/config-vitest.mjs'
 import { config_react } from './eslint/config-react.mjs'
 import { config_next } from './eslint/config-next.mjs'
 // import { config_tailwind } from "./eslint/config-tailwind.mjs";
-// import { config_next } from "./eslint/config-next.mjs";
 
 /** @type {any} */
 const config = tseslint.config(
@@ -19,11 +18,17 @@ const config = tseslint.config(
   {
     languageOptions: {
       globals: {
+        NodeJS: true,
         ...globals.node,
         ...globals.browser,
+        ...globals.nodeBuiltin,
       },
       parserOptions: {
-        project: ['./tsconfig.json', './packages/*/tsconfig.json'],
+        project: [
+          './tsconfig.json',
+          './packages/*/tsconfig.json',
+          './apps/*/tsconfig.json',
+        ],
         tsconfigRootDir: import.meta.dirname,
         ecmaFeatures: { jsx: true },
       },
@@ -33,11 +38,11 @@ const config = tseslint.config(
     },
   },
   {
-    files: ['packages/**'],
+    files: ['packages/**', 'tsup/**', 'vitest/**', 'test-utils/**'],
     ...config_js,
   },
   {
-    files: ['packages/**'],
+    files: ['packages/**', 'tsup/**', 'vitest/**', 'test-utils/**'],
     ...config_ts,
   },
   {

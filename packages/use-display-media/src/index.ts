@@ -35,9 +35,6 @@ type LoadingMedia = {
 
 export type DisplayMedia = ClosedMedia | ErrorMedia | OpenMedia | LoadingMedia
 
-/**
- * https://crustack.vercel.app/hooks/use-display-media/
- */
 export function useDisplayMedia(options: DisplayMediaStreamOptions = {}) {
   const getIsMounted = useGetIsMounted()
   const [_options, _setOptions] = React.useState(options)

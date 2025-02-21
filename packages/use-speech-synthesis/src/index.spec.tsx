@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import 'src/hooks/_test-utils/speech-synthesis'
+import '../../../test-utils/speech-synthesis'
 import { expect, test } from 'vitest'
 import { useSpeechSynthesis } from '.'
 

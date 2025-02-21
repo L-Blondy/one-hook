@@ -10,8 +10,8 @@ import {
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { useResizeObserver } from '.'
 import React from 'react'
-import { mockResizeTargets } from 'src/hooks/_test-utils/resize-observer'
-import { useMergeRefs } from 'src/hooks/use-merge-refs'
+import { mockResizeTargets } from '../../../test-utils/resize-observer'
+import { useMergeRefs } from '@rebase.io/use-merge-refs'
 
 beforeAll(() => {
   vi.useFakeTimers()

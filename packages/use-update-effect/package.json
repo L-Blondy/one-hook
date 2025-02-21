@@ -1,5 +1,5 @@
 {
-  "name": "@rebase.io/use-resize-observer",
+  "name": "@rebase.io/use-update-effect",
   "version": "0.0.0-beta.1",
   "files": [
     "dist",
@@ -26,14 +26,6 @@
     "@types/react-dom": ">=18.0.0 || >=19.0.0",
     "react": ">=18.0.0 || >=19.0.0",
     "react-dom": ">=18.0.0 || >=19.0.0"
-  },
-  "dependencies": {
-    "@rebase.io/use-event-handler": "workspace:*",
-    "@rebase.io/use-isomorphic-layout-effect": "workspace:*",
-    "@rebase.io/utils": "workspace:*"
-  },
-  "devDependencies": {
-    "@rebase.io/use-merge-refs": "workspace:*"
   },
   "tag": "beta"
 }

@@ -11,9 +11,6 @@ import type {
 import { getEventListener } from './vanilla'
 import type { MaybeRef } from '@rebase.io/utils/types'
 
-/**
- * https://crustack.vercel.app/hooks/use-event-listener/
- */
 export function useEventListener<
   const Target extends UseEventListenerTarget,
   Type extends UseEventListenerType<Target>,

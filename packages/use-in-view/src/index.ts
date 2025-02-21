@@ -16,9 +16,6 @@ export type UseInViewOptions = UseIntersectionObserverOptions & {
   onChange?: (inView: boolean) => void
 }
 
-/**
- * https://crustack.vercel.app/hooks/use-in-view/
- */
 export const useInView = (options: UseInViewOptions = {}) => {
   const [inView, setInView] = React.useState<boolean>()
   const onChange = useEventHandler(options.onChange)

@@ -13,9 +13,6 @@ export type RecorderOptions = Prettify<
   }
 >
 
-/**
- * https://crustack.vercel.app/hooks/use-media-recorder/
- */
 export function useMediaRecorder(
   stream: MediaStream | null | undefined,
   {

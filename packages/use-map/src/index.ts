@@ -6,9 +6,6 @@ export type MapInit<K, V> =
   | null
   | undefined
 
-/**
- * https://crustack.vercel.app/hooks/use-map/
- */
 export function useMap<K, V>(init?: MapInit<K, V>) {
   const [_map, _setMap] = React.useState(() => createMap(init))
 

@@ -12,9 +12,6 @@ export type UseResizeObserverCallback = (
   observer: ResizeObserver,
 ) => void
 
-/**
- * https://crustack.vercel.app/hooks/use-resize-observer/
- */
 export const useResizeObserver = (
   callback: UseResizeObserverCallback,
   { autoObserve = true, box }: UseResizeObserverOptions = {},

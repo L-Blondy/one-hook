@@ -11,9 +11,6 @@ export type UseMutationObserverCallback = (
   observer: MutationObserver,
 ) => void
 
-/**
- * https://crustack.vercel.app/hooks/use-mutation-observer/
- */
 export const useMutationObserver = (
   callback: UseMutationObserverCallback,
   { autoObserve = true, ...options }: UseMutationObserverOptions = {},

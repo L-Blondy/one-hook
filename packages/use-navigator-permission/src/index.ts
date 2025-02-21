@@ -20,13 +20,6 @@ export type NavigatorPermissionState = Prettify<
   PermissionState | 'loading' | 'error'
 >
 
-/**
- * Read the navigator's permissions `state` using [navigator.permissions.query](https://developer.mozilla.org/en-US/docs/Web/API/Permissions/query)
- *
- * The state is `undefined` while the query promise is pending
- *
- * https://crustack.vercel.app/hooks/use-navigator-permission/
- */
 export function useNavigatorPermission(descriptor: {
   name: NavigatorPermissionName
 }): { state: NavigatorPermissionState } {

@@ -1,3 +1,5 @@
+import type React from 'react'
+
 export type KeyOf<O> = O extends unknown ? keyof O : never
 
 export type KeysOf<O> = O extends unknown
@@ -31,3 +33,5 @@ export type Prettify<O> = O extends any
       } & {}
     : O
   : never
+
+export type MaybeRef<T> = T | React.MutableRefObject<T>

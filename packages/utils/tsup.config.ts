@@ -5,6 +5,7 @@ export const buildOptions = tsupBuildOptions({
   emitter: './src/emitter/index.ts',
   'entries-of': './src/entries-of/index.ts',
   'forward-generic-ref': './src/forward-generic-ref/index.ts',
+  'get-element-uid': './src/get-element-uid/index.ts',
   invariant: './src/invariant/index.ts',
   'is-server': './src/is-server/index.ts',
   'keys-of': './src/keys-of/index.ts',

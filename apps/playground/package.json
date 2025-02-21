@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@rebase.io/use-cookie": "workspace:*",
+    "@rebase.io/use-storage": "workspace:*",
     "@tailwindcss/postcss": "^4.0.7",
     "next": "15.1.7",
     "postcss": "^8.5.3",

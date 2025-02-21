@@ -53,7 +53,6 @@ export function defineCookies<
   }
 
   addCrossTabListener((name) => {
-    console.log('CROSS TB LISTENER')
     if (keysOf(config).includes(name)) {
       emit(name as any, cookieService.get(name, config[name]!))
     }
@@ -168,7 +167,6 @@ function emitCrossTabMessage(name: string) {
 function addCrossTabListener(cb: (name: string) => any) {
   !isServer &&
     window.addEventListener('storage', (e) => {
-      console.log('STORAGE EVENT', e)
       if (e.key !== storageKey || !e.newValue) return
       try {
         cb(JSON.parse(e.newValue).name)

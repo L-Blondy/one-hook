@@ -18,6 +18,11 @@ export const LayoutSidebar = () => {
             children="use-cookie"
             activeClassName="text-teal-600"
           />
+          <NavLink
+            href="/use-storage"
+            children="use-storage"
+            activeClassName="text-teal-600"
+          />
         </div>
       </ul>
     </nav>

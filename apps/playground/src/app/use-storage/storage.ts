@@ -1,9 +1,9 @@
 'use client'
 import { optional, string } from 'valibot'
-import { defineCookies } from '@rebase.io/use-cookie'
+import { defineStorage } from '@rebase.io/use-storage'
 
-export const { CookieProvider, useCookie, useClearCookies, cookieService } =
-  defineCookies({
+export const { useLocalStorage, useClearLocalStorage } = defineStorage(
+  {
     'input-validation-schema': {
       expires: 7,
       validate: optional(string(), ''),
@@ -12,4 +12,6 @@ export const { CookieProvider, useCookie, useClearCookies, cookieService } =
       expires: 7,
       validate: (value) => String(value ?? ''),
     },
-  })
+  },
+  { type: 'local' },
+)

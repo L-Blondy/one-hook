@@ -1,11 +1,21 @@
 'use client'
 import React from 'react'
-import { useClearCookies, useCookie } from '../cookies'
+import { useClearLocalStorage, useLocalStorage } from './storage'
 
-export default function UseCookiePage() {
-  const [inputFn, setInputFn] = useCookie('input-validation-function')
-  const [inputSc, setInputSc] = useCookie('input-validation-schema')
-  const clearCookies = useClearCookies()
+export default function UseStoragePage() {
+  const [isHydrated, setIsHydrated] = React.useState(false)
+  React.useEffect(() => setIsHydrated(true), [])
+
+  return isHydrated && <Impl />
+}
+
+/**
+ * Generates an error on the server (localStorage is not defined)
+ */
+function Impl() {
+  const [inputFn, setInputFn] = useLocalStorage('input-validation-function')
+  const [inputSc, setInputSc] = useLocalStorage('input-validation-schema')
+  const clearCookies = useClearLocalStorage()
 
   return (
     <div className="space-y-4">

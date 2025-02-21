@@ -110,6 +110,9 @@ importers:
       '@rebase.io/use-cookie':
         specifier: workspace:*
         version: link:../../packages/use-cookie
+      '@rebase.io/use-storage':
+        specifier: workspace:*
+        version: link:../../packages/use-storage
       '@tailwindcss/postcss':
         specifier: ^4.0.7
         version: 4.0.7

@@ -113,9 +113,6 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4.0.7
         version: 4.0.7
-      crustack:
-        specifier: ^0.6.11
-        version: 0.6.11(@types/react-dom@19.0.3(@types/react@19.0.9))(@types/react@19.0.9)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       next:
         specifier: 15.1.7
         version: 15.1.7(@babel/core@7.26.9)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1454,15 +1451,6 @@ packages:
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
-
-  crustack@0.6.11:
-    resolution: {integrity: sha512-t+S5HBWn1O74sxXCc13QTar1FgNfmSzOL90b+9dm3s7xpQVS6VO4cTUpZemxU7zX5dfySC7OIrYd21VjKkilrw==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
 
   css.escape@1.5.1:
     resolution: {integrity: sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==}
@@ -4263,13 +4251,6 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-
-  crustack@0.6.11(@types/react-dom@19.0.3(@types/react@19.0.9))(@types/react@19.0.9)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
-    dependencies:
-      '@types/react': 19.0.9
-      '@types/react-dom': 19.0.3(@types/react@19.0.9)
-      react: 19.0.0
-      react-dom: 19.0.0(react@19.0.0)
 
   css.escape@1.5.1: {}
 

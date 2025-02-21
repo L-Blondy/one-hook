@@ -12,11 +12,4 @@ export const { CookieProvider, useCookie, useClearCookies, cookieService } =
       expires: 7,
       validate: (value) => String(value ?? ''),
     },
-    'sidebar-width': {
-      validate: (width) => {
-        return typeof width === 'string' || typeof width === 'number'
-          ? width
-          : 360
-      },
-    },
   })

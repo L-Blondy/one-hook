@@ -4,7 +4,7 @@ import localFont from 'next/font/local'
 import { LayoutSidebar } from './layout.sidebar'
 import { CookieProvider } from './cookies'
 import { cookies } from 'next/headers'
-import { cn } from 'crustack/utils'
+import { cn } from 'src/utils/cn'
 
 const geistSans = localFont({
   src: './GeistVF.woff',

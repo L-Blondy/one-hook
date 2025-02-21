@@ -905,6 +905,48 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.0(react@19.0.0)
 
+  packages/use-user-media:
+    dependencies:
+      '@rebase.io/use-get-is-mounted':
+        specifier: workspace:*
+        version: link:../use-get-is-mounted
+      '@types/react':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.10
+      '@types/react-dom':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.4(@types/react@19.0.10)
+      react:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0
+      react-dom:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0(react@19.0.0)
+
+  packages/use-window-size:
+    dependencies:
+      '@rebase.io/use-event-handler':
+        specifier: workspace:*
+        version: link:../use-event-handler
+      '@rebase.io/use-isomorphic-layout-effect':
+        specifier: workspace:*
+        version: link:../use-isomorphic-layout-effect
+      '@rebase.io/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@types/react':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.10
+      '@types/react-dom':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.4(@types/react@19.0.10)
+      react:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0
+      react-dom:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0(react@19.0.0)
+
   packages/utils:
     dependencies:
       '@standard-schema/spec':

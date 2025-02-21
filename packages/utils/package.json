@@ -16,6 +16,10 @@
       "types": "./dist/entries-of.d.ts",
       "default": "./dist/entries-of.js"
     },
+    "./forward-generic-ref": {
+      "types": "./dist/forward-generic-ref.d.ts",
+      "default": "./dist/forward-generic-ref.js"
+    },
     "./invariant": {
       "types": "./dist/invariant.d.ts",
       "default": "./dist/invariant.js"
@@ -31,6 +35,10 @@
     "./noop": {
       "types": "./dist/noop.d.ts",
       "default": "./dist/noop.js"
+    },
+    "./strip-undefined": {
+      "types": "./dist/strip-undefined.d.ts",
+      "default": "./dist/strip-undefined.js"
     },
     "./timeout": {
       "types": "./dist/timeout.d.ts",

@@ -1,3 +1,4 @@
+import { validateSync, type Validator } from "@rebase.io/utils/validate";
 import { defaultDeserializer, defaultSerializer } from "./serializers";
 
 export type CookieServiceOptions<TDeserialized> = {
@@ -49,8 +50,8 @@ export function createCookieService<TDeserialized>({
     },
     get<T extends TDeserialized | undefined>(
       key: string,
-      config: { validate: (value: TDeserialized | undefined) => T }
-    ) {
+      config: { validate: Validator<TDeserialized | undefined, T> }
+    ): T {
       return this.parse(getValue(key, decode), config);
     },
     remove(key: string, attrs?: Omit<CookieAttributes, "expires">) {
@@ -61,10 +62,10 @@ export function createCookieService<TDeserialized>({
      */
     parse<T extends TDeserialized | undefined>(
       value: string | undefined,
-      config: { validate: (value: TDeserialized | undefined) => T }
-    ) {
+      config: { validate: Validator<TDeserialized | undefined, T> }
+    ): T {
       const deserialized = value === undefined ? undefined : deserialize(value);
-      return config.validate(deserialized);
+      return validateSync(config.validate, deserialized);
     },
   };
 }

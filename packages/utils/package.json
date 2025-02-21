@@ -56,8 +56,5 @@
   "dependencies": {
     "@standard-schema/spec": "^1.0.0"
   },
-  "devDependencies": {
-    "valibot": "^1.0.0-rc.1"
-  },
   "tag": "beta"
 }

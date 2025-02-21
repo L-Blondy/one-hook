@@ -10,10 +10,11 @@ import { isServer } from "@rebase.io/utils/is-server";
 import { entriesOf } from "@rebase.io/utils/entries-of";
 import { keysOf } from "@rebase.io/utils/keys-of";
 import { useIsomorphicLayoutEffect } from "@rebase.io/use-isomorphic-layout-effect";
+import type { Validator, ValidatorOutput } from "@rebase.io/utils/validate";
 
 type BaseConfig = {
   [TName in string]: CookieAttributes & {
-    validate: (value: unknown) => any;
+    validate: Validator;
   };
 };
 
@@ -26,7 +27,7 @@ export function defineCookies<
   const TCookieServiceOptions extends CookieServiceOptions<TDeserialized>,
 >(config: TConfig, cookieServiceOptions: TCookieServiceOptions = {} as any) {
   type Store = {
-    [TName in KeyOf<TConfig>]: ReturnType<TConfig[TName]["validate"]>;
+    [TName in KeyOf<TConfig>]: ValidatorOutput<TConfig[TName]["validate"]>;
   };
 
   const store = new Map<keyof Store, ValueOf<Store>>();

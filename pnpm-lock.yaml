@@ -151,6 +151,24 @@ importers:
         specifier: ^5
         version: 5.7.3
 
+  packages/use-actions:
+    dependencies:
+      '@rebase.io/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@types/react':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.10
+      '@types/react-dom':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.4(@types/react@19.0.10)
+      react:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0
+      react-dom:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0(react@19.0.0)
+
   packages/use-contextual-state:
     dependencies:
       '@rebase.io/use-invariant-context':
@@ -213,6 +231,27 @@ importers:
 
   packages/use-get-is-mounted:
     dependencies:
+      '@types/react':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.10
+      '@types/react-dom':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.4(@types/react@19.0.10)
+      react:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0
+      react-dom:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.0.0(react@19.0.0)
+
+  packages/use-global-state:
+    dependencies:
+      '@rebase.io/use-isomorphic-layout-effect':
+        specifier: workspace:*
+        version: link:../use-isomorphic-layout-effect
+      '@rebase.io/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@types/react':
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.10

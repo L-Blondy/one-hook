@@ -1,3 +1,4 @@
+import consola from 'consola'
 import {
   getAllPackageJsonPaths,
   getExports,
@@ -32,5 +33,7 @@ await Promise.all(
             'react-dom': '>=18.0.0 || >=19.0.0',
           },
     }))
+
+    consola.success(`Aligned: ${path}`)
   }),
 )

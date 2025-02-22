@@ -1,7 +1,6 @@
 import * as v from 'valibot'
 import fs from 'fs'
 import path from 'path'
-import consola from 'consola'
 import { type Options as TsupOptions } from 'tsup'
 import ignore from 'ignore'
 
@@ -57,7 +56,6 @@ export function updatePackageJson(
   const json = readPackageJson(filePath)
   const updated = update(json)
   fs.writeFileSync(filePath, JSON.stringify(updated, null, 2))
-  consola.success(`package.json aligned: ${filePath}`)
 }
 
 export async function getExports(pkgFilePath: string) {

@@ -4,11 +4,6 @@ import { getAllPackageJsonPaths, readPackageJson } from './package-json-utils'
 import path from 'path'
 import consola from 'consola'
 
-// before all
-execSync('pnpm run align')
-execSync('git pull')
-execSync('pnpm run bumpp')
-
 // release all
 await Promise.all(
   getAllPackageJsonPaths('./packages').map((packageJsonPath) => {

@@ -13,7 +13,7 @@
     "lint": "turbo lint",
     "lint:eslint": "turbo lint:eslint",
     "lint:typescript": "turbo lint:typescript",
-    "release": "bun scripts/release-all.ts && git add . && git commit -a && git push"
+    "release": "pnpm align && git pull && pnpm bumpp && bun scripts/release-all.ts && git add . && git commit -a && git push"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",

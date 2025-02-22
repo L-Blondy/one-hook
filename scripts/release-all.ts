@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { execSync } from 'child_process'
 import { getAllPackageJsonPaths, readPackageJson } from './package-json-utils'
 import path from 'path'
@@ -23,13 +22,9 @@ await Promise.all(
             : `pnpm publish --quiet --access public`,
         ].join(' && '),
       )
-      consola.box(
-        `✔ Successfully published package:\n  - ${shortName}\n  - ${packageJson.version}`,
-      )
+      consola.success(`RELEASED: v${packageJson.version} - ${shortName}`)
     } catch (_) {
-      consola.box(
-        `✖ Nothing published for package:\n  - ${shortName}\n  - ${packageJson.version}`,
-      )
+      consola.fail(`FAILED  : v${packageJson.version} - ${shortName}`)
     }
   }),
 )

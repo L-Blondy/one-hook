@@ -38,11 +38,23 @@ const config = tseslint.config(
     },
   },
   {
-    files: ['packages/**', 'tsup/**', 'vitest/**', 'test-utils/**'],
+    files: [
+      'packages/**',
+      'tsup/**',
+      'vitest/**',
+      'scripts/**',
+      'test-utils/**',
+    ],
     ...config_js,
   },
   {
-    files: ['packages/**', 'tsup/**', 'vitest/**', 'test-utils/**'],
+    files: [
+      'packages/**',
+      'tsup/**',
+      'vitest/**',
+      'scripts/**',
+      'test-utils/**',
+    ],
     ...config_ts,
   },
   {

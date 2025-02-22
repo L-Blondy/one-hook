@@ -11,10 +11,10 @@ type Props<TComponent extends React.ElementType<any> = typeof defaultTag> =
   }
 
 const ComponentAs = forwardGenericRef(
-  <TComponent extends React.ElementType<any>>({
-    as,
-    ...props
-  }: Props<TComponent>) => {
+  <TComponent extends React.ElementType<any>>(
+    { as, ...props }: Props<TComponent>,
+    _ref: any,
+  ) => {
     const Comp = as || defaultTag
     return <Comp {...props} />
   },

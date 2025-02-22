@@ -57,7 +57,7 @@ export function updatePackageJson(
   const json = readPackageJson(filePath)
   const updated = update(json)
   fs.writeFileSync(filePath, JSON.stringify(updated, null, 2))
-  consola.success(`Updated successfully: ${filePath}`)
+  consola.success(`package.json aligned: ${filePath}`)
 }
 
 export async function getExports(pkgFilePath: string) {

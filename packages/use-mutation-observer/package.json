@@ -1,6 +1,6 @@
 {
   "name": "@rebase.io/use-mutation-observer",
-  "version": "0.0.1-beta.4",
+  "version": "0.0.1-beta.5",
   "files": [
     "dist",
     "README.md"

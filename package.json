@@ -6,7 +6,7 @@
   "scripts": {
     "align": "bun scripts/align-all-package-json.ts",
     "build": "pnpm run align && turbo --filter \"./packages/*\" build",
-    "bumpp": "bumpp --recursive",
+    "bumpp": "bumpp --recursive --no-commit --no-push --no-tag",
     "dev": "pnpm run align && turbo --concurrency 40 dev",
     "dev:packages": "pnpm run align && turbo --concurrency 40 --filter \"./packages/*\" dev",
     "test": "turbo test",

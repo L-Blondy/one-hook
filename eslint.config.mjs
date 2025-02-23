@@ -39,6 +39,7 @@ const config = tseslint.config(
   },
   {
     files: [
+      'apps/**',
       'packages/**',
       'tsup/**',
       'vitest/**',
@@ -49,6 +50,7 @@ const config = tseslint.config(
   },
   {
     files: [
+      'apps/**',
       'packages/**',
       'tsup/**',
       'vitest/**',
@@ -62,15 +64,16 @@ const config = tseslint.config(
     ...config_vitest,
   },
   {
-    files: ['packages/**'],
+    files: ['apps/**', 'packages/**'],
     ...config_react,
   },
   {
-    files: ['apps/playground/**'],
+    files: ['apps/**'],
     ...config_next,
+    '@typescript-eslint/require-await': 0,
   },
   // {
-  //   files: ['apps/playground/**'],
+  //   files: ['apps/**'],
   //   ...config_tailwind,
   // },
 )

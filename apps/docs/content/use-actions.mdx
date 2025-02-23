@@ -3,4 +3,120 @@ title: defineActions
 description: Type-safe state management with predefined actions.
 ---
 
-test
+import { Step, Steps } from 'fumadocs-ui/components/steps'
+
+Use predefined actions to update the state.
+
+## Quick Start
+
+<Steps>
+
+<Step>
+### Define the actions:
+
+Lets define 3 actions that modify a `boolean` state: `toggle`, `on`, and `off`.
+
+```tsx twoslash title="boolean.ts"
+import { defineActions } from '@rebase.io/use-actions'
+
+export const useBoolean = defineActions((state: boolean) => ({
+  toggle: () => !state,
+  on: () => true,
+  off: () => false,
+}))
+```
+
+</Step>
+
+<Step>
+### Use the actions:
+
+```tsx twoslash
+// @allowUmdGlobalAccess
+
+// @filename: boolean.ts
+import { defineActions } from '@rebase.io/use-actions'
+
+export const useBoolean = defineActions((state: boolean) => ({
+  toggle: () => !state,
+  on: () => true,
+  off: () => false,
+}))
+// @filename: usage.tsx
+// ---cut---
+import { useBoolean } from './boolean'
+
+function Toggle() {
+  const [isOpen, actions] = useBoolean(false)
+
+  return (
+    <div>
+      <h1>Status: {isOpen ? 'Open' : 'Closed'}</h1>
+
+      <button onClick={actions.toggle}>Toggle</button>
+      <button onClick={actions.on}>Open</button>
+      <button onClick={actions.off}>Close</button>
+    </div>
+  )
+}
+```
+
+</Step>
+
+The actions can also be destructured:
+
+```tsx
+const [isOpen, { toggle, on, off }] = useBoolean(false)
+```
+
+</Steps>
+
+## Pass arguments to actions
+
+The actions can also be passed arguments to update the state. \
+Let's say we want to create a counter that can be incremented or decremented by a certain amount.
+
+```tsx twoslash title="counter.ts"
+import { defineActions } from '@rebase.io/use-actions'
+
+export const useCounter = defineActions((state: number) => ({
+  increment: (amount: number) => state + amount,
+  decrement: (amount: number) => state - amount,
+}))
+```
+
+Use the actions to update the state:
+
+```tsx twoslash
+// @filename: counter.ts
+import { defineActions } from '@rebase.io/use-actions'
+
+export const useCounter = defineActions((state: number) => ({
+  increment: (amount: number) => state + amount,
+  decrement: (amount: number) => state - amount,
+}))
+
+// @filename: b.ts
+import { useCounter } from './counter'
+// ---cut---
+const [count, actions] = useCounter(0)
+
+actions.increment(1)
+actions.decrement(3)
+```
+
+## Build a generic hook
+
+We can leverage typescript generics to build reusable hooks.
+
+Let's build a custom `useArray` hook:
+
+We can now use the `useArray` hook in our components:
+
+```tsx
+const [items, actions] = useArray([1, 2, 3])
+
+actions.push(4)
+actions.remove(2)
+actions.clear()
+```

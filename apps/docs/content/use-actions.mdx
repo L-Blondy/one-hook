@@ -109,9 +109,30 @@ We can leverage typescript generics to build reusable hooks.
 
 Let's build a custom `useArray` hook:
 
+```tsx title="useArray.ts"
+import { defineActions } from '@rebase.io/use-actions'
+
+export const useArray = defineActions(<T>(items: Array<T>) => ({
+  push: (item: T) => [...items, item],
+  remove: (item: T) => items.filter((i) => i !== item),
+  clear: () => [],
+}))
+```
+
 We can now use the `useArray` hook in our components:
 
-```tsx
+```tsx twoslash
+// @filename: useArray.ts
+import { defineActions } from '@rebase.io/use-actions'
+
+export const useArray = defineActions((items: Array<number>) => ({
+  push: (item: number) => [...items, item],
+  remove: (item: number) => items.filter((i) => i !== item),
+  clear: () => [],
+}))
+// @filename: usage.tsx
+import { useArray } from './useArray'
+// ---cut---
 const [items, actions] = useArray([1, 2, 3])
 
 actions.push(4)

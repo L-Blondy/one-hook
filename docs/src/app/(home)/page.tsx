@@ -10,9 +10,8 @@ import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { Popup, PopupContent, PopupTrigger } from 'fumadocs-twoslash/ui'
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
 import { Step, Steps } from 'fumadocs-ui/components/steps'
-import { PackageDetails } from '@/lib/package-details'
 
-export default async function Page(props: {
+export default async function Home(props: {
   params: Promise<{ slug?: string[] }>
 }) {
   const params = await props.params
@@ -27,10 +26,10 @@ export default async function Page(props: {
       toc={page.data.toc}
       full={page.data.full}
     >
-      <DocsTitle className="border-b pb-4">{page.data.title}</DocsTitle>
-      <PackageDetails filename={page.file.name} />
+      <DocsTitle className="border-b pb-4">1hook</DocsTitle>
+
       <DocsDescription className="mb-4">
-        {page.data.description}
+        Just one hook at a time.
       </DocsDescription>
 
       <DocsBody>

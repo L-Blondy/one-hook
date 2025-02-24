@@ -4,3 +4,8 @@
 @import 'fumadocs-twoslash/twoslash.css';
 
 @source '../../node_modules/fumadocs-ui/dist/**/*.js';
+
+@theme {
+  --color-primary: var(--color-fd-primary);
+  --color-fd-primary: 'red';
+}

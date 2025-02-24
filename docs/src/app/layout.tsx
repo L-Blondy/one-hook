@@ -16,7 +16,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <body className="flex min-h-screen flex-col">
         <RootProvider>
           <DocsLayout tree={source.pageTree} {...baseOptions}>
-            {children}{' '}
+            {children}
           </DocsLayout>
         </RootProvider>
       </body>

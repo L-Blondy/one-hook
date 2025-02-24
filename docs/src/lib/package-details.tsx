@@ -15,18 +15,59 @@ export function PackageDetails({ filename }: Props) {
 }
 
 function BuildSize({ filename }: Props) {
-  console.log(path.join(process.cwd(), `../size/${filename}/index.js.gz`))
   function getFileSize() {
     const filePath = path.join(
       process.cwd(),
-      `../../size/${filename}/index.js.gz`,
+      `../packages/${filename}/dist/index.min.js.gz`,
     )
     const stats = fs.statSync(filePath)
     const fileSize = stats.size / 1000
     return fileSize.toFixed(2) + ' kb'
   }
 
-  return <div>Build size: {filename}</div>
+  return (
+    <div
+      className="not-content"
+      style={{
+        width: 'max-content',
+        fontSize: '0.8125rem',
+        letterSpacing: '0.05em',
+        fontWeight: '400',
+        display: 'flex',
+      }}
+    >
+      <div
+        style={{
+          background: '#505050',
+          color: 'white',
+          width: 'max-content',
+          borderRadius: '3px 0 0 3px',
+          paddingInlineStart: '0.5rem',
+          paddingInlineEnd: '0.375rem',
+          height: '1.5rem',
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        Size
+      </div>
+      <div
+        style={{
+          background: '#42a400',
+          color: 'white',
+          width: 'max-content',
+          borderRadius: '0 3px 3px 0',
+          paddingInlineEnd: '0.5rem',
+          paddingInlineStart: '0.375rem',
+          height: '1.5rem',
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        {getFileSize()}
+      </div>
+    </div>
+  )
 }
 
 function SourceLink({ filename }: { filename: string }) {

@@ -18,7 +18,7 @@ export default async function Page(props: {
 
   const MDX = page.data.body
 
-  const isHomepage = page.file.path === 'index.mdx'
+  const isHook = params.slug?.includes('hooks')
 
   return (
     <DocsPage
@@ -28,7 +28,7 @@ export default async function Page(props: {
     >
       <DocsTitle className="border-b pb-4">{page.data.title}</DocsTitle>
 
-      {!isHomepage && <PackageDetails filename={page.file.name} />}
+      {!!isHook && <PackageDetails filename={page.file.name} />}
 
       <DocsDescription className="mb-4">
         {page.data.description}

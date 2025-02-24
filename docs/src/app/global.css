@@ -2,18 +2,14 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 @import 'fumadocs-twoslash/twoslash.css';
-
 @source '../../node_modules/fumadocs-ui/dist/**/*.js';
 
-/* @theme {
-  --color-fd-primary: #ec9600;
-}
-
-.dark {
-  --color-fd-primary: #eeac3a;
-} */
 @theme {
   --color-fd-primary: #00a66b;
+  --color-fd-secondary: #f2f2f2;
+  --color-fd-muted: --color-fd-secondary;
+  --color-fd-background: #fcfcfc;
+  --color-fd-card: #f8f8f8;
 }
 
 .dark {

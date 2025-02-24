@@ -2,6 +2,7 @@ import 'server-only'
 import path from 'path'
 import fs from 'fs'
 import { repoUrl } from '@/utils/repo-url'
+import { ExternalLink } from 'lucide-react'
 
 type Props = { filename: string }
 
@@ -36,34 +37,10 @@ function BuildSize({ filename }: Props) {
         display: 'flex',
       }}
     >
-      <div
-        style={{
-          background: '#505050',
-          color: 'white',
-          width: 'max-content',
-          borderRadius: '3px 0 0 3px',
-          paddingInlineStart: '0.5rem',
-          paddingInlineEnd: '0.375rem',
-          height: '1.5rem',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
+      <div className="flex h-6 w-max items-center rounded-l-sm bg-[#505050] px-2 py-1 text-white">
         Size
       </div>
-      <div
-        style={{
-          background: 'var(--color-fd-primary)',
-          color: 'white',
-          width: 'max-content',
-          borderRadius: '0 3px 3px 0',
-          paddingInlineEnd: '0.5rem',
-          paddingInlineStart: '0.375rem',
-          height: '1.5rem',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
+      <div className="bg-fd-primary flex h-6 w-max items-center rounded-r-sm px-2 py-1 text-white">
         {getFileSize()}
       </div>
     </div>
@@ -77,33 +54,11 @@ function SourceLink({ filename }: { filename: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '6px',
-        fontWeight: 500,
-        fontSize: '0.875rem',
-        lineHeight: '1.25rem',
-        textDecoration: 'none',
-      }}
+      className="text-fd-primary inline-flex items-center gap-2 text-sm font-medium leading-5 no-underline hover:underline"
     >
       <span>View source</span>
 
-      <svg
-        height="18px"
-        width="18px"
-        stroke="currentColor"
-        fill="none"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
-        <path d="M11 13l9 -9" />
-        <path d="M15 4h5v5" />
-      </svg>
+      <ExternalLink size={16} strokeWidth={2.5} />
     </a>
   )
 }

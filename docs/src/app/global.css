@@ -5,7 +5,17 @@
 
 @source '../../node_modules/fumadocs-ui/dist/**/*.js';
 
+/* @theme {
+  --color-fd-primary: #ec9600;
+}
+
+.dark {
+  --color-fd-primary: #eeac3a;
+} */
 @theme {
-  --color-primary: var(--color-fd-primary);
-  --color-fd-primary: 'red';
+  --color-fd-primary: #00a66b;
+}
+
+.dark {
+  --color-fd-primary: #00a66b;
 }

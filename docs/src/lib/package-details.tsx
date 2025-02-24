@@ -53,7 +53,7 @@ function BuildSize({ filename }: Props) {
       </div>
       <div
         style={{
-          background: '#42a400',
+          background: 'var(--color-fd-primary)',
           color: 'white',
           width: 'max-content',
           borderRadius: '0 3px 3px 0',

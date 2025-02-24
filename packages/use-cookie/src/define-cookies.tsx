@@ -4,7 +4,7 @@ import {
   type CookieServiceOptions,
   type CookieAttributes,
 } from './vanilla'
-import type { KeyOf, ValueOf } from '@1hook/utils/types'
+import type { KeyOf, Prettify, ValueOf } from '@1hook/utils/types'
 import { createEmitter } from '@1hook/utils/emitter'
 import { isServer } from '@1hook/utils/is-server'
 import { entriesOf } from '@1hook/utils/entries-of'
@@ -12,15 +12,15 @@ import { keysOf } from '@1hook/utils/keys-of'
 import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 import type { Validator, ValidatorOutput } from '@1hook/utils/validate'
 
-type BaseConfig = {
-  [TName in string]: CookieAttributes & {
-    validate: Validator
+export type CookieConfig<TInput = any, TOutput = TInput> = Prettify<
+  CookieAttributes & {
+    validate: Validator<TInput, TOutput>
   }
-}
+>
 
 export function defineCookies<
   TDeserialized,
-  TConfig extends BaseConfig,
+  TConfig extends Record<string, CookieConfig>,
   const TCookieServiceOptions extends CookieServiceOptions<TDeserialized>,
 >(config: TConfig, cookieServiceOptions: TCookieServiceOptions = {} as any) {
   type Store = {

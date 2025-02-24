@@ -23,18 +23,18 @@ description: A simple persistent state manager that uses cookies.
 
 Use defineCookies to configure validation rules and expiration settings for each cookie.
 
-```ts twoslash title='cookies.ts' include cookies
+```ts twoslash title="cookies.ts" include cookies
 'use client'
 import { z } from 'zod'
 import { defineCookies } from '@1hook/use-cookie'
 
 export const { CookieProvider, useCookie, useClearCookies } = defineCookies({
-  // expect a "search" cookie with a value of type `string`
+  // "search" cookie with a string value
   search: {
     validate: z.string().default(''),
     expires: 365, // days from now
   },
-  // create a "selected" cookie with a value of type `{ id: number, name: string } | undefined`
+  // "selected" cookie with an optional object value
   selected: {
     validate: z.object({ id: z.number(), name: z.string() }).optional(),
     expires: new Date('2026-12-12'), // specific date
@@ -49,23 +49,25 @@ export const { CookieProvider, useCookie, useClearCookies } = defineCookies({
 <Step>
 ### Place the Provider in a Server Component.
 
-Place the CookieProvider at the root of your application, in a [Server Component](https://react.dev/reference/rsc/server-components)
+Place the `CookieProvider` in a [Server Component](https://react.dev/reference/rsc/server-components), preferably at the root of your application.
 
-, and you must pass in the cookies retrieved on the server.
+<Callout type="info">
+  The Provider must receive the server cookies in the form of a 
+	`Record<string, string>`.
+</Callout>
 
-```tsx title='providers.tsx'
-// Next.js example, this is a server component
+```tsx twoslash title="providers.tsx"
+// @noErrors
+// @include: cookies
+// ---cut---
 import { cookies } from 'next/headers'
 import { CookieProvider } from './cookies'
 
-export function Providers(props: { children: ReactNode }) {
-  // transform the cookies to `{ [name]: value }`
+export async function Providers(props: { children: ReactNode }) {
   const serverCookies = Object.fromEntries(
-    cookies()
-      .getAll()
-      .map((cookie) => [cookie.name, cookie.value]),
+    (await cookies()).getAll().map((cookie) => [cookie.name, cookie.value]),
   )
-  // pass the cookies to the provider
+
   return (
     <CookieProvider serverCookies={serverCookies}>
       {props.children}
@@ -79,10 +81,12 @@ export function Providers(props: { children: ReactNode }) {
 <Step>
 ### Use like useState.
 
-Instead of the initial state, pass the storage key you want to read / write from.
+Instead of the initial state, pass the name of the cookie you want use.
 
-```tsx
-'use client'
+```tsx twoslash
+// @noErrors
+// @include: cookies
+// ---cut---
 import { useCookie } from './cookies'
 
 function Search() {
@@ -92,105 +96,113 @@ function Search() {
 }
 ```
 
-Cookie updates are automatically synchronized across all instances of the hook and across browser tabs.
+Any change to the cookie is synchronized across all instances of the hook and across browser tabs.
 
 </Step>
 </Steps>
 
-## How to
-
-### Clear the cookies
+## Clear the cookies
 
 Use `useClearCookies` to remove keys defined in [defineCookies](#definecookies). <br/>
 For full cookie clearing, create a custom helper.
 
-```ts
+```ts twoslash include clearcookies
+// @noErrors
+// @include: cookies
+// ---cut---
 import { useClearCookies } from './cookies'
 
 const clearCookies = useClearCookies()
+```
 
-// Clear all defined cookies
-clearCookies()
+Clear specific cookies:
 
-// Clear specific cookies
+```ts twoslash
+// @noErrors
+// @include: cookies
+// @include: clearcookies
+// ---cut---
 clearCookies({ keys: ['search'] })
 ```
 
-### Validate the cookies
+Clear all user defined cookies:
 
-Since cookies can be modified manually by users, validation is important for ensuring data integrity. <br/>
-You can use libraries like **zod** or **valibot** for validation.
+```ts twoslash
+// @noErrors
+// @include: cookies
+// @include: clearcookies
+// ---cut---
+clearCookies()
+```
 
-**Example using zod:**
+## Validation
+
+To ensure data integrity, cookies should be validated.
+
+### 👉 Functional validation
+
+For simple cases you can use a function to validate the cookie value.
+
+The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
 
 ```ts
+import { defineCookies } from '@1hook/use-cookie'
+
+defineCookies({
+  search: {
+    validate: (value) => String(value ?? ''),
+  },
+})
+```
+
+### 👉 Schema validation
+
+For more complex cases you can use a schema to validate the cookie value.
+
+<Callout type="info">
+  Since _1hook_ implements the [Standard Schema
+  ](https://github.com/standard-schema/standard-schema) specification, you can
+  choose between [zod 3.24+](https://zod.dev/), [valibot
+  1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/) to
+  validate the cookies.
+</Callout>
+
+The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
+
+```ts twoslash
 import { z } from 'zod'
+import { defineCookies } from '@1hook/use-cookie'
 
 defineCookies({
-  // expect a string, fallback to ''
   search: {
-    validate: (value) => z.string().catch('').parse(value),
-  },
-  // expect an optional object with id and name, fallback to undefined
-  selected: {
-    validate: (value) =>
-      z
-        .object({ id: z.number(), name: z.string() })
-        .optional()
-        .catch(undefined)
-        .parse(value),
+    validate: z.string().default(''),
   },
 })
 ```
 
-**Example using valibot:**
+## Custom (de)serialization
 
-```ts
-import { parse, string, boolean } from 'valibot'
+In some cases you might need to customize the serialization and deserialization of the cookie value.
 
-defineCookies({
-  // expect a string, fallback to ''
-  search: {
-    validate: (value) => fallback(parse(string(), value), ''),
-  },
-  // expect an optional object with id and name, fallback to undefined
-  selected: {
-    validate: (value) =>
-      fallback(
-        parse(
-          optional(
-            object({
-              id: number(),
-              name: string(),
-            }),
-          ),
-          value,
-        ),
-        undefined,
-      ),
-  },
-})
-```
+You can do this by using the `serialize` and `deserialize` options.
 
-### Customize (de)serialization
-
-You can define custom serialization and deserialization for cookie values.
-
-By default the serialization matches Next.js's serialization from primary value types.
-
-```ts
+```ts twoslash
+import { defineCookies } from '@1hook/use-cookie'
+// ---cut---
 defineCookies(
-  { search: { validate: String } },
+  { search: { validate: (value) => String(value ?? '') } },
   {
-    serialize: (value) => JSON.stringify(value), // Custom serialize
-    deserialize: (value) => JSON.parse(value), // Custom deserialize
+    serialize: (value) => JSON.stringify(value), // Custom serialization
+    deserialize: (value) => JSON.parse(value), // Custom deserialization
   },
 )
 ```
 
 ## API Reference
 
-### <samp>defineCookies</samp>
+### 👉 defineCookies
+
+<AutoTypeTable path="packages/use-cookie/src/index.ts" name="CookieConfig" />
 
 Define the cookies upfront.
 

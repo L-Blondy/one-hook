@@ -19,11 +19,11 @@ export default async function Page(props: {
   const MDX = page.data.body
 
   const isHook = params.slug?.includes('hooks')
-
+  console.log(page.data.toc)
   return (
     <DocsPage
       breadcrumb={{ enabled: false }}
-      toc={page.data.toc}
+      toc={page.data.toc.filter((t) => t.depth <= 2)}
       full={page.data.full}
     >
       <DocsTitle className="border-b pb-4">{page.data.title}</DocsTitle>

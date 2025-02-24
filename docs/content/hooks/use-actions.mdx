@@ -32,13 +32,10 @@ export const useBoolean = defineActions((state: boolean) => ({
 ### Use the actions
 
 ```tsx twoslash
+// @noErrors
 // @include: use-boolean
-// @filename: a
 // ---cut---
 import { useBoolean } from './use-boolean'
-// ---cut-start---
-// @filename: b
-// ---cut-end---
 
 function Toggle() {
   const [isOpen, actions] = useBoolean(false)

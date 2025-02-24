@@ -1,6 +1,6 @@
 ---
 title: useContextualState
-description: Optimized version of useState with a context.
+description: useState with a context.
 ---
 
 ```package-install
@@ -11,11 +11,11 @@ npm install @1hook/use-contextual-state
 
 <Steps>
 <Step>
-### Create a Provider and a hook using `defineContextualState`.
+### Define the hook
 
 Pass the state **type** to `defineContextualState` to ensure type safety throughout your application.
 
-```tsx twoslash title="use-count.ts"
+```tsx twoslash title="use-count.ts" include use-count
 import { defineContextualState } from '@1hook/use-contextual-state'
 
 export const [CountProvider, useCount] = defineContextualState<number>()
@@ -23,9 +23,16 @@ export const [CountProvider, useCount] = defineContextualState<number>()
 
 </Step>
 <Step>
-### Place the Provider in your component tree and initialize the state by passing `initialValues` to the provider.
+### Place the Provider
 
-```tsx title='providers.tsx'
+Place the Provider in your component tree and initialize the state by passing `initialValues` to the provider.
+
+```tsx twoslash
+// @noErrors
+// @include: use-count
+// ---cut---
+import { CountProvider } from './use-count'
+
 function Providers(props: { children: ReactNode }) {
   return <CountProvider initialState={0}>{props.children}</CountProvider>
 }
@@ -35,11 +42,9 @@ function Providers(props: { children: ReactNode }) {
 <Step>
 ### Use the state like `useState`
 
-```tsx
-import { useCount } from './count'
-
-...
-
+```tsx twoslash
+// @include: use-count
+// ---cut---
 const [count, setCount] = useCount()
 ```
 

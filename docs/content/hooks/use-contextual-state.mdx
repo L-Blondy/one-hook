@@ -40,7 +40,9 @@ function Providers(props: { children: ReactNode }) {
 
 </Step>
 <Step>
-### Use the state like `useState`
+### Use like useState
+
+The state can be used like `useState` without initial state.
 
 ```tsx twoslash
 // @include: use-count
@@ -51,23 +53,45 @@ const [count, setCount] = useCount()
 </Step>
 </Steps>
 
-For improved performance, `defineContextualState` provides a `useSetState` hook. \
+## Prevent unnecessary rerenders
+
+To help prevent unnecessary rerenders, `defineContextualState` provides a `useSetState` hook. \
 It helps prevent unnecessary rerenders by not listening to the state.
 
-```tsx title='count.ts'
+```tsx twoslash title="use-count.ts" include use-set-count
 import { defineContextualState } from '@1hook/use-contextual-state'
 
 export const [CountProvider, useCount, useSetCount] =
   defineContextualState<number>()
 ```
 
-The component does not rerender when count changes:
+✅ No rerender when count changes:
 
-```tsx
-import { useSetCount } from './count'
+```tsx twoslash
+// @noErrors
+// @include: use-set-count
+// ---cut---
+import { useSetCount } from './use-count'
 
-function Increment() {
+function Increment1() {
   const setCount = useSetCount()
+
+  return (
+    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
+  )
+}
+```
+
+❌ Rerenders when count changes:
+
+```tsx twoslash
+// @noErrors
+// @include: use-set-count
+// ---cut---
+import { useCount } from './use-count'
+
+function Increment1() {
+  const [count, setCount] = useCount()
 
   return (
     <button onClick={() => setCount((count) => count + 1)}>Increment</button>

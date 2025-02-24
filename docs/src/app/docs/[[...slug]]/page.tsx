@@ -6,10 +6,6 @@ import {
   DocsTitle,
 } from 'fumadocs-ui/page'
 import { notFound } from 'next/navigation'
-import defaultMdxComponents from 'fumadocs-ui/mdx'
-import { Popup, PopupContent, PopupTrigger } from 'fumadocs-twoslash/ui'
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
-import { Step, Steps } from 'fumadocs-ui/components/steps'
 import { PackageDetails } from '@/lib/package-details'
 import { MdxComponents } from '@/lib/mdx-components'
 
@@ -22,6 +18,8 @@ export default async function Page(props: {
 
   const MDX = page.data.body
 
+  const isHomepage = page.file.path === 'index.mdx'
+
   return (
     <DocsPage
       breadcrumb={{ enabled: false }}
@@ -29,7 +27,9 @@ export default async function Page(props: {
       full={page.data.full}
     >
       <DocsTitle className="border-b pb-4">{page.data.title}</DocsTitle>
-      <PackageDetails filename={page.file.name} />
+
+      {!isHomepage && <PackageDetails filename={page.file.name} />}
+
       <DocsDescription className="mb-4">
         {page.data.description}
       </DocsDescription>

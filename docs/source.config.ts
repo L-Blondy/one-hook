@@ -4,7 +4,7 @@ import { transformerTwoslash } from 'fumadocs-twoslash'
 import { rehypeCodeDefaultOptions } from 'fumadocs-core/mdx-plugins'
 
 export const docs = defineDocs({
-  dir: 'content',
+  dir: 'content', // in the content folder
 })
 
 export default defineConfig({

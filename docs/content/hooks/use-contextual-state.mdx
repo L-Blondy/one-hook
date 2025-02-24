@@ -3,46 +3,54 @@ title: useContextualState
 description: Optimized version of useState with a context.
 ---
 
+```package-install
+npm install @1hook/use-contextual-state
+```
+
 ## Quick Start
 
 <Steps>
+<Step>
+### Create a Provider and a hook using `defineContextualState`.
 
-1. Create a Provider and a hook using `defineContextualState`.
+Pass the state **type** to `defineContextualState` to ensure type safety throughout your application.
 
-   Pass the state **type** to `defineContextualState` to ensure type safety throughout your application.
+```tsx twoslash title="use-count.ts"
+import { defineContextualState } from '@1hook/use-contextual-state'
 
-   ```tsx title='count.ts'
-   'use client'
-   import { defineContextualState } from 'crustack/hooks'
+export const [CountProvider, useCount] = defineContextualState<number>()
+```
 
-   export const [CountProvider, useCount] = defineContextualState<number>()
-   ```
+</Step>
+<Step>
+### Place the Provider in your component tree and initialize the state by passing `initialValues` to the provider.
 
-2. Place the Provider in your component tree and initialize the state by passing `initialValues` to the provider.
+```tsx title='providers.tsx'
+function Providers(props: { children: ReactNode }) {
+  return <CountProvider initialState={0}>{props.children}</CountProvider>
+}
+```
 
-   ```tsx title='providers.tsx'
-   function Providers(props: { children: ReactNode }) {
-     return <CountProvider initialState={0}>{props.children}</CountProvider>
-   }
-   ```
+</Step>
+<Step>
+### Use the state like `useState`
 
-3. Use the state like `useState`
+```tsx
+import { useCount } from './count'
 
-   ```tsx
-   import { useCount } from './count'
+...
 
-   ...
+const [count, setCount] = useCount()
+```
 
-   const [count, setCount] = useCount()
-   ```
-
+</Step>
 </Steps>
 
 For improved performance, `defineContextualState` provides a `useSetState` hook. \
 It helps prevent unnecessary rerenders by not listening to the state.
 
 ```tsx title='count.ts'
-import { defineContextualState } from 'crustack/hooks'
+import { defineContextualState } from '@1hook/use-contextual-state'
 
 export const [CountProvider, useCount, useSetCount] =
   defineContextualState<number>()

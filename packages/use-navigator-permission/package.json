@@ -1,6 +1,6 @@
 {
   "name": "@1hook/use-navigator-permission",
-  "version": "0.0.1-beta.6",
+  "version": "0.0.1-beta.1",
   "files": [
     "dist",
     "README.md"

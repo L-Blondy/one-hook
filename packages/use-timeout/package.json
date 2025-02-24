@@ -1,5 +1,5 @@
 {
-  "name": "@rebase.io/use-timeout",
+  "name": "@1hook/use-timeout",
   "version": "0.0.1-beta.6",
   "files": [
     "dist",
@@ -28,8 +28,8 @@
     "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "dependencies": {
-    "@rebase.io/use-event-handler": "workspace:*",
-    "@rebase.io/utils": "workspace:*"
+    "@1hook/use-event-handler": "workspace:*",
+    "@1hook/utils": "workspace:*"
   },
   "tag": "beta"
 }

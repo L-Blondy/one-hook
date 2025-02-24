@@ -1,5 +1,5 @@
 {
-  "name": "@rebase.io/use-lock-body-scroll",
+  "name": "@1hook/use-lock-body-scroll",
   "version": "0.0.1-beta.6",
   "files": [
     "dist",
@@ -28,7 +28,7 @@
     "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "dependencies": {
-    "@rebase.io/utils": "workspace:*"
+    "@1hook/utils": "workspace:*"
   },
   "tag": "beta"
 }

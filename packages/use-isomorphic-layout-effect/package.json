@@ -1,5 +1,5 @@
 {
-  "name": "@rebase.io/use-isomorphic-layout-effect",
+  "name": "@1hook/use-isomorphic-layout-effect",
   "version": "0.0.1-beta.6",
   "files": [
     "dist",
@@ -29,6 +29,6 @@
   },
   "tag": "beta",
   "dependencies": {
-    "@rebase.io/utils": "workspace:*"
+    "@1hook/utils": "workspace:*"
   }
 }

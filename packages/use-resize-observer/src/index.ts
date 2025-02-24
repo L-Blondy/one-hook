@@ -1,7 +1,7 @@
 import React from 'react'
-import { useEventHandler } from '@rebase.io/use-event-handler'
-import { useIsomorphicLayoutEffect } from '@rebase.io/use-isomorphic-layout-effect'
-import { isServer } from '@rebase.io/utils/is-server'
+import { useEventHandler } from '@1hook/use-event-handler'
+import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
+import { isServer } from '@1hook/utils/is-server'
 
 export type UseResizeObserverOptions = ResizeObserverOptions & {
   autoObserve?: boolean

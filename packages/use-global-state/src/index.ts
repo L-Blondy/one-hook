@@ -1,6 +1,6 @@
 import React from 'react'
-import { createEmitter } from '@rebase.io/utils/emitter'
-import { useIsomorphicLayoutEffect } from '@rebase.io/use-isomorphic-layout-effect'
+import { createEmitter } from '@1hook/utils/emitter'
+import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 
 export type DefineGlobalStateConfig<State> = {
   initialState: State

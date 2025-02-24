@@ -9,7 +9,7 @@ export const LayoutSidebar = () => {
     <nav className="w-82 sticky top-0 h-screen bg-slate-50 shadow-lg">
       <ul className="h-full overflow-scroll px-4 py-3">
         <Link href="/" className="text-lg font-semibold">
-          Rebase.io
+          1hook
         </Link>
 
         <div className="mt-6 flex flex-col gap-4 font-mono">

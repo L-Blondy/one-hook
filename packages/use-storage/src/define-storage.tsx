@@ -1,11 +1,11 @@
 import React from 'react'
 import { createStorageService, type StorageServiceOptions } from './vanilla'
-import type { KeyOf } from '@rebase.io/utils/types'
-import { createEmitter } from '@rebase.io/utils/emitter'
-import { entriesOf } from '@rebase.io/utils/entries-of'
-import { keysOf } from '@rebase.io/utils/keys-of'
-import { useIsomorphicLayoutEffect } from '@rebase.io/use-isomorphic-layout-effect'
-import type { Validator, ValidatorOutput } from '@rebase.io/utils/validate'
+import type { KeyOf } from '@1hook/utils/types'
+import { createEmitter } from '@1hook/utils/emitter'
+import { entriesOf } from '@1hook/utils/entries-of'
+import { keysOf } from '@1hook/utils/keys-of'
+import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
+import type { Validator, ValidatorOutput } from '@1hook/utils/validate'
 
 type BaseConfig = {
   [Key in string]: {

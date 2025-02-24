@@ -1,6 +1,6 @@
-import { useUnmountEffect } from '@rebase.io/use-unmount-effect'
-import { isServer } from '@rebase.io/utils/is-server'
-import { useGetIsMounted } from '@rebase.io/use-get-is-mounted'
+import { useUnmountEffect } from '@1hook/use-unmount-effect'
+import { isServer } from '@1hook/utils/is-server'
+import { useGetIsMounted } from '@1hook/use-get-is-mounted'
 import React from 'react'
 
 export type SpeechSynthesisOptions = {

@@ -13,7 +13,7 @@ const geistSans = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'Rebase.io Playground',
+  title: '1hook Playground',
 }
 
 export default async function RootLayout({

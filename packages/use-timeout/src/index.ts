@@ -1,6 +1,6 @@
 import React from 'react'
-import { useEventHandler } from '@rebase.io/use-event-handler'
-import type { AnyFunction } from '@rebase.io/utils/types'
+import { useEventHandler } from '@1hook/use-event-handler'
+import type { AnyFunction } from '@1hook/utils/types'
 
 export const useTimeout = (
   callback: AnyFunction,

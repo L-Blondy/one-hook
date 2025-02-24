@@ -1,5 +1,5 @@
 {
-  "name": "@rebase.io/use-cookie",
+  "name": "@1hook/use-cookie",
   "version": "0.0.1-beta.6",
   "files": [
     "dist",
@@ -29,7 +29,7 @@
   },
   "tag": "beta",
   "dependencies": {
-    "@rebase.io/utils": "workspace:*",
-    "@rebase.io/use-isomorphic-layout-effect": "workspace:*"
+    "@1hook/utils": "workspace:*",
+    "@1hook/use-isomorphic-layout-effect": "workspace:*"
   }
 }

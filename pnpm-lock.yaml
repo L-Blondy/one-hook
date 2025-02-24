@@ -110,7 +110,7 @@ importers:
 
   apps/docs:
     dependencies:
-      '@rebase.io/use-actions':
+      '@1hook/use-actions':
         specifier: workspace:*
         version: link:../../packages/use-actions
       fumadocs-core:
@@ -162,13 +162,13 @@ importers:
 
   apps/playground:
     dependencies:
-      '@rebase.io/use-cookie':
+      '@1hook/use-cookie':
         specifier: workspace:*
         version: link:../../packages/use-cookie
-      '@rebase.io/use-is-hydrated':
+      '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../../packages/use-is-hydrated
-      '@rebase.io/use-storage':
+      '@1hook/use-storage':
         specifier: workspace:*
         version: link:../../packages/use-storage
       '@tailwindcss/postcss':
@@ -205,7 +205,7 @@ importers:
 
   packages/use-actions:
     dependencies:
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -223,10 +223,10 @@ importers:
 
   packages/use-audio-analyser:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@rebase.io/use-is-hydrated':
+      '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../use-is-hydrated
       '@types/react':
@@ -244,7 +244,7 @@ importers:
 
   packages/use-contextual-state:
     dependencies:
-      '@rebase.io/use-invariant-context':
+      '@1hook/use-invariant-context':
         specifier: workspace:*
         version: link:../use-invariant-context
       '@types/react':
@@ -262,10 +262,10 @@ importers:
 
   packages/use-cookie:
     dependencies:
-      '@rebase.io/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -283,7 +283,7 @@ importers:
 
   packages/use-countdown:
     dependencies:
-      '@rebase.io/use-interval':
+      '@1hook/use-interval':
         specifier: workspace:*
         version: link:../use-interval
       '@types/react':
@@ -331,7 +331,7 @@ importers:
 
   packages/use-display-media:
     dependencies:
-      '@rebase.io/use-get-is-mounted':
+      '@1hook/use-get-is-mounted':
         specifier: workspace:*
         version: link:../use-get-is-mounted
       '@types/react':
@@ -364,10 +364,10 @@ importers:
 
   packages/use-event-handler:
     dependencies:
-      '@rebase.io/use-latest-ref':
+      '@1hook/use-latest-ref':
         specifier: workspace:*
         version: link:../use-latest-ref
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -385,13 +385,13 @@ importers:
 
   packages/use-event-listener:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@rebase.io/use-is-hydrated':
+      '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../use-is-hydrated
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -439,10 +439,10 @@ importers:
 
   packages/use-global-state:
     dependencies:
-      '@rebase.io/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -460,13 +460,13 @@ importers:
 
   packages/use-in-view:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@rebase.io/use-intersection-observer':
+      '@1hook/use-intersection-observer':
         specifier: workspace:*
         version: link:../use-intersection-observer
-      '@rebase.io/use-previous':
+      '@1hook/use-previous':
         specifier: workspace:*
         version: link:../use-previous
       '@types/react':
@@ -482,16 +482,16 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.0(react@19.0.0)
     devDependencies:
-      '@rebase.io/use-merge-refs':
+      '@1hook/use-merge-refs':
         specifier: workspace:*
         version: link:../use-merge-refs
 
   packages/use-intersection-observer:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -507,16 +507,16 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.0(react@19.0.0)
     devDependencies:
-      '@rebase.io/use-merge-refs':
+      '@1hook/use-merge-refs':
         specifier: workspace:*
         version: link:../use-merge-refs
 
   packages/use-interval:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -549,7 +549,7 @@ importers:
 
   packages/use-is-hydrated:
     dependencies:
-      '@rebase.io/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
       '@types/react':
@@ -567,7 +567,7 @@ importers:
 
   packages/use-is-online:
     dependencies:
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -585,7 +585,7 @@ importers:
 
   packages/use-isomorphic-layout-effect:
     dependencies:
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -603,7 +603,7 @@ importers:
 
   packages/use-latest-ref:
     dependencies:
-      '@rebase.io/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
       '@types/react':
@@ -621,7 +621,7 @@ importers:
 
   packages/use-lock-body-scroll:
     dependencies:
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -654,10 +654,10 @@ importers:
 
   packages/use-media-recorder:
     dependencies:
-      '@rebase.io/use-latest-ref':
+      '@1hook/use-latest-ref':
         specifier: workspace:*
         version: link:../use-latest-ref
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -690,7 +690,7 @@ importers:
 
   packages/use-mount-effect:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
       '@types/react':
@@ -708,10 +708,10 @@ importers:
 
   packages/use-mutation-observer:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -727,13 +727,13 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.0(react@19.0.0)
     devDependencies:
-      '@rebase.io/use-merge-refs':
+      '@1hook/use-merge-refs':
         specifier: workspace:*
         version: link:../use-merge-refs
 
   packages/use-navigator-permission:
     dependencies:
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -781,13 +781,13 @@ importers:
 
   packages/use-resize-observer:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@rebase.io/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -803,7 +803,7 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.0(react@19.0.0)
     devDependencies:
-      '@rebase.io/use-merge-refs':
+      '@1hook/use-merge-refs':
         specifier: workspace:*
         version: link:../use-merge-refs
 
@@ -824,10 +824,10 @@ importers:
 
   packages/use-size:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@rebase.io/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
       '@types/react':
@@ -845,13 +845,13 @@ importers:
 
   packages/use-speech-synthesis:
     dependencies:
-      '@rebase.io/use-get-is-mounted':
+      '@1hook/use-get-is-mounted':
         specifier: workspace:*
         version: link:../use-get-is-mounted
-      '@rebase.io/use-unmount-effect':
+      '@1hook/use-unmount-effect':
         specifier: workspace:*
         version: link:../use-unmount-effect
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -869,10 +869,10 @@ importers:
 
   packages/use-storage:
     dependencies:
-      '@rebase.io/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -905,10 +905,10 @@ importers:
 
   packages/use-timeout:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -926,7 +926,7 @@ importers:
 
   packages/use-unmount-effect:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
       '@types/react':
@@ -959,7 +959,7 @@ importers:
 
   packages/use-user-media:
     dependencies:
-      '@rebase.io/use-get-is-mounted':
+      '@1hook/use-get-is-mounted':
         specifier: workspace:*
         version: link:../use-get-is-mounted
       '@types/react':
@@ -977,13 +977,13 @@ importers:
 
   packages/use-window-size:
     dependencies:
-      '@rebase.io/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@rebase.io/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
-      '@rebase.io/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':

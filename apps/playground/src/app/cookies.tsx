@@ -1,6 +1,6 @@
 'use client'
 import { optional, string } from 'valibot'
-import { defineCookies } from '@rebase.io/use-cookie'
+import { defineCookies } from '@1hook/use-cookie'
 
 export const { CookieProvider, useCookie, useClearCookies, cookieService } =
   defineCookies({

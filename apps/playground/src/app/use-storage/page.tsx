@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { useClearLocalStorage, useLocalStorage } from './storage'
-import { useIsHydrated } from '@rebase.io/use-is-hydrated'
+import { useIsHydrated } from '@1hook/use-is-hydrated'
 
 export default function UseStoragePage() {
   const isHydrated = useIsHydrated()

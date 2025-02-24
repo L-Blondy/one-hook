@@ -1,6 +1,6 @@
 'use client'
 import { optional, string } from 'valibot'
-import { defineStorage } from '@rebase.io/use-storage'
+import { defineStorage } from '@1hook/use-storage'
 
 export const { useLocalStorage, useClearLocalStorage } = defineStorage(
   {

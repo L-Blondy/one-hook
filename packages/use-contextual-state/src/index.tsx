@@ -1,5 +1,5 @@
 import React from 'react'
-import { useInvariantContext } from '@rebase.io/use-invariant-context'
+import { useInvariantContext } from '@1hook/use-invariant-context'
 
 export function defineContextualState<State>() {
   const StateCtx = React.createContext<State>(null!)

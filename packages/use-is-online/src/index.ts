@@ -1,5 +1,5 @@
 import React from 'react'
-import { isServer } from '@rebase.io/utils/is-server'
+import { isServer } from '@1hook/utils/is-server'
 
 const listeners = new Set<(online: boolean) => void>()
 

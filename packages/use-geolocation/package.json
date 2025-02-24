@@ -1,5 +1,5 @@
 {
-  "name": "@rebase.io/use-geolocation",
+  "name": "@1hook/use-geolocation",
   "version": "0.0.1-beta.6",
   "files": [
     "dist",

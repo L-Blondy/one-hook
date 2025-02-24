@@ -1,4 +1,4 @@
-import { useIsomorphicLayoutEffect } from '@rebase.io/use-isomorphic-layout-effect'
+import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 import React from 'react'
 
 export const useIsHydrated = () => {

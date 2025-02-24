@@ -1,4 +1,4 @@
-import { isServer } from '@rebase.io/utils/is-server'
+import { isServer } from '@1hook/utils/is-server'
 
 function isScrollable(node: HTMLElement | null | undefined): boolean {
   if (!node) return false

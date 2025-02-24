@@ -1,7 +1,7 @@
 import React from 'react'
-import { useEventHandler } from '@rebase.io/use-event-handler'
-import { isServer } from '@rebase.io/utils/is-server'
-import { useIsomorphicLayoutEffect } from '@rebase.io/use-isomorphic-layout-effect'
+import { useEventHandler } from '@1hook/use-event-handler'
+import { isServer } from '@1hook/utils/is-server'
+import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 
 type Size<TSpa extends boolean = false> = TSpa extends true
   ? {

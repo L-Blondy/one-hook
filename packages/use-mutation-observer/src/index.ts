@@ -1,6 +1,6 @@
 import React from 'react'
-import { useEventHandler } from '@rebase.io/use-event-handler'
-import { isServer } from '@rebase.io/utils/is-server'
+import { useEventHandler } from '@1hook/use-event-handler'
+import { isServer } from '@1hook/utils/is-server'
 
 export type UseMutationObserverOptions = MutationObserverInit & {
   autoObserve?: boolean

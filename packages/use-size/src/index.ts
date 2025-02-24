@@ -1,6 +1,6 @@
 import React from 'react'
-import { useIsomorphicLayoutEffect } from '@rebase.io/use-isomorphic-layout-effect'
-import { useEventHandler } from '@rebase.io/use-event-handler'
+import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
+import { useEventHandler } from '@1hook/use-event-handler'
 
 export type Size = {
   width?: number

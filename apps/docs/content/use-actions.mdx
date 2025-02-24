@@ -17,7 +17,7 @@ Use predefined actions to update the state.
 Lets define 3 actions that modify a `boolean` state: `toggle`, `on`, and `off`.
 
 ```tsx twoslash title="boolean.ts"
-import { defineActions } from '@rebase.io/use-actions'
+import { defineActions } from '@1hook/use-actions'
 
 export const useBoolean = defineActions((state: boolean) => ({
   toggle: () => !state,
@@ -33,7 +33,7 @@ export const useBoolean = defineActions((state: boolean) => ({
 
 ```tsx twoslash
 // @filename: boolean.ts
-import { defineActions } from '@rebase.io/use-actions'
+import { defineActions } from '@1hook/use-actions'
 
 export const useBoolean = defineActions((state: boolean) => ({
   toggle: () => !state,
@@ -75,7 +75,7 @@ The actions can also be passed arguments to update the state. \
 Let's say we want to create a counter that can be incremented or decremented by a certain amount.
 
 ```tsx twoslash title="counter.ts"
-import { defineActions } from '@rebase.io/use-actions'
+import { defineActions } from '@1hook/use-actions'
 
 export const useCounter = defineActions((state: number) => ({
   increment: (amount: number) => state + amount,
@@ -87,7 +87,7 @@ Use the actions to update the state:
 
 ```tsx twoslash
 // @filename: counter.ts
-import { defineActions } from '@rebase.io/use-actions'
+import { defineActions } from '@1hook/use-actions'
 
 export const useCounter = defineActions((state: number) => ({
   increment: (amount: number) => state + amount,
@@ -110,7 +110,7 @@ We can leverage typescript generics to build reusable hooks.
 Let's build a custom `useArray` hook:
 
 ```tsx title="useArray.ts"
-import { defineActions } from '@rebase.io/use-actions'
+import { defineActions } from '@1hook/use-actions'
 
 export const useArray = defineActions(<T>(items: Array<T>) => ({
   push: (item: T) => [...items, item],
@@ -123,7 +123,7 @@ We can now use the `useArray` hook in our components:
 
 ```tsx twoslash
 // @filename: useArray.ts
-import { defineActions } from '@rebase.io/use-actions'
+import { defineActions } from '@1hook/use-actions'
 
 export const useArray = defineActions((items: Array<number>) => ({
   push: (item: number) => [...items, item],

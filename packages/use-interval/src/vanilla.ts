@@ -1,5 +1,5 @@
-import type { AnyFunction } from '@rebase.io/utils/types'
-import { isServer } from '@rebase.io/utils/is-server'
+import type { AnyFunction } from '@1hook/utils/types'
+import { isServer } from '@1hook/utils/is-server'
 
 type Delay = number
 

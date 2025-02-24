@@ -1,5 +1,5 @@
 import React from 'react'
-import { useIsomorphicLayoutEffect } from '@rebase.io/use-isomorphic-layout-effect'
+import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 
 export function useLatestRef<T>(value: T): { readonly current: T } {
   const ref = React.useRef(value)

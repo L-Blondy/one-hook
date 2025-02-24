@@ -1,6 +1,6 @@
 import React from 'react'
-import { useLatestRef } from '@rebase.io/use-latest-ref'
-import type { Prettify } from '@rebase.io/utils/types'
+import { useLatestRef } from '@1hook/use-latest-ref'
+import type { Prettify } from '@1hook/utils/types'
 
 export type RecorderOptions = Prettify<
   MediaRecorderOptions & {

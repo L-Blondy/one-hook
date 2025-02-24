@@ -1,5 +1,5 @@
 {
-  "name": "@rebase.io/use-in-view",
+  "name": "@1hook/use-in-view",
   "version": "0.0.1-beta.6",
   "files": [
     "dist",
@@ -28,12 +28,12 @@
     "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "devDependencies": {
-    "@rebase.io/use-merge-refs": "workspace:*"
+    "@1hook/use-merge-refs": "workspace:*"
   },
   "dependencies": {
-    "@rebase.io/use-event-handler": "workspace:*",
-    "@rebase.io/use-intersection-observer": "workspace:*",
-    "@rebase.io/use-previous": "workspace:*"
+    "@1hook/use-event-handler": "workspace:*",
+    "@1hook/use-intersection-observer": "workspace:*",
+    "@1hook/use-previous": "workspace:*"
   },
   "tag": "beta"
 }

@@ -1,11 +1,11 @@
 ---
-title: defineActions
-description: Type-safe state management with predefined actions.
+title: useActions
+description: Manage the state with predefined actions.
 ---
 
-import { Step, Steps } from 'fumadocs-ui/components/steps'
-
-Use predefined actions to update the state.
+```package-install
+npm i next -D
+```
 
 ## Quick Start
 
@@ -16,7 +16,7 @@ Use predefined actions to update the state.
 
 Lets define 3 actions that modify a `boolean` state: `toggle`, `on`, and `off`.
 
-```tsx twoslash title="boolean.ts"
+```ts twoslash title="use-boolean.ts" include use-boolean
 import { defineActions } from '@1hook/use-actions'
 
 export const useBoolean = defineActions((state: boolean) => ({
@@ -32,17 +32,13 @@ export const useBoolean = defineActions((state: boolean) => ({
 ### Use the actions:
 
 ```tsx twoslash
-// @filename: boolean.ts
-import { defineActions } from '@1hook/use-actions'
-
-export const useBoolean = defineActions((state: boolean) => ({
-  toggle: () => !state,
-  on: () => true,
-  off: () => false,
-}))
-// @filename: usage.tsx
+// @include: use-boolean
+// @filename: a
 // ---cut---
-import { useBoolean } from './boolean'
+import { useBoolean } from './use-boolean'
+// ---cut-start---
+// @filename: b
+// ---cut-end---
 
 function Toggle() {
   const [isOpen, actions] = useBoolean(false)
@@ -63,7 +59,9 @@ function Toggle() {
 
 The actions can also be destructured:
 
-```tsx
+```tsx twoslash
+// @include: use-boolean
+// ---cut---
 const [isOpen, { toggle, on, off }] = useBoolean(false)
 ```
 
@@ -74,7 +72,7 @@ const [isOpen, { toggle, on, off }] = useBoolean(false)
 The actions can also be passed arguments to update the state. \
 Let's say we want to create a counter that can be incremented or decremented by a certain amount.
 
-```tsx twoslash title="counter.ts"
+```tsx twoslash title="counter.ts" include use-counter
 import { defineActions } from '@1hook/use-actions'
 
 export const useCounter = defineActions((state: number) => ({
@@ -86,16 +84,8 @@ export const useCounter = defineActions((state: number) => ({
 Use the actions to update the state:
 
 ```tsx twoslash
-// @filename: counter.ts
-import { defineActions } from '@1hook/use-actions'
-
-export const useCounter = defineActions((state: number) => ({
-  increment: (amount: number) => state + amount,
-  decrement: (amount: number) => state - amount,
-}))
-
-// @filename: b.ts
-import { useCounter } from './counter'
+// @include: use-counter
+// @filename: a
 // ---cut---
 const [count, actions] = useCounter(0)
 
@@ -109,7 +99,7 @@ We can leverage typescript generics to build reusable hooks.
 
 Let's build a custom `useArray` hook:
 
-```tsx title="useArray.ts"
+```tsx title="use-array.ts"
 import { defineActions } from '@1hook/use-actions'
 
 export const useArray = defineActions(<T>(items: Array<T>) => ({
@@ -122,16 +112,13 @@ export const useArray = defineActions(<T>(items: Array<T>) => ({
 We can now use the `useArray` hook in our components:
 
 ```tsx twoslash
-// @filename: useArray.ts
 import { defineActions } from '@1hook/use-actions'
 
-export const useArray = defineActions((items: Array<number>) => ({
+const useArray = defineActions((items: Array<number>) => ({
   push: (item: number) => [...items, item],
   remove: (item: number) => items.filter((i) => i !== item),
   clear: () => [],
 }))
-// @filename: usage.tsx
-import { useArray } from './useArray'
 // ---cut---
 const [items, actions] = useArray([1, 2, 3])
 

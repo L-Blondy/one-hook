@@ -9,7 +9,7 @@ export const docs = defineDocs({
 
 export default defineConfig({
   mdxOptions: {
-    remarkPlugins: [remarkInstall],
+    remarkPlugins: [[remarkInstall, { persist: { id: 'package-manager' } }]],
     rehypeCodeOptions: {
       themes: {
         light: 'github-light',

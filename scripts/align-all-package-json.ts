@@ -32,6 +32,14 @@ await Promise.all(
             react: '>=18.0.0 || >=19.0.0',
             'react-dom': '>=18.0.0 || >=19.0.0',
           },
+      repository: {
+        type: 'git',
+        url: 'https://github.com/L-Blondy/1hook',
+      },
+      homepage: 'https://github.com/L-Blondy/1hook',
+      bugs: {
+        url: 'https://github.com/L-Blondy/1hook/issues',
+      },
     }))
 
     consola.success(`Aligned: ${path}`)

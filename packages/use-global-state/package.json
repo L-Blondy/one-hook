@@ -31,5 +31,13 @@
     "@1hook/use-isomorphic-layout-effect": "workspace:*",
     "@1hook/utils": "workspace:*"
   },
-  "tag": "beta"
+  "tag": "beta",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/L-Blondy/1hook"
+  },
+  "homepage": "https://github.com/L-Blondy/1hook",
+  "bugs": {
+    "url": "https://github.com/L-Blondy/1hook/issues"
+  }
 }

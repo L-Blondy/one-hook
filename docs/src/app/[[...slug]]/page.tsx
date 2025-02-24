@@ -10,6 +10,7 @@ import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { Popup, PopupContent, PopupTrigger } from 'fumadocs-twoslash/ui'
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
 import { Step, Steps } from 'fumadocs-ui/components/steps'
+import { PackageDetails } from '@/lib/package-details'
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>
@@ -24,6 +25,7 @@ export default async function Page(props: {
     <DocsPage toc={page.data.toc} full={page.data.full}>
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
+      <PackageDetails filename={page.file.name} />
       <DocsBody>
         <MDX
           components={{

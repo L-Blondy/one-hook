@@ -7,7 +7,7 @@
     "align": "bun scripts/align-all-package-json.ts",
     "build": "pnpm run align && turbo --filter \"./packages/*\" build",
     "bumpp": "bumpp --recursive --no-commit --no-push --no-tag",
-    "dev:docs": "turbo docs",
+    "dev:docs": "cd docs && pnpm run docs",
     "dev:packages": "pnpm run align && turbo --concurrency 50 --filter \"./packages/*\" dev",
     "dev:playground": "pnpm run align && turbo --concurrency 50 --filter ./apps/playground --filter \"./packages/*\" dev",
     "test": "turbo test",
@@ -15,6 +15,14 @@
     "lint:eslint": "turbo lint:eslint",
     "lint:typescript": "turbo lint:typescript",
     "release": "pnpm align && git pull && pnpm bumpp && bun scripts/release-all.ts && git add . && git commit -a && git push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/L-Blondy/1hook"
+  },
+  "homepage": "https://github.com/L-Blondy/1hook",
+  "bugs": {
+    "url": "https://github.com/L-Blondy/1hook/issues"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",

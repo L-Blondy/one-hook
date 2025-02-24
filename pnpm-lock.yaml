@@ -116,6 +116,9 @@ importers:
       '@1hook/use-contextual-state':
         specifier: workspace:*
         version: link:../packages/use-contextual-state
+      '@1hook/use-cookie':
+        specifier: workspace:*
+        version: link:../packages/use-cookie
       fumadocs-core:
         specifier: 15.0.12
         version: 15.0.12(@types/react@19.0.10)(next@15.1.7(@babel/core@7.26.9)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -143,6 +146,9 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.0.7

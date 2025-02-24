@@ -1,0 +1,242 @@
+---
+title: useCookie (SSR only)
+description: A simple persistent state manager that uses cookies.
+---
+
+<Callout type="warn">
+  This hook is designed for Server Side Rendering frameworks (SSR) like Next.js.{' '}
+  <br /> If you need a persistent state manager for Single Page Applications
+  (SPA), use [useStorage](/docs/hooks/use-storage) instead.
+</Callout>
+
+## Features
+
+- **Global State:** The cookie state is synced across all components.
+- **Built-in Validation:** Validate with [zod](https://zod.dev/), [valibot](https://valibot.dev/), [arktype](https://arktype.dev/) or with a simple function.
+- **Tab Sync:** The cookie state is synced across multiple browser tabs.
+
+## Quick Start
+
+<Steps>
+<Step>
+### Define the cookies
+
+Use defineCookies to configure validation rules and expiration settings for each cookie.
+
+```ts twoslash title='cookies.ts' include cookies
+'use client'
+import { z } from 'zod'
+import { defineCookies } from '@1hook/use-cookie'
+
+export const { CookieProvider, useCookie, useClearCookies } = defineCookies({
+  // expect a "search" cookie with a value of type `string`
+  search: {
+    validate: z.string().default(''),
+    expires: 365, // days from now
+  },
+  // create a "selected" cookie with a value of type `{ id: number, name: string } | undefined`
+  selected: {
+    validate: z.object({ id: z.number(), name: z.string() }).optional(),
+    expires: new Date('2026-12-12'), // specific date
+    secure: true,
+    domain: 'example.com',
+    sameSite: 'lax',
+  },
+})
+```
+
+</Step>
+<Step>
+### Place the Provider in a Server Component.
+
+Place the CookieProvider at the root of your application, in a [Server Component](https://react.dev/reference/rsc/server-components)
+
+, and you must pass in the cookies retrieved on the server.
+
+```tsx title='providers.tsx'
+// Next.js example, this is a server component
+import { cookies } from 'next/headers'
+import { CookieProvider } from './cookies'
+
+export function Providers(props: { children: ReactNode }) {
+  // transform the cookies to `{ [name]: value }`
+  const serverCookies = Object.fromEntries(
+    cookies()
+      .getAll()
+      .map((cookie) => [cookie.name, cookie.value]),
+  )
+  // pass the cookies to the provider
+  return (
+    <CookieProvider serverCookies={serverCookies}>
+      {props.children}
+    </CookieProvider>
+  )
+}
+```
+
+</Step>
+
+<Step>
+### Use like useState.
+
+Instead of the initial state, pass the storage key you want to read / write from.
+
+```tsx
+'use client'
+import { useCookie } from './cookies'
+
+function Search() {
+  const [search, setSearch] = useCookie('search')
+
+  return <input onChange={(e) => setSearch(e.target.value)} value={search} />
+}
+```
+
+Cookie updates are automatically synchronized across all instances of the hook and across browser tabs.
+
+</Step>
+</Steps>
+
+## How to
+
+### Clear the cookies
+
+Use `useClearCookies` to remove keys defined in [defineCookies](#definecookies). <br/>
+For full cookie clearing, create a custom helper.
+
+```ts
+import { useClearCookies } from './cookies'
+
+const clearCookies = useClearCookies()
+
+// Clear all defined cookies
+clearCookies()
+
+// Clear specific cookies
+clearCookies({ keys: ['search'] })
+```
+
+### Validate the cookies
+
+Since cookies can be modified manually by users, validation is important for ensuring data integrity. <br/>
+You can use libraries like **zod** or **valibot** for validation.
+
+**Example using zod:**
+
+```ts
+import { z } from 'zod'
+
+defineCookies({
+  // expect a string, fallback to ''
+  search: {
+    validate: (value) => z.string().catch('').parse(value),
+  },
+  // expect an optional object with id and name, fallback to undefined
+  selected: {
+    validate: (value) =>
+      z
+        .object({ id: z.number(), name: z.string() })
+        .optional()
+        .catch(undefined)
+        .parse(value),
+  },
+})
+```
+
+**Example using valibot:**
+
+```ts
+import { parse, string, boolean } from 'valibot'
+
+defineCookies({
+  // expect a string, fallback to ''
+  search: {
+    validate: (value) => fallback(parse(string(), value), ''),
+  },
+  // expect an optional object with id and name, fallback to undefined
+  selected: {
+    validate: (value) =>
+      fallback(
+        parse(
+          optional(
+            object({
+              id: number(),
+              name: string(),
+            }),
+          ),
+          value,
+        ),
+        undefined,
+      ),
+  },
+})
+```
+
+### Customize (de)serialization
+
+You can define custom serialization and deserialization for cookie values.
+
+By default the serialization matches Next.js's serialization from primary value types.
+
+```ts
+defineCookies(
+  { search: { validate: String } },
+  {
+    serialize: (value) => JSON.stringify(value), // Custom serialize
+    deserialize: (value) => JSON.parse(value), // Custom deserialize
+  },
+)
+```
+
+## API Reference
+
+### <samp>defineCookies</samp>
+
+Define the cookies upfront.
+
+| 1st argument            | type                          | description                                                                                                           |
+| ----------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `config[name].validate` | `(value: unknown) => T`       | Validation function for the given cookie `name` <br/>when reading the cookie. <br/>The value is already deserialized. |
+| `config[name].expires`  | `number \| Date`              | Expiration date for the cookie. <br/> Numerical values represent the number of days from now.                         |
+| `config[name].sameSite` | `'lax' \| 'strict' \| 'none'` | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value)           |
+| `config[name].secure`   | `boolean`                     | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#secure)                           |
+| `config[name].domain`   | `string`                      | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value)               |
+
+<br />
+
+| 2nd argument (optional)   | type                   | description                                                                                                                                                                   |
+| ------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `options.disableEncoding` | `boolean`              | Disable the default encoding / decoding <br/> (See [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)) |
+| `options.serialize`       | `(value: T) => string` | Custom serialization function                                                                                                                                                 |
+| `options.deserialize`     | `(value: T) => string` | Custom deserialization function                                                                                                                                               |
+
+### <samp>CookieProvider</samp>
+
+Must be used within a server-side component.
+
+| props           | type                     | description                              |
+| --------------- | ------------------------ | ---------------------------------------- |
+| `serverCookies` | `Record<string, string>` | Initial cookies retrieved on the server. |
+| `children`      | `ReactNode`              | Content to be rendered as children.      |
+
+### <samp>useCookie</samp>
+
+Read and write a given cookie
+
+| Arguments | type     | description                                         |
+| --------- | -------- | --------------------------------------------------- |
+| `name`    | `string` | The cookie name you want to read from and write to. |
+
+<br />
+
+| Returns             | type                               | description                                |
+| ------------------- | ---------------------------------- | ------------------------------------------ |
+| `[state, setState]` | `[T, Dispatch<SetStateAction<T>>]` | Like `useState`, returns state and setter. |
+
+### <samp>useClearCookies</samp>
+
+Clear the cookies defined in [defineCookies](#definecookies)
+
+| Returns        | type                                    | description                                                                         |
+| -------------- | --------------------------------------- | ----------------------------------------------------------------------------------- |
+| `clearCookies` | `(options?: {keys?: string[]}) => void` | Use the `keys` option the clear specific cookies. <br />Otherwise clears everything |

@@ -57,9 +57,9 @@ export function defineCookies<
 
   function CookieProvider(props: {
     children: React.ReactNode
-    ssrCookies: Record<string, string>
+    serverCookies: Record<string, string>
   }) {
-    const prevSsrCookies = React.useRef<Record<string, string> | undefined>(
+    const prevServerCookies = React.useRef<Record<string, string> | undefined>(
       undefined,
     )
 
@@ -67,31 +67,31 @@ export function defineCookies<
       keysOf(config).forEach((name) => {
         store.set(
           name as any,
-          cookieService.parse(props.ssrCookies[name], config[name]!),
+          cookieService.parse(props.serverCookies[name], config[name]!),
         )
       })
     })
 
     // Notify the listeners when server-side cookies change
     React.useEffect(() => {
-      entriesOf(props.ssrCookies).forEach(([name, cookie]) => {
+      entriesOf(props.serverCookies).forEach(([name, cookie]) => {
         if (
           // check if the cookie name is ours
           keysOf(config).includes(name) &&
           // check if the serialized version of the cookie has changed
-          cookie !== prevSsrCookies.current?.[name]
+          cookie !== prevServerCookies.current?.[name]
         ) {
           // notify the listeners with the parsed and validated value
           emit(
             name as any,
-            cookieService.parse(props.ssrCookies[name], config[name]!),
+            cookieService.parse(props.serverCookies[name], config[name]!),
           )
           // notify other tabs
           emitCrossTabMessage(name)
         }
       })
-      prevSsrCookies.current = props.ssrCookies
-    }, [props.ssrCookies])
+      prevServerCookies.current = props.serverCookies
+    }, [props.serverCookies])
 
     return props.children
   }

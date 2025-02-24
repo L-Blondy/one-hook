@@ -20,11 +20,8 @@ export function defineContextualState<State>() {
       )
     },
 
-    () => {
-      const state = React.useContext(StateCtx)
-      const setState = useInvariantContext(SetStateCtx)
-      return [state, setState] as const
-    },
+    () =>
+      [React.useContext(StateCtx), useInvariantContext(SetStateCtx)] as const,
 
     () => useInvariantContext(SetStateCtx),
   ] as const

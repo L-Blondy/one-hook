@@ -1,0 +1,80 @@
+# Cursor Rules
+
+Say "Rules acknowledged" before you answer.
+
+Every time you choose to apply a rule(s), explicitly state the rule(s) in the output. You can abbreviate the rule description to a single word or phrase.
+
+## Project Context
+
+"1hook" is a monorepo where each package exports a React hook, except for the utils package.
+
+## Code Style and Structure
+
+- Write concise, technical TypeScript code with accurate examples
+- Use functional and declarative programming patterns; avoid classes
+- Prefer iteration and modularization over code duplication
+- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError)
+- Structure repository files as follows:
+
+```
+packages/  	# Contains all hooks packages, with each hook package having a corresponding documentation file in docs/content/hooks/*.mdx
+docs/ 			# The docs for the library, written with Next.js 15 and Fumadocs
+```
+
+## Tech Stack
+
+### packages/\*\* folder
+
+Each package has the following tech stack:
+
+- React
+- TypeScript
+- vitest (testing framework)
+- react-testing-library (testing library)
+- tsup (bundler)
+- eslint (linter)
+- prettier (formatter)
+
+### docs folder
+
+- Next.js 15 (https://nextjs.org/docs)
+- Fumadocs (https://fumadocs.vercel.app)
+- TailwindCSS 4 (https://tailwindcss.com)
+
+## Naming Conventions
+
+- Use lowercase with dashes for directories and files (e.g., components/form-wizard)
+
+## TypeScript Usage
+
+- Use TypeScript for all code; prefer interfaces over types
+- Avoid enums; use const objects with 'as const' assertion
+- Use functional components with TypeScript interfaces
+- prefer type aliases over interfaces
+
+## packages/crustack folder specific rules
+
+- Each library module should be in a separate folder under src/\*/
+- Each module folder must expose its public interface through an index.ts file
+- no external dependency is allowed
+- private modules folders should be named with an underscore prefix (e.g., \_test-utils)
+- add a vanilla.ts file to the module folder for the vanilla implementation of the module
+
+### Syntax and Formatting
+
+- Use "function" keyword for pure functions
+- Favor named exports for components and utilities
+- prefix boolean variables with auxiliary verbs (e.g., isLoading, hasError, canAccess)
+- always use React.\* hooks instead of using named imports
+
+### Testing
+
+- test files are named like the module they are testing (e.g. "packages/use-rerender/index.spec.ts")
+- Write unit tests for each module
+- use the "test" keyword for tests
+
+## "docs" folder specific rules
+
+- End each sentence with a dot
+- Each documentation file should be named like the module it is documenting (e.g. "packages/use-rerender" should have a corresponding "docs/content/hooks/use-rerender.mdx")
+- Each documentation file should have an API reference section, using markdown tables to describe the API

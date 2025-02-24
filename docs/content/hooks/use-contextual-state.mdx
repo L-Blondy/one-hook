@@ -1,0 +1,63 @@
+---
+title: useContextualState
+description: Optimized version of useState with a context.
+---
+
+## Quick Start
+
+<Steps>
+
+1. Create a Provider and a hook using `defineContextualState`.
+
+   Pass the state **type** to `defineContextualState` to ensure type safety throughout your application.
+
+   ```tsx title='count.ts'
+   'use client'
+   import { defineContextualState } from 'crustack/hooks'
+
+   export const [CountProvider, useCount] = defineContextualState<number>()
+   ```
+
+2. Place the Provider in your component tree and initialize the state by passing `initialValues` to the provider.
+
+   ```tsx title='providers.tsx'
+   function Providers(props: { children: ReactNode }) {
+     return <CountProvider initialState={0}>{props.children}</CountProvider>
+   }
+   ```
+
+3. Use the state like `useState`
+
+   ```tsx
+   import { useCount } from './count'
+
+   ...
+
+   const [count, setCount] = useCount()
+   ```
+
+</Steps>
+
+For improved performance, `defineContextualState` provides a `useSetState` hook. \
+It helps prevent unnecessary rerenders by not listening to the state.
+
+```tsx title='count.ts'
+import { defineContextualState } from 'crustack/hooks'
+
+export const [CountProvider, useCount, useSetCount] =
+  defineContextualState<number>()
+```
+
+The component does not rerender when count changes:
+
+```tsx
+import { useSetCount } from './count'
+
+function Increment() {
+  const setCount = useSetCount()
+
+  return (
+    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
+  )
+}
+```

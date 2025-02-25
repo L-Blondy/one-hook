@@ -1,5 +1,5 @@
 {
-  "name": "@1hook/use-throttle-fn",
+  "name": "@one-stack/use-throttle-fn",
   "version": "0.0.1-beta.1",
   "files": [
     "dist",

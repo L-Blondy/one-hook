@@ -1,5 +1,5 @@
 {
-  "name": "@1hook/use-dom-id",
+  "name": "@one-stack/use-dom-id",
   "version": "0.0.1-beta.1",
   "files": [
     "dist",

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useInterval } from '@1hook/use-interval'
+import { useInterval } from '@one-stack/use-interval'
 
 type To = string | Date | null | undefined | false
 

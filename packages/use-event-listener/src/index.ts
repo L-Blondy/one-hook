@@ -1,6 +1,6 @@
 import React from 'react'
-import { useEventHandler } from '@1hook/use-event-handler'
-import { useIsHydrated } from '@1hook/use-is-hydrated'
+import { useEventHandler } from '@one-stack/use-event-handler'
+import { useIsHydrated } from '@one-stack/use-is-hydrated'
 import type {
   UseEventListenerTarget,
   UseEventListenerType,
@@ -9,7 +9,7 @@ import type {
   EventListenerService,
 } from './types'
 import { getEventListener } from './vanilla'
-import type { MaybeRef } from '@1hook/utils/types'
+import type { MaybeRef } from '@one-stack/utils/types'
 
 export function useEventListener<
   const Target extends UseEventListenerTarget,

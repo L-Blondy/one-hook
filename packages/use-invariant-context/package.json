@@ -1,5 +1,5 @@
 {
-  "name": "@1hook/use-invariant-context",
+  "name": "@one-stack/use-invariant-context",
   "version": "0.0.1-beta.1",
   "files": [
     "dist",

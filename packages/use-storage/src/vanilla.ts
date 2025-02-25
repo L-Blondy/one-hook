@@ -1,4 +1,4 @@
-import { validateSync, type Validator } from '@1hook/utils/validate'
+import { validateSync, type Validator } from '@one-stack/utils/validate'
 import { defaultDeserializer, defaultSerializer } from './serializers'
 
 export type StorageServiceOptions<TDeserialized> = {

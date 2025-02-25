@@ -1,5 +1,5 @@
 {
-  "name": "@1hook/use-get-is-mounted",
+  "name": "@one-stack/use-get-is-mounted",
   "version": "0.0.1-beta.1",
   "files": [
     "dist",

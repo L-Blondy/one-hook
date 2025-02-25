@@ -1,5 +1,5 @@
 {
-  "name": "@1hook/use-mount-effect",
+  "name": "@one-stack/use-mount-effect",
   "version": "0.0.1-beta.1",
   "files": [
     "dist",
@@ -28,7 +28,7 @@
     "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "dependencies": {
-    "@1hook/use-event-handler": "workspace:*"
+    "@one-stack/use-event-handler": "workspace:*"
   },
   "tag": "beta",
   "repository": {

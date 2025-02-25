@@ -1,4 +1,4 @@
-import { isServer } from '@1hook/utils/is-server'
+import { isServer } from '@one-stack/utils/is-server'
 
 function isScrollable(node: HTMLElement | null | undefined): boolean {
   if (!node) return false

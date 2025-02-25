@@ -8,7 +8,7 @@ await Promise.all(
   getAllPackageJsonPaths('./packages').map((packageJsonPath) => {
     const packagePath = path.join(packageJsonPath, '..')
     const packageJson = readPackageJson(packageJsonPath)
-    const shortName = packageJson.name.replace('@1hook/', '')
+    const shortName = packageJson.name.replace('@one-stack/', '')
     const tag = packageJson.version.replace(/[.\-0-9]/g, '')
 
     try {

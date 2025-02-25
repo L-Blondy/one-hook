@@ -1,5 +1,5 @@
 {
-  "name": "@1hook/use-speech-synthesis",
+  "name": "@one-stack/use-speech-synthesis",
   "version": "0.0.1-beta.1",
   "files": [
     "dist",
@@ -28,9 +28,9 @@
     "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "dependencies": {
-    "@1hook/use-get-is-mounted": "workspace:*",
-    "@1hook/use-unmount-effect": "workspace:*",
-    "@1hook/utils": "workspace:*"
+    "@one-stack/use-get-is-mounted": "workspace:*",
+    "@one-stack/use-unmount-effect": "workspace:*",
+    "@one-stack/utils": "workspace:*"
   },
   "tag": "beta",
   "repository": {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useGetIsMounted } from '@1hook/use-get-is-mounted'
+import { useGetIsMounted } from '@one-stack/use-get-is-mounted'
 
 type ClosedMedia = {
   stream: null

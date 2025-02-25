@@ -1,6 +1,6 @@
 import React from 'react'
-import { useLatestRef } from '@1hook/use-latest-ref'
-import type { AnyFunction } from '@1hook/utils/types'
+import { useLatestRef } from '@one-stack/use-latest-ref'
+import type { AnyFunction } from '@one-stack/utils/types'
 
 export function useEventHandler<const Fn extends AnyFunction | undefined>(
   cb: Fn,

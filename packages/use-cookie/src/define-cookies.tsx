@@ -4,13 +4,13 @@ import {
   type CookieServiceOptions,
   type CookieAttributes,
 } from './vanilla'
-import type { KeyOf, Prettify, ValueOf } from '@1hook/utils/types'
-import { createEmitter } from '@1hook/utils/emitter'
-import { isServer } from '@1hook/utils/is-server'
-import { entriesOf } from '@1hook/utils/entries-of'
-import { keysOf } from '@1hook/utils/keys-of'
-import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
-import type { Validator, ValidatorOutput } from '@1hook/utils/validate'
+import type { KeyOf, Prettify, ValueOf } from '@one-stack/utils/types'
+import { createEmitter } from '@one-stack/utils/emitter'
+import { isServer } from '@one-stack/utils/is-server'
+import { entriesOf } from '@one-stack/utils/entries-of'
+import { keysOf } from '@one-stack/utils/keys-of'
+import { useIsomorphicLayoutEffect } from '@one-stack/use-isomorphic-layout-effect'
+import type { Validator, ValidatorOutput } from '@one-stack/utils/validate'
 
 export type CookieConfig<TInput = any, TOutput = TInput> = Prettify<
   CookieAttributes & {

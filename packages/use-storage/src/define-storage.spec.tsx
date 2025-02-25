@@ -9,7 +9,7 @@ import {
 } from '@testing-library/react'
 import { defineStorage } from './define-storage'
 import React from 'react'
-import { noop } from '@1hook/utils/noop'
+import { noop } from '@one-stack/utils/noop'
 import * as v from 'valibot'
 
 afterEach(() => {

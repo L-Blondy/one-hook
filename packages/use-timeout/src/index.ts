@@ -1,6 +1,6 @@
 import React from 'react'
-import { useEventHandler } from '@1hook/use-event-handler'
-import type { AnyFunction } from '@1hook/utils/types'
+import { useEventHandler } from '@one-stack/use-event-handler'
+import type { AnyFunction } from '@one-stack/utils/types'
 
 export const useTimeout = (
   callback: AnyFunction,

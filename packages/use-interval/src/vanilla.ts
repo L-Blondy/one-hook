@@ -1,5 +1,5 @@
-import type { AnyFunction } from '@1hook/utils/types'
-import { isServer } from '@1hook/utils/is-server'
+import type { AnyFunction } from '@one-stack/utils/types'
+import { isServer } from '@one-stack/utils/is-server'
 
 type Delay = number
 

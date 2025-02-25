@@ -1,5 +1,5 @@
 {
-  "name": "@1hook/use-display-media",
+  "name": "@one-stack/use-display-media",
   "version": "0.0.1-beta.1",
   "files": [
     "dist",
@@ -28,7 +28,7 @@
     "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "dependencies": {
-    "@1hook/use-get-is-mounted": "workspace:*"
+    "@one-stack/use-get-is-mounted": "workspace:*"
   },
   "tag": "beta",
   "repository": {

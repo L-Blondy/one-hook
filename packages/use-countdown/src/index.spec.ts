@@ -9,7 +9,7 @@ import {
   vi,
 } from 'vitest'
 import { useCountdown } from '.'
-import { resetIntervalSync } from '@1hook/use-interval/test-utils'
+import { resetIntervalSync } from '@one-stack/use-interval/test-utils'
 
 beforeAll(() => {
   vi.useFakeTimers()

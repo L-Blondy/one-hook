@@ -1,5 +1,5 @@
 {
-  "name": "@1hook/use-cookie",
+  "name": "@one-stack/use-cookie",
   "version": "0.0.1-beta.1",
   "files": [
     "dist",
@@ -29,8 +29,8 @@
   },
   "tag": "beta",
   "dependencies": {
-    "@1hook/utils": "workspace:*",
-    "@1hook/use-isomorphic-layout-effect": "workspace:*"
+    "@one-stack/utils": "workspace:*",
+    "@one-stack/use-isomorphic-layout-effect": "workspace:*"
   },
   "repository": {
     "type": "git",

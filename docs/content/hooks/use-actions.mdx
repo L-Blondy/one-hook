@@ -4,7 +4,7 @@ description: Manage the state with predefined actions.
 ---
 
 ```package-install
-npm install @1hook/use-actions
+npm install @one-stack/use-actions
 ```
 
 ## Quick Start
@@ -17,7 +17,7 @@ npm install @1hook/use-actions
 Lets define 3 actions that modify a `boolean` state: `toggle`, `on`, and `off`.
 
 ```ts twoslash title="use-boolean.ts" include use-boolean
-import { defineActions } from '@1hook/use-actions'
+import { defineActions } from '@one-stack/use-actions'
 
 export const useBoolean = defineActions((state: boolean) => ({
   toggle: () => !state,
@@ -70,7 +70,7 @@ The actions can also be passed arguments to update the state. \
 Let's say we want to create a counter that can be incremented or decremented by a certain amount.
 
 ```tsx twoslash title="counter.ts" include use-counter
-import { defineActions } from '@1hook/use-actions'
+import { defineActions } from '@one-stack/use-actions'
 
 export const useCounter = defineActions((state: number) => ({
   increment: (amount: number) => state + amount,
@@ -97,7 +97,7 @@ We can leverage typescript generics to build reusable hooks.
 Let's build a custom `useArray` hook:
 
 ```tsx title="use-array.ts"
-import { defineActions } from '@1hook/use-actions'
+import { defineActions } from '@one-stack/use-actions'
 
 export const useArray = defineActions(<T>(items: Array<T>) => ({
   push: (item: T) => [...items, item],
@@ -109,7 +109,7 @@ export const useArray = defineActions(<T>(items: Array<T>) => ({
 We can now use the `useArray` hook in our components:
 
 ```tsx twoslash
-import { defineActions } from '@1hook/use-actions'
+import { defineActions } from '@one-stack/use-actions'
 
 const useArray = defineActions((items: Array<number>) => ({
   push: (item: number) => [...items, item],

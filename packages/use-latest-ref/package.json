@@ -1,5 +1,5 @@
 {
-  "name": "@1hook/use-latest-ref",
+  "name": "@one-stack/use-latest-ref",
   "version": "0.0.1-beta.1",
   "files": [
     "dist",
@@ -28,7 +28,7 @@
     "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "dependencies": {
-    "@1hook/use-isomorphic-layout-effect": "workspace:*"
+    "@one-stack/use-isomorphic-layout-effect": "workspace:*"
   },
   "tag": "beta",
   "repository": {

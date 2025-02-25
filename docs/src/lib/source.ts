@@ -3,7 +3,7 @@ import { docs } from '@/.source'
 import { loader } from 'fumadocs-core/source'
 import { icons } from 'lucide-react'
 
-export const source: any = loader({
+export const source = loader({
   baseUrl: '/docs', // in next.js app folder
   source: docs.toFumadocsSource(),
   icon(icon) {

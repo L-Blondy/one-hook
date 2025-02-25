@@ -1,57 +1,47 @@
 import React from 'react'
 import {
   createCookieService,
-  type CookieServiceOptions,
-  type CookieAttributes,
+  type ServiceOptions,
+  type CookieConfig,
 } from './vanilla'
-import type { KeyOf, Prettify, ValueOf } from '@one-stack/utils/types'
+import type { KeyOf, ValueOf } from '@one-stack/utils/types'
 import { createEmitter } from '@one-stack/utils/emitter'
 import { isServer } from '@one-stack/utils/is-server'
 import { entriesOf } from '@one-stack/utils/entries-of'
 import { keysOf } from '@one-stack/utils/keys-of'
 import { useIsomorphicLayoutEffect } from '@one-stack/use-isomorphic-layout-effect'
-import type { Validator, ValidatorOutput } from '@one-stack/utils/validate'
+import type { ValidatorOutput } from '@one-stack/utils/validate'
 
-export type CookieConfig<TInput = any, TOutput = TInput> = Prettify<
-  CookieAttributes & {
-    validate: Validator<TInput, TOutput>
-  }
->
-
-export function defineCookies<
-  TDeserialized,
-  TConfig extends Record<string, CookieConfig>,
-  const TCookieServiceOptions extends CookieServiceOptions<TDeserialized>,
->(config: TConfig, cookieServiceOptions: TCookieServiceOptions = {} as any) {
+export function defineCookies<TConfig extends Record<string, CookieConfig>>(
+  config: TConfig,
+  options: ServiceOptions = {},
+) {
+  type CookieName = KeyOf<TConfig>
   type Store = {
-    [TName in KeyOf<TConfig>]: ValidatorOutput<TConfig[TName]['validate']>
+    [TName in CookieName]: ValidatorOutput<TConfig[TName]['validate']>
   }
 
-  const store = new Map<keyof Store, ValueOf<Store>>()
+  const store = new Map<CookieName, ValueOf<Store>>()
 
-  const emitter = createEmitter()
+  const emitter = createEmitter<Record<CookieName, any>>()
 
-  const cookieService = createCookieService(cookieServiceOptions)
+  const service = createCookieService(config, options)
 
-  function emit(
-    ...[name, updater, remove]: [
-      Parameters<typeof emitter.emit>[0],
-      Parameters<typeof emitter.emit>[1],
-      remove?: boolean,
-    ]
-  ) {
-    const next =
-      typeof updater === 'function' ? updater(store.get(name as any)) : updater
-    store.set(name as any, next)
-    remove
-      ? cookieService.remove(name, config[name])
-      : cookieService.set(name, next, config[name])
-    emitter.emit(name, next)
+  function emit(name: CookieName, updater: any, parsed: boolean) {
+    let value =
+      typeof updater === 'function' ? updater(store.get(name)) : updater
+    const remove = value === undefined
+    if (!parsed) {
+      value = service.parse(name, value)
+    }
+    store.set(name as any, value)
+    remove ? service.remove(name) : service.set(name, value)
+    emitter.emit(name as any, value)
   }
 
-  addCrossTabListener((name) => {
+  addCrossTabListener<CookieName>((name: CookieName) => {
     if (keysOf(config).includes(name)) {
-      emit(name as any, cookieService.get(name, config[name]!))
+      emit(name as any, service.get(name), true)
     }
   })
 
@@ -64,11 +54,9 @@ export function defineCookies<
     )
 
     React.useState(() => {
-      keysOf(config).forEach((name) => {
-        store.set(
-          name as any,
-          cookieService.parse(props.serverCookies[name], config[name]!),
-        )
+      keysOf(config as Record<CookieName, any>).forEach((name) => {
+        const value = service.parse(name, props.serverCookies[name])
+        store.set(name, value as any)
       })
     })
 
@@ -82,10 +70,7 @@ export function defineCookies<
           cookie !== prevServerCookies.current?.[name]
         ) {
           // notify the listeners with the parsed and validated value
-          emit(
-            name as any,
-            cookieService.parse(props.serverCookies[name], config[name]!),
-          )
+          emit(name as CookieName, props.serverCookies[name], false)
           // notify other tabs
           emitCrossTabMessage(name)
         }
@@ -104,14 +89,14 @@ export function defineCookies<
     useIsomorphicLayoutEffect(
       () =>
         emitter.on((channel, updater) => {
-          channel === name && setState(updater)
+          channel === (name as string) && setState(updater)
         }),
       [name],
     )
 
     const set = React.useCallback(
       (updater: React.SetStateAction<Store[TName]>) => {
-        emit(name as any, updater)
+        emit(name, updater, true)
         emitCrossTabMessage(name)
       },
       [name],
@@ -125,7 +110,7 @@ export function defineCookies<
     return React.useCallback((options?: { keys?: (keyof Store)[] }) => {
       const names = options?.keys ?? keysOf(config)
       names.forEach((name) => {
-        emit(name as any, cookieService.parse(undefined, config[name]!), true)
+        emit(name, service.parse(name, undefined), true)
         emitCrossTabMessage(name)
       })
     }, [])
@@ -135,7 +120,7 @@ export function defineCookies<
     CookieProvider,
     useCookie,
     useClearCookies,
-    cookieService,
+    cookieService: service,
   }
 }
 
@@ -149,7 +134,7 @@ function emitCrossTabMessage(name: string) {
 }
 
 // listen to the change in localStorage coming from other tabs
-function addCrossTabListener(cb: (name: string) => any) {
+function addCrossTabListener<TName extends string>(cb: (name: TName) => any) {
   !isServer &&
     window.addEventListener('storage', (e) => {
       if (e.key !== storageKey || !e.newValue) return

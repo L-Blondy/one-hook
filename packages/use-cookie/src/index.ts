@@ -1,2 +1,6 @@
-export { createCookieService, type CookieAttributes } from './vanilla'
-export { defineCookies, type CookieConfig } from './define-cookies'
+export {
+  createCookieService,
+  type CookieConfig,
+  type ServiceOptions,
+} from './vanilla'
+export { defineCookies } from './define-cookies'

@@ -1,17 +1,23 @@
-import { validateSync, type Validator } from '@one-stack/utils/validate'
+import {
+  validateSync,
+  type Validator,
+  type ValidatorOutput,
+} from '@one-stack/utils/validate'
 import { defaultDeserializer, defaultSerializer } from './serializers'
+import type { KeyOf } from '@one-stack/utils/types'
 
-export type CookieServiceOptions<TDeserialized> = {
+export type ServiceOptions = {
   disableEncoding?: boolean
-  serialize?: (value: NoInfer<TDeserialized>) => string
-  deserialize?: (value: string) => TDeserialized
+  serialize?: (value: unknown) => string
+  deserialize?: (value: string) => any
 }
 
-export type CookieAttributes = {
+export type CookieConfig<TOutput = any> = {
   expires?: number | Date
   sameSite?: 'lax' | 'strict' | 'none'
   secure?: boolean
   domain?: string
+  validate: Validator<TOutput>
 }
 
 /**
@@ -21,51 +27,59 @@ export type CookieAttributes = {
  * No `clear` method is exposed to avoid inconsistent behaviors:
  * cookies should be removed using the same attributes they were created with
  */
-export function createCookieService<TDeserialized>({
-  disableEncoding,
-  serialize = defaultSerializer,
-  deserialize = defaultDeserializer,
-}: CookieServiceOptions<TDeserialized> = {}) {
-  const encode = disableEncoding ? (str: string) => str : encodeURIComponent
-  const decode = disableEncoding ? (str: string) => str : decodeURIComponent
+export function createCookieService<
+  TConfig extends Record<string, CookieConfig>,
+>(config: TConfig, options: ServiceOptions = {}) {
+  type CookieName = KeyOf<TConfig>
+  type CookieValue<TName extends CookieName> = ValidatorOutput<
+    TConfig[TName]['validate']
+  >
+
+  const encode = options.disableEncoding
+    ? (str: string) => str
+    : encodeURIComponent
+  const decode = options.disableEncoding
+    ? (str: string) => str
+    : decodeURIComponent
+  const serialize = options.serialize ?? defaultSerializer
+  const deserialize = options.deserialize ?? defaultDeserializer
+
+  function setCookie<TName extends CookieName>(
+    name: TName,
+    value: CookieValue<TName>,
+    cookieConfig: CookieConfig<CookieValue<TName>>,
+  ) {
+    let stringified = encode(serialize(value))
+    let cookie = `${name}=${stringified}; Path=/`
+    if (cookieConfig.sameSite) cookie += `; SameSite=${cookieConfig.sameSite}`
+    if (cookieConfig.expires)
+      cookie += `; Expires=${toUTCString(cookieConfig.expires)}`
+    if (cookieConfig.secure) cookie += `; Secure`
+    if (cookieConfig.domain) cookie += `; Domain=${cookieConfig.domain}`
+    document.cookie = cookie
+    return stringified
+  }
+
   return {
-    /**
-     * ----
-     * On **Next.js server** you can read/write `string` cookies as usual using the `cookie()` utility.
-     *
-     * To achieve that:
-     * - the key is not encoded
-     * - the value is encoded using encodeURIComponent
-     * - the default serializer only transforms non-string values
-     */
-    set(key: string, value: TDeserialized, attrs: CookieAttributes = {}) {
-      let stringified = encode(serialize(value))
-      let cookie = `${key}=${stringified}; Path=/`
-      if (attrs.sameSite) cookie += `; SameSite=${attrs.sameSite}`
-      if (attrs.expires) cookie += `; Expires=${toUTCString(attrs.expires)}`
-      if (attrs.secure) cookie += `; Secure`
-      if (attrs.domain) cookie += `; Domain=${attrs.domain}`
-      document.cookie = cookie
-      return stringified
+    set<TName extends CookieName>(name: TName, value: CookieValue<TName>) {
+      return setCookie(name, value, config[name]!)
     },
-    get<T extends TDeserialized | undefined>(
-      key: string,
-      config: { validate: Validator<TDeserialized | undefined, T> },
-    ): T {
-      return this.parse(getValue(key, decode), config)
+    get<TName extends CookieName>(name: TName): CookieValue<TName> {
+      return this.parse(name, readValue(name, decode))
     },
-    remove(key: string, attrs?: Omit<CookieAttributes, 'expires'>) {
-      this.set(key, '' as TDeserialized, { ...attrs, expires: -1 })
+    remove(name: CookieName) {
+      setCookie(name, '' as CookieValue<CookieName>, {
+        ...config[name],
+        validate: () => '' as CookieValue<CookieName>,
+        expires: -1,
+      })
     },
-    /**
-     * Can be used to parse already decoded cookies
-     */
-    parse<T extends TDeserialized | undefined>(
+    parse<TName extends CookieName>(
+      name: TName,
       value: string | undefined,
-      config: { validate: Validator<TDeserialized | undefined, T> },
-    ): T {
+    ): CookieValue<TName> {
       const deserialized = value === undefined ? undefined : deserialize(value)
-      return validateSync(config.validate, deserialized)
+      return validateSync(config[name]!.validate, deserialized)
     },
   }
 }
@@ -78,11 +92,10 @@ function toUTCString(expires: number | Date) {
   ).toUTCString()
 }
 
-function getValue(key: string, decode: (value: string) => string) {
+function readValue(key: string, decode: (value: string) => string) {
   for (let cookie of document.cookie.split(';')) {
     cookie = cookie.trim()
     const exists = cookie.startsWith(`${key}=`)
     if (exists) return decode(cookie.replace(`${key}=`, ''))
   }
-  return
 }

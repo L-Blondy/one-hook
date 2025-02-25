@@ -1,45 +1,49 @@
 import React from 'react'
-import { createStorageService, type StorageServiceOptions } from './vanilla'
+import {
+  createStorageService,
+  type ServiceOptions,
+  type StorageConfig,
+} from './vanilla'
 import type { KeyOf } from '@one-stack/utils/types'
 import { createEmitter } from '@one-stack/utils/emitter'
-import { entriesOf } from '@one-stack/utils/entries-of'
 import { keysOf } from '@one-stack/utils/keys-of'
 import { useIsomorphicLayoutEffect } from '@one-stack/use-isomorphic-layout-effect'
-import type { Validator, ValidatorOutput } from '@one-stack/utils/validate'
-
-type BaseConfig = {
-  [Key in string]: {
-    validate: Validator
-  }
-}
+import type { ValidatorOutput } from '@one-stack/utils/validate'
 
 export function defineStorage<
-  TDeserialized,
-  TConfig extends BaseConfig,
-  const TStorageOptions extends StorageServiceOptions<TDeserialized>,
->(config: TConfig, storageOptions: TStorageOptions) {
-  const storage = createStorageService(storageOptions)
-
+  TConfig extends Record<string, StorageConfig>,
+  TServiceOptions extends ServiceOptions,
+>(config: TConfig, options: TServiceOptions) {
+  type StorageKey = KeyOf<TConfig>
+  type StorageValue<TKey extends StorageKey> = ValidatorOutput<
+    TConfig[TKey]['validate']
+  >
   type Store = {
-    [Key in KeyOf<TConfig>]: ValidatorOutput<TConfig[Key]['validate']>
+    [Key in StorageKey]: StorageValue<Key>
   }
 
+  const service = createStorageService(config, options)
   const emitter = createEmitter()
 
-  const store = new Map(
-    entriesOf(config).map(([key, value]) => [key, storage.getItem(key, value)]),
+  const store = new Map<StorageKey, StorageValue<StorageKey>>(
+    keysOf(config as Record<StorageKey, any>).map((key) => [
+      key,
+      service.get(key),
+    ]),
   )
 
   window.addEventListener('storage', ({ key }: { key: any }) => {
     if (keysOf(config).includes(key)) {
-      const value = storage.getItem(key, config[key]!)
+      const value = service.get(key)
       store.set(key, value)
       emitter.emit(key, value)
     }
   })
 
-  function useStorage<TKey extends KeyOf<TConfig>>(key: TKey) {
-    const [state, setState] = React.useState<Store[TKey]>(() => store.get(key))
+  function useStorage<TKey extends StorageKey>(key: TKey) {
+    const [state, setState] = React.useState<StorageValue<TKey>>(
+      () => store.get(key)!,
+    )
 
     useIsomorphicLayoutEffect(
       () =>
@@ -56,7 +60,7 @@ export function defineStorage<
             ? (updater as any)(store.get(key))
             : updater
         store.set(key, value)
-        storage.setItem(key, value)
+        service.set(key, value)
         emitter.emit(key as any, value)
       },
       [key],
@@ -67,11 +71,11 @@ export function defineStorage<
 
   // Could be non-hook
   function useClearStorage() {
-    return React.useCallback((options?: { keys?: KeyOf<TConfig>[] }) => {
+    return React.useCallback((options?: { keys?: StorageKey[] }) => {
       const keys = options?.keys ?? keysOf(config)
       keys.forEach((key) => {
-        storage.removeItem(key)
-        const value = storage.getItem(key, config[key]!)
+        service.remove(key)
+        const value = service.get(key)
         store.set(key, value)
         emitter.emit(key as any, value)
       })
@@ -88,12 +92,12 @@ export function defineStorage<
     useClearSessionStorage: typeof useClearStorage
   }
 
-  type OutputType = TStorageOptions['type'] extends 'local'
+  type OutputType = TServiceOptions['type'] extends 'local'
     ? OutputLocal
     : OutputSession
 
   // assign to a typed variable before returning lets JSDocs work
-  return storageOptions.type === 'local'
+  return options.type === 'local'
     ? ({
         useLocalStorage: useStorage,
         useClearLocalStorage: useClearStorage,

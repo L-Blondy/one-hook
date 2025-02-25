@@ -78,8 +78,8 @@ export function createCookieService<
       name: TName,
       value: string | undefined,
     ): CookieValue<TName> {
-      const deserialized = value === undefined ? undefined : deserialize(value)
-      return validateSync(config[name]!.validate, deserialized)
+      const parsed = value === undefined ? undefined : deserialize(value)
+      return validateSync(config[name]!.validate, parsed)
     },
   }
 }

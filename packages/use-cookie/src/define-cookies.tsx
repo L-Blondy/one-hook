@@ -4,7 +4,7 @@ import {
   type ServiceOptions,
   type CookieConfig,
 } from './vanilla'
-import type { KeyOf, ValueOf } from '@one-stack/utils/types'
+import type { KeyOf } from '@one-stack/utils/types'
 import { createEmitter } from '@one-stack/utils/emitter'
 import { isServer } from '@one-stack/utils/is-server'
 import { entriesOf } from '@one-stack/utils/entries-of'
@@ -17,14 +17,12 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
   options: ServiceOptions = {},
 ) {
   type CookieName = KeyOf<TConfig>
-  type Store = {
-    [TName in CookieName]: ValidatorOutput<TConfig[TName]['validate']>
-  }
+  type CookieValue<TName extends CookieName> = ValidatorOutput<
+    TConfig[TName]['validate']
+  >
 
-  const store = new Map<CookieName, ValueOf<Store>>()
-
+  const store = new Map<CookieName, CookieValue<CookieName>>()
   const emitter = createEmitter<Record<CookieName, any>>()
-
   const service = createCookieService(config, options)
 
   function emit(name: CookieName, updater: any, parsed: boolean) {
@@ -81,8 +79,8 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
     return props.children
   }
 
-  function useCookie<TName extends keyof Store>(name: TName) {
-    const [state, setState] = React.useState<Store[TName]>(
+  function useCookie<TName extends CookieName>(name: TName) {
+    const [state, setState] = React.useState<CookieValue<TName>>(
       () => store.get(name)!,
     )
 
@@ -95,7 +93,7 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
     )
 
     const set = React.useCallback(
-      (updater: React.SetStateAction<Store[TName]>) => {
+      (updater: React.SetStateAction<CookieValue<TName>>) => {
         emit(name, updater, true)
         emitCrossTabMessage(name)
       },
@@ -107,7 +105,7 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
 
   // could be non-hook
   function useClearCookies() {
-    return React.useCallback((options?: { keys?: (keyof Store)[] }) => {
+    return React.useCallback((options?: { keys?: CookieName[] }) => {
       const names = options?.keys ?? keysOf(config)
       names.forEach((name) => {
         emit(name, service.parse(name, undefined), true)

@@ -1,16 +1,37 @@
 import { afterEach, expect, expectTypeOf, test } from 'vitest'
+import { defineStorage } from './define-storage'
 import {
-  act,
   cleanup,
   fireEvent,
   render,
   renderHook,
   screen,
+  act,
 } from '@testing-library/react'
-import { defineStorage } from './define-storage'
 import React from 'react'
-import { noop } from '@one-stack/utils/noop'
 import * as v from 'valibot'
+
+const { useLocalStorage } = defineStorage(
+  {
+    name1: {
+      validate: (data) => String(data ?? ''),
+    },
+    name2: {
+      validate: v.fallback(v.number(), 0),
+    },
+    object: {
+      validate: v.optional(
+        v.object({
+          key: v.string(),
+        }),
+      ),
+    },
+    anyCookie: {
+      validate: (v) => v,
+    },
+  },
+  { type: 'local' },
+)
 
 afterEach(() => {
   cleanup()
@@ -18,62 +39,30 @@ afterEach(() => {
   sessionStorage.clear()
 })
 
-function initLocalStorage() {
-  const { useLocalStorage, useClearLocalStorage } = defineStorage(
-    {
-      ch1: {
-        validate: (value) => Number(value ?? 0),
-      },
-      ch2: { validate: v.optional(v.string(), 'init') },
-    },
-    { type: 'local' },
-  )
-  expectTypeOf(useLocalStorage).not.toBeNullable()
-  expectTypeOf(useClearLocalStorage).not.toBeNullable()
-  return { useLocalStorage, useClearLocalStorage } as const
-}
-
-function initSessionStorage() {
-  // define Session Storage just for type testing
-  const { useSessionStorage, useClearSessionStorage } = defineStorage(
-    {
-      ch1: { validate: (value) => Number(value) },
-      ch2: { validate: (value) => String(value) },
-    },
-    {
-      type: 'session',
-      serialize: (value) => String(value),
-      deserialize: (value) => Number(value),
-    },
-  )
-  expectTypeOf(useSessionStorage).not.toBeNullable()
-  expectTypeOf(useClearSessionStorage).not.toBeNullable()
-  return { useSessionStorage, useClearSessionStorage } as const
-}
-
-noop(initSessionStorage)
-
 test('type inferrence', () => {
-  const { useLocalStorage } = initLocalStorage()
   renderHook(() => {
-    const [state1, setState1] = useLocalStorage('ch1')
-    expectTypeOf(state1).toEqualTypeOf<number>()
+    const [state1, setState1] = useLocalStorage('name1')
+    expectTypeOf(state1).toEqualTypeOf<string>()
     expectTypeOf(setState1).toEqualTypeOf<
+      React.Dispatch<React.SetStateAction<string>>
+    >()
+    const [state2, setState2] = useLocalStorage('name2')
+    expectTypeOf(state2).toEqualTypeOf<number>()
+    expectTypeOf(setState2).toEqualTypeOf<
       React.Dispatch<React.SetStateAction<number>>
     >()
-    const [state2, setState2] = useLocalStorage('ch2')
-    expectTypeOf(state2).toEqualTypeOf<string>()
-    expectTypeOf(setState2).toEqualTypeOf<
-      React.Dispatch<React.SetStateAction<string>>
+    const [state3, setState3] = useLocalStorage('object')
+    expectTypeOf(state3).toEqualTypeOf<{ key: string } | undefined>()
+    expectTypeOf(setState3).toEqualTypeOf<
+      React.Dispatch<React.SetStateAction<{ key: string } | undefined>>
     >()
   })
 })
 
-test('Should be just like useState, but shared', () => {
-  const { useLocalStorage } = initLocalStorage()
+test('should behave like useState with shared state between hooks', () => {
   const { result } = renderHook(() => {
-    const [state1, setState1] = useLocalStorage('ch1')
-    const [state2, setState2] = useLocalStorage('ch1')
+    const [state1, setState1] = useLocalStorage('name2')
+    const [state2, setState2] = useLocalStorage('name2')
     return { state1, setState1, state2, setState2 }
   })
   expect(result.current.state1).toBe(0)
@@ -89,31 +78,39 @@ test('Should be just like useState, but shared', () => {
   expect(result.current.state2).toBe(16)
 })
 
-test('Should sync between different components', () => {
+test('should synchronize state updates across multiple components', () => {
   const TestApp = initTestApp()
   render(<TestApp />)
 
+  // Initial state should be 0 for both consumers
   screen.getByText('Consumer1 0')
   screen.getByText('Consumer2 0')
+
+  // Updating state in one component should update the other
   fireEvent.click(screen.getByText('Consumer1 0'))
   screen.getByText('Consumer1 1')
   screen.getByText('Consumer2 1')
 })
 
-test('The initial state should be the current state, not the defined initialState', () => {
+test('should initialize new components with current cookie value instead of initial state', () => {
   const TestApp = initTestApp()
   render(<TestApp />)
 
+  // Initial state is 0 for both consumers
   screen.getByText('Consumer1 0')
   screen.getByText('Consumer2 0')
+
+  // Update state to 2 by clicking twice
   fireEvent.click(screen.getByText('Consumer1 0'))
   fireEvent.click(screen.getByText('Consumer1 1'))
+
+  // All consumers, including newly mounted Consumer3, should show current value of 2
   screen.getByText('Consumer1 2')
   screen.getByText('Consumer2 2')
   screen.getByText('Consumer3 2')
 })
 
-test('clearStorage should reset all states if not specified', () => {
+test('should reset all cookie states when clearCookies is called without specific keys', () => {
   const TestApp = initTestApp()
   render(<TestApp />)
 
@@ -129,7 +126,7 @@ test('clearStorage should reset all states if not specified', () => {
   screen.getByText('Consumer4 init')
 })
 
-test('clearStorage should reset only the specified keys', () => {
+test('should only reset cookies for specified keys when calling clearStorage', () => {
   const TestApp = initTestApp()
   render(<TestApp keysToReset={['ch1']} />)
 
@@ -146,36 +143,46 @@ test('clearStorage should reset only the specified keys', () => {
   screen.getByText('Consumer4 changed')
 })
 
-type UseClearLocalStorage = ReturnType<
-  typeof initLocalStorage
->['useClearLocalStorage']
+const {
+  useLocalStorage: useAppStorage,
+  useClearLocalStorage: useClearAppStorage,
+} = defineStorage(
+  {
+    ch1: { validate: (v) => Number(v ?? 0) },
+    ch2: { validate: (v) => String(v ?? 'init') },
+  },
+  { type: 'local' },
+)
+
+type KeysToReset = NonNullable<
+  NonNullable<Parameters<ReturnType<typeof useClearAppStorage>>[0]>['keys']
+>
 
 function initTestApp() {
-  const { useLocalStorage, useClearLocalStorage } = initLocalStorage()
-
-  type KeysToReset = NonNullable<
-    NonNullable<Parameters<ReturnType<UseClearLocalStorage>>[0]>['keys']
-  >
-
-  function TestApp(props: { keysToReset?: KeysToReset }) {
+  function TestApp(props: {
+    keysToReset?: KeysToReset
+    serverCookies?: Record<string, string>
+  }) {
+    const clear = useClearAppStorage()
+    React.useEffect(() => () => clear(), [clear])
     return (
-      <>
+      <div>
         <Consumer1 />
         <Consumer2 keysToReset={props.keysToReset} />
         <Consumer4 />
-      </>
+      </div>
     )
   }
 
   function Consumer1() {
-    const [state, setState] = useLocalStorage('ch1')
+    const [state, setState] = useAppStorage('ch1')
     return (
       <button onClick={() => setState((s) => ++s)}>Consumer1 {state}</button>
     )
   }
 
   function Consumer2(props: { keysToReset?: KeysToReset }) {
-    const [state, setState] = useLocalStorage('ch1')
+    const [state, setState] = useAppStorage('ch1')
     return (
       <>
         <button onClick={() => setState((s) => ++s)}>Consumer2 {state}</button>
@@ -185,17 +192,17 @@ function initTestApp() {
   }
 
   function Consumer3(props: { keysToReset?: KeysToReset }) {
-    const [state] = useLocalStorage('ch1')
-    const clearStorage = useClearLocalStorage()
+    const [state] = useAppStorage('ch1')
+    const clearCookies = useClearAppStorage()
     return (
-      <button onClick={() => clearStorage({ keys: props.keysToReset })}>
+      <button onClick={() => clearCookies({ keys: props.keysToReset })}>
         Consumer3 {state}
       </button>
     )
   }
 
   function Consumer4() {
-    const [state, setState] = useLocalStorage('ch2')
+    const [state, setState] = useAppStorage('ch2')
     return (
       <button onClick={() => setState('changed')}>Consumer4 {state}</button>
     )

@@ -1,5 +1,5 @@
 {
-  "name": "1hook",
+  "name": "one-stack",
   "private": true,
   "type": "module",
   "version": "0.0.1-beta.1",
@@ -7,6 +7,7 @@
     "align": "bun scripts/align-all-package-json.ts",
     "build": "pnpm run align && turbo --filter \"./packages/*\" build",
     "bumpp": "bumpp --recursive --no-commit --no-push --no-tag",
+    "clean": "rm -rf node_modules packages/*/node_modules docs/*/node_modules",
     "dev:docs": "cd docs && pnpm run docs",
     "dev:hooks": "pnpm run align && turbo --concurrency 50 --filter \"./packages/*\" dev",
     "test": "turbo test",
@@ -17,11 +18,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/L-Blondy/1hook"
+    "url": "https://github.com/L-Blondy/one-stack"
   },
-  "homepage": "https://github.com/L-Blondy/1hook",
+  "homepage": "https://github.com/L-Blondy/one-stack",
   "bugs": {
-    "url": "https://github.com/L-Blondy/1hook/issues"
+    "url": "https://github.com/L-Blondy/one-stack/issues"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
@@ -50,6 +51,7 @@
     "prettier-plugin-tailwindcss": "^0.6.11",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
+    "rimraf": "^6.0.1",
     "tsup": "^8.3.6",
     "turbo": "^2.4.2",
     "typescript": "5.7.3",

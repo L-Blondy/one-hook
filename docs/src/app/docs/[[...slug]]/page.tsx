@@ -19,7 +19,7 @@ export default async function Page(props: {
   const MDX = page.data.body
 
   const isHook = params.slug?.includes('hooks')
-  console.log(page.data.toc)
+
   return (
     <DocsPage
       breadcrumb={{ enabled: false }}

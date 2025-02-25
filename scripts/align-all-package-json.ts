@@ -32,6 +32,14 @@ await Promise.all(
             react: '>=18.0.0 || >=19.0.0',
             'react-dom': '>=18.0.0 || >=19.0.0',
           },
+      peerDependenciesMeta: {
+        '@types/react': {
+          'optional': true,
+        },
+        '@types/react-dom': {
+          'optional': true,
+        },
+      },
       repository: {
         type: 'git',
         url: 'https://github.com/L-Blondy/1hook',

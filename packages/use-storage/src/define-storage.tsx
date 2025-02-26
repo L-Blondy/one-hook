@@ -71,8 +71,7 @@ export function defineStorage<
 
   // Could be non-hook
   function useClearStorage() {
-    return React.useCallback((options?: { keys?: StorageKey[] }) => {
-      const keys = options?.keys ?? keysOf(config)
+    return React.useCallback((keys: StorageKey[] = keysOf(config)) => {
       keys.forEach((key) => {
         service.remove(key)
         const value = service.get(key)

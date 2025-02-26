@@ -101,8 +101,7 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
 
   // could be non-hook
   function useClearCookies() {
-    return React.useCallback((options?: { keys?: CookieName[] }) => {
-      const names = options?.keys ?? keysOf(config)
+    return React.useCallback((names: CookieName[] = keysOf(config)) => {
       names.forEach((name) => {
         const value = service.parse(name, undefined)
         store.set(name, value)

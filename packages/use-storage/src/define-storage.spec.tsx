@@ -158,7 +158,7 @@ const {
 )
 
 type KeysToReset = NonNullable<
-  NonNullable<Parameters<ReturnType<typeof useClearAppStorage>>[0]>['keys']
+  NonNullable<Parameters<ReturnType<typeof useClearAppStorage>>[0]>
 >
 
 function initTestApp() {
@@ -198,7 +198,7 @@ function initTestApp() {
     const [state] = useAppStorage('ch1')
     const clearCookies = useClearAppStorage()
     return (
-      <button onClick={() => clearCookies({ keys: props.keysToReset })}>
+      <button onClick={() => clearCookies(props.keysToReset)}>
         Consumer3 {state}
       </button>
     )

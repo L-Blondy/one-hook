@@ -118,17 +118,15 @@ const clearCookies = useClearCookies()
 Clear specific cookies:
 
 ```ts twoslash
-// @noErrors
 // @include: cookies
 // @include: clearcookies
 // ---cut---
-clearCookies({ keys: ['search'] })
+clearCookies(['search'])
 ```
 
 Clear all user defined cookies:
 
 ```ts twoslash
-// @noErrors
 // @include: cookies
 // @include: clearcookies
 // ---cut---
@@ -202,11 +200,18 @@ defineCookies(
 
 ### 👉 defineCookies
 
+Generate typesafe hooks and a Provider from a cookie configuration object.
+
 ```ts
-defineCookies(
+function defineCookies(
   config: Record<string, CookieConfig>,
   options?: ServiceOptions,
-)
+): {
+  CookieProvider
+  useCookie
+  useClearCookies
+  cookieService
+}
 ```
 
 <AutoTypeTable
@@ -237,22 +242,25 @@ function CookieProvider(props: CookieProviderProps): ReactNode
 
 ### 👉 useCookie
 
-Read and write a given cookie
+Manage cookie state like `useState`.
+Instead of an initial value, provide the cookie name.
 
-| Arguments | type     | description                                         |
-| --------- | -------- | --------------------------------------------------- |
-| `name`    | `string` | The cookie name you want to read from and write to. |
-
-<br />
-
-| Returns             | type                               | description                                |
-| ------------------- | ---------------------------------- | ------------------------------------------ |
-| `[state, setState]` | `[T, Dispatch<SetStateAction<T>>]` | Like `useState`, returns state and setter. |
+```ts
+function useCookie(name: string): [cookie, setCookie]
+```
 
 ### 👉 useClearCookies
 
-Clear the cookies defined in [defineCookies](#definecookies)
+Clear the user-defined cookies.
 
-| Returns        | type                                    | description                                                                         |
-| -------------- | --------------------------------------- | ----------------------------------------------------------------------------------- |
-| `clearCookies` | `(options?: {keys?: string[]}) => void` | Use the `keys` option the clear specific cookies. <br />Otherwise clears everything |
+```ts
+function useClearCookies(): clearCookies
+
+function clearCookies(keys?: string[]): void
+```
+
+### 👉 cookieService
+
+Use the cookie service to read and write cookies in Server Components or outside of React.
+
+<AutoTypeTable name="CookieService" path="packages/use-cookie/src/index.ts" />

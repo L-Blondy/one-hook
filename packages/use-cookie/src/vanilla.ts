@@ -53,6 +53,48 @@ export type CookieConfig<TOutput = unknown> = {
   secure?: boolean
 }
 
+type CookieName<TConfig extends Record<string, CookieConfig>> = KeyOf<TConfig>
+
+type CookieValue<
+  TConfig extends Record<string, CookieConfig>,
+  TName extends CookieName<TConfig>,
+> = ValidatorOutput<TConfig[TName]['validate']>
+
+export type CookieService<TConfig extends Record<string, CookieConfig>> = {
+  /**
+   * Set a cookie value.
+   *
+   * @remarks `<T>(name: string, value: T) => string`
+   */
+  set: <TName extends CookieName<TConfig>>(
+    name: TName,
+    value: CookieValue<TConfig, TName>,
+  ) => string
+  /**
+   * Get a cookie value.
+   *
+   * @remarks `<T>(name: string) => T`
+   */
+  get: <TName extends CookieName<TConfig>>(
+    name: TName,
+  ) => CookieValue<TConfig, TName>
+  /**
+   * Remove a cookie.
+   *
+   * @remarks `(name: string) => void`
+   */
+  remove: <TName extends CookieName<TConfig>>(name: TName) => void
+  /**
+   * Parse a raw cookie string. If the cookie is not found, the value is `undefined`.
+   *
+   * @remarks `(name: string, value: string | undefined) => T`
+   */
+  parse: <TName extends CookieName<TConfig>>(
+    name: TName,
+    value: string | undefined,
+  ) => CookieValue<TConfig, TName>
+}
+
 /**
  * ----
  * Client only cookie management service
@@ -62,12 +104,7 @@ export type CookieConfig<TOutput = unknown> = {
  */
 export function createCookieService<
   TConfig extends Record<string, CookieConfig>,
->(config: TConfig, options: ServiceOptions = {}) {
-  type CookieName = KeyOf<TConfig>
-  type CookieValue<TName extends CookieName> = ValidatorOutput<
-    TConfig[TName]['validate']
-  >
-
+>(config: TConfig, options: ServiceOptions = {}): CookieService<TConfig> {
   const encode = options.disableEncoding
     ? (str: string) => str
     : encodeURIComponent
@@ -77,10 +114,10 @@ export function createCookieService<
   const serialize = options.serialize ?? defaultSerializer
   const deserialize = options.deserialize ?? defaultDeserializer
 
-  function setCookie<TName extends CookieName>(
+  function setCookie<TName extends CookieName<TConfig>>(
     name: TName,
-    value: CookieValue<TName>,
-    cookieConfig: CookieConfig<CookieValue<TName>>,
+    value: CookieValue<TConfig, TName>,
+    cookieConfig: CookieConfig<CookieValue<TConfig, TName>>,
   ) {
     let stringified = encode(serialize(value))
     let cookie = `${name}=${stringified}; Path=/`
@@ -93,28 +130,26 @@ export function createCookieService<
     return stringified
   }
 
-  return {
-    set<TName extends CookieName>(name: TName, value: CookieValue<TName>) {
+  const service: CookieService<TConfig> = {
+    set(name, value) {
       return setCookie(name, value, config[name] as any)
     },
-    get<TName extends CookieName>(name: TName): CookieValue<TName> {
+    get(name) {
       return this.parse(name, readValue(name, decode))
     },
-    remove(name: CookieName) {
-      setCookie(name, '' as CookieValue<CookieName>, {
+    remove(name) {
+      setCookie(name, '' as any, {
         ...config[name],
-        validate: () => '' as CookieValue<CookieName>,
+        validate: () => '' as any,
         expires: -1,
       })
     },
-    parse<TName extends CookieName>(
-      name: TName,
-      value: string | undefined,
-    ): CookieValue<TName> {
+    parse(name, value) {
       const parsed = value === undefined ? undefined : deserialize(value)
       return validateSync((config[name] as any).validate, parsed)
     },
   }
+  return service
 }
 
 function toUTCString(expires: number | Date) {

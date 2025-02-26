@@ -12,6 +12,14 @@ import { keysOf } from '@one-stack/utils/keys-of'
 import { useIsomorphicLayoutEffect } from '@one-stack/use-isomorphic-layout-effect'
 import type { ValidatorOutput } from '@one-stack/utils/validate'
 
+export type CookieProviderProps = {
+  /**
+   * The initial cookies retrieved on the server.
+   */
+  serverCookies: Record<string, string>
+  children: React.ReactNode
+}
+
 export function defineCookies<TConfig extends Record<string, CookieConfig>>(
   config: TConfig,
   options: ServiceOptions = {},

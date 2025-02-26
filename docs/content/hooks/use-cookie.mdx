@@ -223,12 +223,17 @@ defineCookies(
 
 ### 👉 CookieProvider
 
-Must be used within a server-side component.
+The CookieProvider component should be rendered at the highest possible level in your application's component tree, and must be used within a server component.
 
-| props           | type                     | description                              |
-| --------------- | ------------------------ | ---------------------------------------- |
-| `serverCookies` | `Record<string, string>` | Initial cookies retrieved on the server. |
-| `children`      | `ReactNode`              | Content to be rendered as children.      |
+```tsx
+function CookieProvider(props: CookieProviderProps): ReactNode
+```
+
+<AutoTypeTable
+  name="CookieProviderProps"
+  description="The props of the CookieProvider component."
+  path="packages/use-cookie/src/index.ts"
+/>
 
 ### 👉 useCookie
 

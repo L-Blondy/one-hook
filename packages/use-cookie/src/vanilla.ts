@@ -7,8 +7,18 @@ import { defaultDeserializer, defaultSerializer } from './serializers'
 import type { KeyOf } from '@one-stack/utils/types'
 
 export type ServiceOptions = {
+  /**
+   * By default the cookie is encoded using `encodeURIComponent`. \
+   * Set this to `true` to disable encoding.
+   */
   disableEncoding?: boolean
+  /**
+   * Custom serializer for the cookie.
+   */
   serialize?: (value: unknown) => string
+  /**
+   * Custom deserializer for the cookie.
+   */
   deserialize?: (value: string) => any
 }
 

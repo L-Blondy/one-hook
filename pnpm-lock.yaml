@@ -122,6 +122,9 @@ importers:
       '@one-stack/use-cookie':
         specifier: workspace:*
         version: link:../packages/use-cookie
+      '@one-stack/use-global-state':
+        specifier: workspace:*
+        version: link:../packages/use-global-state
       fumadocs-core:
         specifier: 15.0.12
         version: 15.0.12(@types/react@19.0.10)(next@15.1.7(@babel/core@7.26.9)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)

@@ -71,7 +71,7 @@ Let's say we want to create a counter that can be incremented or decremented by 
 
 ```tsx twoslash title="counter.ts" include use-counter
 import { defineActions } from '@one-stack/use-actions'
-
+// ---cut---
 export const useCounter = defineActions((state: number) => ({
   increment: (amount: number) => state + amount,
   decrement: (amount: number) => state - amount,
@@ -97,8 +97,6 @@ We can leverage typescript generics to build reusable hooks.
 Let's build a custom `useArray` hook:
 
 ```tsx title="use-array.ts"
-import { defineActions } from '@one-stack/use-actions'
-
 export const useArray = defineActions(<T>(items: Array<T>) => ({
   push: (item: T) => [...items, item],
   remove: (item: T) => items.filter((i) => i !== item),

@@ -61,9 +61,8 @@ It helps prevent unnecessary rerenders by not listening to the state.
 
 ```tsx twoslash title="use-count.ts" include use-set-count
 import { defineContextualState } from '@one-stack/use-contextual-state'
-
-export const [CountProvider, useCount, useSetCount] =
-  defineContextualState<number>()
+// ---cut---
+export const [Provider, useCount, useSetCount] = defineContextualState<number>()
 ```
 
 ✅ No rerender when count changes:

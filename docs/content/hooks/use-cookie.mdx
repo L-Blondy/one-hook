@@ -3,7 +3,7 @@ title: useCookie (SSR only)
 description: A simple persistent state manager that uses cookies.
 ---
 
-<Callout type="warn">
+<Callout type="info">
   This hook is designed for Server Side Rendering frameworks (SSR) like Next.js.{' '}
   <br /> If you need a persistent state manager for Single Page Applications
   (SPA), use [useStorage](/docs/hooks/use-storage) instead.
@@ -143,9 +143,9 @@ For simple cases you can use a function to validate the cookie value.
 
 The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
 
-```ts
+```ts twoslash
 import { defineCookies } from '@one-stack/use-cookie'
-
+// ---cut---
 defineCookies({
   search: {
     validate: (value) => String(value ?? ''),
@@ -168,8 +168,9 @@ For more complex cases you can use a schema to validate the cookie value.
 The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
 
 ```ts twoslash
-import { z } from 'zod'
 import { defineCookies } from '@one-stack/use-cookie'
+// ---cut---
+import { z } from 'zod'
 
 defineCookies({
   search: {

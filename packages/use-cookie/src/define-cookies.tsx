@@ -108,7 +108,7 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
     return React.useCallback((options?: { keys?: CookieName[] }) => {
       const names = options?.keys ?? keysOf(config)
       names.forEach((name) => {
-        emit(name, service.parse(name, undefined), true)
+        emit(name, undefined, false)
         emitCrossTabMessage(name)
       })
     }, [])

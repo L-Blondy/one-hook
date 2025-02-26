@@ -13,10 +13,33 @@ export type ServiceOptions = {
 }
 
 export type CookieConfig<TOutput = unknown> = {
+  /**
+   * The expiration of the cookie
+   * - set to a `number` to expire in N days
+   * - set to a `Date` to expire at a specific date
+   * - set to `undefined` or omit to expire with the Session
+   */
   expires?: number | Date
+  /**
+   * The sameSite attribute of the cookie.
+   * See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value) for details
+   */
   sameSite?: 'lax' | 'strict' | 'none'
+  /**
+   * Only send the cookie over HTTPS
+   * See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#secure) for details
+   */
   secure?: boolean
+  /**
+   * Defines the host to which the cookie will be sent.
+   * See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value) for details
+   */
   domain?: string
+  /**
+   * The validator for the cookie. Can be:
+   * - a function that returns a the value or throws an error
+   * - a `StandardSchema` (e.g. a zod, valibot or arktype schema)
+   */
   validate: Validator<TOutput>
 }
 

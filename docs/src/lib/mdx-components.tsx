@@ -2,11 +2,9 @@ import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { Popup, PopupContent, PopupTrigger } from 'fumadocs-twoslash/ui'
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
 import { Step, Steps } from 'fumadocs-ui/components/steps'
-import { createTypeTable } from 'fumadocs-typescript/ui'
 import type { FC } from 'react'
 import type { MDXProps } from 'mdx/types'
-
-const { AutoTypeTable } = createTypeTable()
+import { AutoTypeTable } from './auto-type-table'
 
 export function MdxComponents({ MDX }: { MDX: FC<MDXProps> }) {
   return (

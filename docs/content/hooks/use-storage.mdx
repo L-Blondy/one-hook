@@ -1,0 +1,213 @@
+---
+title: useStorage (SPA only)
+description: A simple typesafe state manager using localStorage or sessionStorage.
+---
+
+<Callout type="info">
+  This hook is designed for Single Page Applications (SPA).
+  <br /> If you need a persistent state manager for an SSR framework, use
+  [useCookie](/docs/hooks/use-cookie) instead.
+</Callout>
+
+:::caution
+For **SSR frameworks** use [defineCookies](/hooks/cookies) instead.
+:::
+
+## Features
+
+- **Component Synchronization:** State is synced across all components using the same storage key.
+- **Tab Synchronization:** Keeps localStorage values in sync across multiple browser tabs.
+- **Built-in Validation:** Ensures stored values are validated upon retrieval.
+- **Type Safety:** Full TypeScript support for type-safe state management.
+
+## Quick Start
+
+<Steps>
+<Step>
+### Define your storage setup.
+
+Use `defineStorage` to configure validation rules for each key and specify the storage type (`'local'` or `'session'`).
+
+```tsx title='local-storage.ts'
+'use client'
+import { defineStorage } from 'crustack/hooks'
+
+export const { useLocalStorage, useClearLocalStorage } = defineStorage(
+  {
+    // expect a "search" storage key with a value of type `string`
+    search: {
+      validate: (value) => String(value),
+    },
+    // expect a "selected" storage key with a value of type `{ id: number, name: string } | undefined`
+    selected: {
+      validate: (value) =>
+        value ? { id: Number(value.id), name: String(value.name) } : undefined,
+    },
+  },
+  { type: 'local' },
+)
+```
+
+`defineStorage` returns 2 hooks for interacting with the storage:
+
+- type `'local'` returns `useLocalStorage` and `useClearLocalStorage`
+- type `'session'` returns `useSessionStorage` and `useClearSessionStorage`
+
+</Step>
+
+<Step>
+### Use like useState.
+
+Instead of the initial state, pass the storage key you want to read / write from.
+
+```tsx
+'use client'
+import { useLocalStorage } from './local-storage'
+
+function Search() {
+  const [search, setSearch] = useLocalStorage('search')
+
+  return <input onChange={(e) => setSearch(e.target.value)} value={search} />
+}
+```
+
+Storage updates are automatically synchronized across all instances of the hook and across browser tabs.
+
+</Step>
+</Steps>
+
+## How to
+
+### Clear the storage
+
+Use `useClearLocalStorage` to remove keys defined in [defineStorage](#definestorage). <br/>
+For full storage clearing, combine it with `localStorage.clear()`.
+
+```ts
+import { useClearLocalStorage } from './local-storage'
+
+const clearLocalStorage = useClearLocalStorage()
+
+// Clear all defined storage keys
+clearLocalStorage()
+
+// Clear specific keys
+clearLocalStorage({ keys: ['search'] })
+```
+
+### Validate the storage
+
+To ensure the values retrieved from storage are valid (since storage can be manually modified by users), all reads are validated. <br/>
+Use libraries like **zod** or **valibot** to handle validation easily.
+
+**Example using zod:**
+
+```ts
+import { z } from 'zod'
+
+defineStorage(
+  {
+    // expect a string, fallback to ''
+    search: {
+      validate: (value) => z.string().catch('').parse(value),
+    },
+    // expect an optional object with id and name, fallback to undefined
+    selected: {
+      validate: (value) =>
+        z
+          .object({ id: z.number(), name: z.string() })
+          .optional()
+          .catch(undefined)
+          .parse(value),
+    },
+  },
+  { type: 'local' },
+)
+```
+
+**Example using valibot:**
+
+```ts
+import { parse, number, boolean, fallback } from 'valibot'
+
+defineStorage(
+  {
+    // expect a string, fallback to ''
+    search: {
+      validate: (value) => fallback(parse(string(), value), ''),
+    },
+    // expect an optional object with id and name, fallback to undefined
+    selected: {
+      validate: (value) =>
+        fallback(
+          parse(
+            optional(
+              object({
+                id: number(),
+                name: string(),
+              }),
+            ),
+            value,
+          ),
+          undefined,
+        ),
+    },
+  },
+  { type: 'local' },
+)
+```
+
+### Customize (de)serialization
+
+You can define custom serialization and deserialization for stored values.
+
+```ts
+defineStorage(
+  { search: { validate: String } },
+  {
+    type: 'local',
+    serialize: (value) => JSON.stringify(value), // Custom serialize
+    deserialize: (value) => JSON.parse(value), // Custom deserialize
+  },
+)
+```
+
+## API Reference
+
+### <samp>defineStorage</samp>
+
+Define the storage strategy.
+
+| 1st argument           | type                    | description                                                                |
+| ---------------------- | ----------------------- | -------------------------------------------------------------------------- |
+| `config[key].validate` | `(value: unknown) => T` | Validation function for the given `key`<br/> when reading from the storage |
+
+<br />
+
+| 2nd argument          | type                   | description                                 |
+| --------------------- | ---------------------- | ------------------------------------------- |
+| `options.type`        | `'local' \| 'session'` | The type of storage.                        |
+| `options.serialize`   | `(value: T) => string` | Custom serialization function (optional).   |
+| `options.deserialize` | `(value: T) => string` | Custom deserialization function (optional). |
+
+### <samp>useLocalStorage / useSessionStorage</samp>
+
+Read and write from a given storage key
+
+| Arguments | type     | description                                        |
+| --------- | -------- | -------------------------------------------------- |
+| `key`     | `string` | The storage key you want to read from or write to. |
+
+<br />
+
+| Returns             | type                               | description                                |
+| ------------------- | ---------------------------------- | ------------------------------------------ |
+| `[state, setState]` | `[T, Dispatch<SetStateAction<T>>]` | Like `useState`, returns state and setter. |
+
+### <samp>useClearLocalStorage / useClearSessionStorage</samp>
+
+Clear the storage keys defined in [defineStorage](#definestorage)
+
+| Returns        | type                                    | description                                                                      |
+| -------------- | --------------------------------------- | -------------------------------------------------------------------------------- |
+| `clearStorage` | `(options?: {keys?: string[]}) => void` | Use the `keys` option the clear specific keys. <br />Otherwise clears everything |

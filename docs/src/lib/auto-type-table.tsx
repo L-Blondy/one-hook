@@ -3,8 +3,8 @@ import path from 'path'
 import type React from 'react'
 
 const fuma = createTypeTable({
-  transform: (d, i) => {
-    console.log(d, i)
+  transform(entry, ctx) {
+    // console.log(d, i)
   },
 })
 

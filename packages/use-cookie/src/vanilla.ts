@@ -12,7 +12,7 @@ export type ServiceOptions = {
   deserialize?: (value: string) => any
 }
 
-export type CookieConfig<TOutput = any> = {
+export type CookieConfig<TOutput = unknown> = {
   expires?: number | Date
   sameSite?: 'lax' | 'strict' | 'none'
   secure?: boolean
@@ -62,7 +62,7 @@ export function createCookieService<
 
   return {
     set<TName extends CookieName>(name: TName, value: CookieValue<TName>) {
-      return setCookie(name, value, config[name]!)
+      return setCookie(name, value, config[name] as any)
     },
     get<TName extends CookieName>(name: TName): CookieValue<TName> {
       return this.parse(name, readValue(name, decode))
@@ -79,7 +79,7 @@ export function createCookieService<
       value: string | undefined,
     ): CookieValue<TName> {
       const parsed = value === undefined ? undefined : deserialize(value)
-      return validateSync(config[name]!.validate, parsed)
+      return validateSync((config[name] as any).validate, parsed)
     },
   }
 }

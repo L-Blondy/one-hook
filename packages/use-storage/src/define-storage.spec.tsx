@@ -27,7 +27,10 @@ const { useLocalStorage } = defineStorage(
       ),
     },
     anyCookie: {
-      validate: (v) => v,
+      validate: (v) => {
+        expectTypeOf(v).toEqualTypeOf<unknown>()
+        return v
+      },
     },
   },
   { type: 'local' },

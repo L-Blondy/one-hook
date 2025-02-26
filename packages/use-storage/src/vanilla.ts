@@ -12,7 +12,7 @@ export type ServiceOptions = {
   deserialize?: (value: string) => any
 }
 
-export type StorageConfig<TOutput = any> = {
+export type StorageConfig<TOutput = unknown> = {
   validate: Validator<TOutput>
 }
 
@@ -35,7 +35,7 @@ export function createStorageService<
     get<TKey extends StorageKey>(key: TKey): StorageValue<TKey> {
       let value = storage.getItem(key) ?? undefined
       let parsed = value === undefined ? value : deserialize(value)
-      return validateSync(config[key]!.validate, parsed)
+      return validateSync((config[key] as any).validate, parsed)
     },
     remove: (key: StorageKey) => storage.removeItem(key),
   }

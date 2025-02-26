@@ -11,7 +11,10 @@ const service = createCookieService({
     validate: v.fallback(v.number(), 0),
   },
   'spe/cial': {
-    validate: (v) => v,
+    validate: (v) => {
+      expectTypeOf(v).toEqualTypeOf<unknown>()
+      return v
+    },
   },
   object: {
     validate: v.optional(

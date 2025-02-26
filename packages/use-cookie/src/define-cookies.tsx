@@ -22,24 +22,15 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
   >
 
   const store = new Map<CookieName, CookieValue<CookieName>>()
-  const emitter = createEmitter<Record<CookieName, any>>()
+  const emitter = createEmitter()
   const service = createCookieService(config, options)
-
-  function emit(name: CookieName, updater: any, parsed: boolean) {
-    let value =
-      typeof updater === 'function' ? updater(store.get(name)) : updater
-    const remove = value === undefined
-    if (!parsed) {
-      value = service.parse(name, value)
-    }
-    store.set(name as any, value)
-    remove ? service.remove(name) : service.set(name, value)
-    emitter.emit(name as any, value)
-  }
 
   addCrossTabListener<CookieName>((name: CookieName) => {
     if (keysOf(config).includes(name)) {
-      emit(name as any, service.get(name), true)
+      const value = service.get(name)
+      service.set(name, value)
+      store.set(name, value)
+      emitter.emit(name, value)
     }
   })
 
@@ -53,8 +44,7 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
 
     React.useState(() => {
       keysOf(config as Record<CookieName, any>).forEach((name) => {
-        const value = service.parse(name, props.serverCookies[name])
-        store.set(name, value as any)
+        store.set(name, service.parse(name, props.serverCookies[name]))
       })
     })
 
@@ -67,9 +57,9 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
           // check if the serialized version of the cookie has changed
           cookie !== prevServerCookies.current?.[name]
         ) {
-          // notify the listeners with the parsed and validated value
-          emit(name as CookieName, props.serverCookies[name], false)
-          // notify other tabs
+          const value = service.parse(name as CookieName, cookie)
+          store.set(name as CookieName, value)
+          emitter.emit(name, value)
           emitCrossTabMessage(name)
         }
       })
@@ -94,7 +84,13 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
 
     const set = React.useCallback(
       (updater: React.SetStateAction<CookieValue<TName>>) => {
-        emit(name, updater, true)
+        const value =
+          typeof updater === 'function'
+            ? (updater as any)(store.get(name))
+            : updater
+        store.set(name, value)
+        service.set(name, value)
+        emitter.emit(name, value)
         emitCrossTabMessage(name)
       },
       [name],
@@ -108,7 +104,10 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
     return React.useCallback((options?: { keys?: CookieName[] }) => {
       const names = options?.keys ?? keysOf(config)
       names.forEach((name) => {
-        emit(name, undefined, false)
+        const value = service.parse(name, undefined)
+        store.set(name, value)
+        service.remove(name)
+        emitter.emit(name, value)
         emitCrossTabMessage(name)
       })
     }, [])

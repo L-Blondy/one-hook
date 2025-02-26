@@ -209,27 +209,19 @@ defineCookies(
 )
 ```
 
-<AutoTypeTable path="packages/use-cookie/src/index.ts" name="CookieConfig" />
+<AutoTypeTable
+  name="CookieConfig"
+  description="The config of a single cookie."
+  path="packages/use-cookie/src/index.ts"
+/>
 
-Define the cookies upfront.
+<AutoTypeTable
+  name="ServiceOptions"
+  description="The options of the cookie service."
+  path="packages/use-cookie/src/index.ts"
+/>
 
-| 1st argument            | type                          | description                                                                                                           |
-| ----------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `config[name].validate` | `(value: unknown) => T`       | Validation function for the given cookie `name` <br/>when reading the cookie. <br/>The value is already deserialized. |
-| `config[name].expires`  | `number \| Date`              | Expiration date for the cookie. <br/> Numerical values represent the number of days from now.                         |
-| `config[name].sameSite` | `'lax' \| 'strict' \| 'none'` | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value)           |
-| `config[name].secure`   | `boolean`                     | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#secure)                           |
-| `config[name].domain`   | `string`                      | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value)               |
-
-<br />
-
-| 2nd argument (optional)   | type                   | description                                                                                                                                                                   |
-| ------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `options.disableEncoding` | `boolean`              | Disable the default encoding / decoding <br/> (See [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)) |
-| `options.serialize`       | `(value: T) => string` | Custom serialization function                                                                                                                                                 |
-| `options.deserialize`     | `(value: T) => string` | Custom deserialization function                                                                                                                                               |
-
-### <samp>CookieProvider</samp>
+### 👉 CookieProvider
 
 Must be used within a server-side component.
 
@@ -238,7 +230,7 @@ Must be used within a server-side component.
 | `serverCookies` | `Record<string, string>` | Initial cookies retrieved on the server. |
 | `children`      | `ReactNode`              | Content to be rendered as children.      |
 
-### <samp>useCookie</samp>
+### 👉 useCookie
 
 Read and write a given cookie
 
@@ -252,7 +244,7 @@ Read and write a given cookie
 | ------------------- | ---------------------------------- | ------------------------------------------ |
 | `[state, setState]` | `[T, Dispatch<SetStateAction<T>>]` | Like `useState`, returns state and setter. |
 
-### <samp>useClearCookies</samp>
+### 👉 useClearCookies
 
 Clear the cookies defined in [defineCookies](#definecookies)
 

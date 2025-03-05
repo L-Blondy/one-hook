@@ -43,6 +43,7 @@
     "tsup/*",
     "scripts/*",
     "vitest/*",
+    "packages/**/*",
     "**/tsup.config.ts",
     "**/vitest.config.mts",
     "**/postcss.config.mjs"

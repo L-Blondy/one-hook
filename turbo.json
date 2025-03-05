@@ -15,13 +15,16 @@
       "cache": false
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^lint"],
+      "cache": false
     },
     "lint:typescript": {
-      "dependsOn": ["^lint:typescript"]
+      "dependsOn": ["^lint:typescript"],
+      "cache": false
     },
     "lint:eslint": {
-      "dependsOn": ["^lint:eslint"]
+      "dependsOn": ["^lint:eslint"],
+      "cache": false
     }
   }
 }

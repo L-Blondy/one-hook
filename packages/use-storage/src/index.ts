@@ -1,6 +1,2 @@
-export {
-  createStorageService,
-  type ServiceOptions,
-  type StorageConfig,
-} from './vanilla'
+export { type StorageConfig, type ServiceOptions } from './vanilla'
 export { defineStorage } from './define-storage'

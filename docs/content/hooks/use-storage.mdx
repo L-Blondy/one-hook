@@ -28,35 +28,30 @@ For **SSR frameworks** use [defineCookies](/hooks/cookies) instead.
 
 Use `defineStorage` to configure validation rules for each key and specify the storage type (`'local'` or `'session'`).
 
-```tsx title='local-storage.ts'
+```tsx twoslash title='local-storage.ts'
 'use client'
-import { defineStorage } from 'crustack/hooks'
+import { z } from 'zod'
+import { defineStorage } from '@one-stack/use-storage'
 
-export const { useLocalStorage, useClearLocalStorage } = defineStorage(
+export const [useLocalStorage, LocalStorage] = defineStorage(
   {
-    // expect a "search" storage key with a value of type `string`
+    // "search" storage key with a string value
     search: {
-      validate: (value) => String(value),
+      validate: z.string().default(''),
     },
-    // expect a "selected" storage key with a value of type `{ id: number, name: string } | undefined`
+    // "selected" storage key with an optional object value
     selected: {
-      validate: (value) =>
-        value ? { id: Number(value.id), name: String(value.name) } : undefined,
+      validate: z.object({ id: z.number(), name: z.string() }).optional(),
     },
   },
   { type: 'local' },
 )
 ```
 
-`defineStorage` returns 2 hooks for interacting with the storage:
-
-- type `'local'` returns `useLocalStorage` and `useClearLocalStorage`
-- type `'session'` returns `useSessionStorage` and `useClearSessionStorage`
-
 </Step>
 
 <Step>
-### Use like useState.
+### Read and Write to the storage.
 
 Instead of the initial state, pass the storage key you want to read / write from.
 
@@ -65,9 +60,19 @@ Instead of the initial state, pass the storage key you want to read / write from
 import { useLocalStorage } from './local-storage'
 
 function Search() {
-  const [search, setSearch] = useLocalStorage('search')
+  const search = useLocalStorage('search')
 
-  return <input onChange={(e) => setSearch(e.target.value)} value={search} />
+  return (
+    <form>
+      <input
+        onChange={(e) => search.set(e.target.value)}
+        value={search.value}
+      />
+      <button type="button" onClick={() => search.clear()}>
+        Clear search
+      </button>
+    </form>
+  )
 }
 ```
 
@@ -76,138 +81,143 @@ Storage updates are automatically synchronized across all instances of the hook 
 </Step>
 </Steps>
 
-## How to
+## Validation
 
-### Clear the storage
+To ensure data integrity, the storage values should be validated.
 
-Use `useClearLocalStorage` to remove keys defined in [defineStorage](#definestorage). <br/>
-For full storage clearing, combine it with `localStorage.clear()`.
+### 👉 Functional validation
 
-```ts
-import { useClearLocalStorage } from './local-storage'
+For simple cases you can use a function to validate the storage.
 
-const clearLocalStorage = useClearLocalStorage()
+The following example ensures the value is a string and adds a fallback value of `''` in case the value is `undefined`.
 
-// Clear all defined storage keys
-clearLocalStorage()
-
-// Clear specific keys
-clearLocalStorage({ keys: ['search'] })
+```ts twoslash
+import { defineStorage } from '@one-stack/use-storage'
+// ---cut---
+defineStorage(
+  { search: { validate: (value) => String(value ?? '') } },
+  { type: 'local' },
+)
 ```
 
-### Validate the storage
+### 👉 Schema validation
 
-To ensure the values retrieved from storage are valid (since storage can be manually modified by users), all reads are validated. <br/>
-Use libraries like **zod** or **valibot** to handle validation easily.
+For more complex cases you can use a schema to validate the cookie value.
 
-**Example using zod:**
+<Callout type="info">
+  Since we follow the [Standard
+  Schema](https://github.com/standard-schema/standard-schema) specification, you
+  can choose between [zod 3.24+](https://zod.dev/), [valibot
+  1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/) to
+  validate the cookies.
+</Callout>
 
-```ts
+The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
+
+```ts twoslash
+import { defineStorage } from '@one-stack/use-storage'
+// ---cut---
 import { z } from 'zod'
 
 defineStorage(
-  {
-    // expect a string, fallback to ''
-    search: {
-      validate: (value) => z.string().catch('').parse(value),
-    },
-    // expect an optional object with id and name, fallback to undefined
-    selected: {
-      validate: (value) =>
-        z
-          .object({ id: z.number(), name: z.string() })
-          .optional()
-          .catch(undefined)
-          .parse(value),
-    },
-  },
+  { search: { validate: z.string().default('') } },
   { type: 'local' },
 )
 ```
 
-**Example using valibot:**
+## Read, Write & Clear outside of React
 
-```ts
-import { parse, number, boolean, fallback } from 'valibot'
+You can read and write storage outside of React by using the `Storage` object.
 
-defineStorage(
-  {
-    // expect a string, fallback to ''
-    search: {
-      validate: (value) => fallback(parse(string(), value), ''),
-    },
-    // expect an optional object with id and name, fallback to undefined
-    selected: {
-      validate: (value) =>
-        fallback(
-          parse(
-            optional(
-              object({
-                id: number(),
-                name: string(),
-              }),
-            ),
-            value,
-          ),
-          undefined,
-        ),
-    },
-  },
+```ts twoslash include clientstorage
+import { z } from 'zod'
+import { defineStorage } from '@one-stack/use-storage'
+// ---cut---
+export const [useLocalStorage, LocalStorage] = defineStorage(
+  { accessToken: { validate: z.string().optional() } },
   { type: 'local' },
 )
 ```
 
-### Customize (de)serialization
+Using the `Storage` to write or clear storage will still trigger a **React re-render**.
 
-You can define custom serialization and deserialization for stored values.
+```tsx twoslash
+// @noErrors
+// @include: clientstorage
+// ---cut---
+import { LocalStorage } from './storage'
 
-```ts
+// Write
+LocalStorage.set('accessToken', '123')
+
+// Read
+const accessToken = LocalStorage.get('accessToken')
+
+// Clear specific key
+LocalStorage.clear(['accessToken'])
+
+// Clear all keys
+LocalStorage.clear()
+```
+
+## Custom (de)serialization
+
+In some cases you might need to customize the serialization and deserialization of the cookie value.
+
+You can do this by using the `serialize` and `deserialize` options.
+
+```ts twoslash
+import { defineStorage } from '@one-stack/use-storage'
+// ---cut---
 defineStorage(
-  { search: { validate: String } },
+  { search: { validate: (value) => String(value ?? '') } },
   {
     type: 'local',
-    serialize: (value) => JSON.stringify(value), // Custom serialize
-    deserialize: (value) => JSON.parse(value), // Custom deserialize
+    serialize: (value) => JSON.stringify(value), // Custom serialization
+    deserialize: (value) => JSON.parse(value), // Custom deserialization
   },
 )
 ```
+
+<hr />
 
 ## API Reference
 
-### <samp>defineStorage</samp>
+### 👉 defineStorage
 
-Define the storage strategy.
+Generate typesafe hooks and a Provider from a storage configuration object.
 
-| 1st argument           | type                    | description                                                                |
-| ---------------------- | ----------------------- | -------------------------------------------------------------------------- |
-| `config[key].validate` | `(value: unknown) => T` | Validation function for the given `key`<br/> when reading from the storage |
+```ts
+function defineStorage(
+  config: Record<string, StorageConfig>,
+  options?: ServiceOptions,
+): [ useStorage Storage ]
+```
 
-<br />
+<AutoTypeTable
+  name="StorageConfig"
+  description="The config of a storage key."
+  path="packages/use-storage/src/index.ts"
+/>
 
-| 2nd argument          | type                   | description                                 |
-| --------------------- | ---------------------- | ------------------------------------------- |
-| `options.type`        | `'local' \| 'session'` | The type of storage.                        |
-| `options.serialize`   | `(value: T) => string` | Custom serialization function (optional).   |
-| `options.deserialize` | `(value: T) => string` | Custom deserialization function (optional). |
+<AutoTypeTable
+  name="ServiceOptions"
+  description="The options of the storage service."
+  path="packages/use-storage/src/index.ts"
+/>
 
-### <samp>useLocalStorage / useSessionStorage</samp>
+### 👉 useStorage
 
-Read and write from a given storage key
+Manage storage state providing the storage key.
 
-| Arguments | type     | description                                        |
-| --------- | -------- | -------------------------------------------------- |
-| `key`     | `string` | The storage key you want to read from or write to. |
+```ts
+function useStorage(key: string): { value; set; clear; get }
+```
 
-<br />
+### 👉 Storage
 
-| Returns             | type                               | description                                |
-| ------------------- | ---------------------------------- | ------------------------------------------ |
-| `[state, setState]` | `[T, Dispatch<SetStateAction<T>>]` | Like `useState`, returns state and setter. |
+Read and write to the storage outside of React.
 
-### <samp>useClearLocalStorage / useClearSessionStorage</samp>
-
-Clear the storage keys defined in [defineStorage](#definestorage)
-
-| Returns        | type                                    | description                                                                      |
-| -------------- | --------------------------------------- | -------------------------------------------------------------------------------- |
-| `clearStorage` | `(options?: {keys?: string[]}) => void` | Use the `keys` option the clear specific keys. <br />Otherwise clears everything |
+```ts
+const Storage = { set; clear; get }
+```

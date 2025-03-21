@@ -28,7 +28,7 @@ Use defineCookies to configure validation rules and expiration settings for each
 import { z } from 'zod'
 import { defineCookies } from '@one-stack/use-cookie'
 
-export const { CookieProvider, useCookie, useClearCookies } = defineCookies({
+export const { CookieProvider, useCookie } = defineCookies({
   // "search" cookie with a string value
   search: {
     validate: z.string().default(''),
@@ -51,27 +51,16 @@ export const { CookieProvider, useCookie, useClearCookies } = defineCookies({
 
 Place the `CookieProvider` in a [Server Component](https://react.dev/reference/rsc/server-components), preferably at the root of your application.
 
-<Callout type="info">
-  The Provider must receive the server cookies in the form of a 
-	`Record<string, string>`.
-</Callout>
-
 ```tsx twoslash title="providers.tsx"
 // @noErrors
 // @include: cookies
 // ---cut---
-import { cookies } from 'next/headers'
+import { headers } from 'next/headers'
 import { CookieProvider } from './cookies'
 
 export async function Providers(props: { children: ReactNode }) {
-  const serverCookies = Object.fromEntries(
-    (await cookies()).getAll().map((cookie) => [cookie.name, cookie.value]),
-  )
-
   return (
-    <CookieProvider serverCookies={serverCookies}>
-      {props.children}
-    </CookieProvider>
+    <CookieProvider headers={await headers()}>{props.children}</CookieProvider>
   )
 }
 ```
@@ -79,9 +68,15 @@ export async function Providers(props: { children: ReactNode }) {
 </Step>
 
 <Step>
-### Use like useState.
+### Read and Write cookies.
 
-Instead of the initial state, pass the name of the cookie you want use.
+Call `useCookie` with the cookie name you want to use.
+
+Each cookie has 3 properties:
+
+- `value`: The current value of the cookie.
+- `set`: A function to update the cookie value.
+- `remove`: A function to remove the cookie.
 
 ```tsx twoslash
 // @noErrors
@@ -90,48 +85,26 @@ Instead of the initial state, pass the name of the cookie you want use.
 import { useCookie } from './cookies'
 
 function Search() {
-  const [search, setSearch] = useCookie('search')
+  const search = useCookie('search')
 
-  return <input onChange={(e) => setSearch(e.target.value)} value={search} />
+  return (
+    <form>
+      <input
+        onChange={(e) => search.set(e.target.value)}
+        value={search.value}
+      />
+      <button type="button" onClick={() => search.clear()}>
+        Clear search
+      </button>
+    </form>
+  )
 }
 ```
 
-Any change to the cookie is synchronized across all instances of the hook and across browser tabs.
+Changes to the cookie are synchronized across all instances of the hook and across browser tabs.
 
 </Step>
 </Steps>
-
-## Clear the cookies
-
-Use `useClearCookies` to remove keys defined in [defineCookies](#definecookies). <br/>
-For full cookie clearing, create a custom helper.
-
-```ts twoslash include clearcookies
-// @noErrors
-// @include: cookies
-// ---cut---
-import { useClearCookies } from './cookies'
-
-const clearCookies = useClearCookies()
-```
-
-Clear specific cookies:
-
-```ts twoslash
-// @include: cookies
-// @include: clearcookies
-// ---cut---
-clearCookies(['search'])
-```
-
-Clear all user defined cookies:
-
-```ts twoslash
-// @include: cookies
-// @include: clearcookies
-// ---cut---
-clearCookies()
-```
 
 ## Validation
 
@@ -158,9 +131,9 @@ defineCookies({
 For more complex cases you can use a schema to validate the cookie value.
 
 <Callout type="info">
-  Since _1hook_ implements the [Standard Schema
-  ](https://github.com/standard-schema/standard-schema) specification, you can
-  choose between [zod 3.24+](https://zod.dev/), [valibot
+  Since we follow the [Standard
+  Schema](https://github.com/standard-schema/standard-schema) specification, you
+  can choose between [zod 3.24+](https://zod.dev/), [valibot
   1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/) to
   validate the cookies.
 </Callout>
@@ -177,6 +150,72 @@ defineCookies({
     validate: z.string().default(''),
   },
 })
+```
+
+## Read, Write & Clear cookies outside of React
+
+You can read and write cookies outside of React by using the `clientCookies` object.
+
+```ts twoslash include clientcookies
+import { z } from 'zod'
+import { defineCookies } from '@one-stack/use-cookie'
+// ---cut---
+export const { CookieProvider, useCookie, clientCookies } = defineCookies({
+  accessToken: {
+    validate: z.string().optional(),
+    expires: 7, // days from now
+  },
+})
+```
+
+Using the `clientCookies` to write or clear cookies will still trigger a **React re-render**.
+
+```tsx twoslash
+// @noErrors
+// @include: clientcookies
+// ---cut---
+import { clientCookies } from './cookies'
+
+// Write a cookie
+clientCookies.set('accessToken', '123')
+
+// Read a cookie
+const accessToken = clientCookies.get('accessToken')
+
+// Clear specific cookies
+clientCookies.clear(['accessToken'])
+
+// Clear all cookies
+clientCookies.clear()
+```
+
+## Read cookies on the server
+
+You can read cookies on the server by using the `serverCookies` object.
+
+```ts twoslash include servercookies
+import { z } from 'zod'
+import { defineCookies } from '@one-stack/use-cookie'
+// ---cut---
+export const { CookieProvider, useCookie, serverCookies } = defineCookies({
+  accessToken: {
+    validate: z.string().optional(),
+    expires: 7, // days from now
+  },
+})
+```
+
+The `serverCookies` has only one `get` method, which expect the headers and the cookie name. \
+It ensures the cookie is properly **decoded**, **deserialized** and **validated**.
+
+```tsx twoslash
+// @noErrors
+// @include: servercookies
+// ---cut---
+import { headers } from 'next/headers'
+import { serverCookies } from './cookies'
+
+const accessToken = serverCookies.get(await headers(), 'accessToken')
 ```
 
 ## Custom (de)serialization
@@ -212,8 +251,8 @@ function defineCookies(
 ): {
   CookieProvider
   useCookie
-  useClearCookies
-  cookieService
+  clientCookies
+  serverCookies
 }
 ```
 
@@ -245,25 +284,24 @@ function CookieProvider(props: CookieProviderProps): ReactNode
 
 ### 👉 useCookie
 
-Manage cookie state like `useState`.
-Instead of an initial value, provide the cookie name.
+Manage cookie state providing the cookie name.
 
 ```ts
-function useCookie(name: string): [cookie, setCookie]
+function useCookie(name: string): { value; set; clear; get }
 ```
 
-### 👉 useClearCookies
+### 👉 clientCookies
 
-Clear the user-defined cookies.
+Read and write cookies on the client, outside of React.
 
 ```ts
-function useClearCookies(): clearCookies
-
-function clearCookies(keys?: string[]): void
+const clientCookies = { set; clear; get }
 ```
 
-### 👉 cookieService
+### 👉 serverCookies
 
-Use the cookie service to read and write cookies in Server Components or outside of React.
+Read cookies on the server.
 
-<AutoTypeTable name="CookieService" path="packages/use-cookie/src/index.ts" />
+```ts
+const serverCookies = { get }
+```

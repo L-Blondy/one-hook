@@ -40,69 +40,62 @@ export function defineStorage<
     }
   })
 
+  function get<TKey extends StorageKey>(key: TKey) {
+    return store.get(key)!
+  }
+
+  function set<TKey extends StorageKey>(
+    key: TKey,
+    updater: React.SetStateAction<Store[TKey]>,
+  ) {
+    const value =
+      typeof updater === 'function' ? (updater as any)(store.get(key)) : updater
+    store.set(key, value)
+    service.set(key, value)
+    emitter.emit(key as any, value)
+  }
+
+  function clear(keys: StorageKey[] = keysOf(config)) {
+    keys.forEach((key) => {
+      service.remove(key)
+      const value = service.get(key)
+      store.set(key, value)
+      emitter.emit(key as any, value)
+    })
+  }
+
   function useStorage<TKey extends StorageKey>(key: TKey) {
-    const [state, setState] = React.useState<StorageValue<TKey>>(
-      () => store.get(key)!,
-    )
+    type State = {
+      value: StorageValue<TKey>
+      set: (updater: React.SetStateAction<StorageValue<TKey>>) => void
+      clear: () => void
+      get: () => StorageValue<TKey>
+    }
+
+    const [state, setState] = React.useState<State>(() => ({
+      value: get(key),
+      set: (updater) => set(key, updater),
+      clear: () => clear([key]),
+      get: () => get(key),
+    }))
 
     useIsomorphicLayoutEffect(
       () =>
         emitter.on((channel, updater) => {
-          channel === key && setState(updater)
+          channel === key &&
+            setState((prev) => ({
+              ...prev,
+              value:
+                typeof updater === 'function' ? updater(prev.value) : updater,
+            }))
         }),
       [key],
     )
 
-    const set = React.useCallback(
-      (updater: React.SetStateAction<Store[TKey]>) => {
-        const value =
-          typeof updater === 'function'
-            ? (updater as any)(store.get(key))
-            : updater
-        store.set(key, value)
-        service.set(key, value)
-        emitter.emit(key as any, value)
-      },
-      [key],
-    )
-
-    return [state, set] as const
+    return state
   }
 
-  // Could be non-hook
-  function useClearStorage() {
-    return React.useCallback((keys: StorageKey[] = keysOf(config)) => {
-      keys.forEach((key) => {
-        service.remove(key)
-        const value = service.get(key)
-        store.set(key, value)
-        emitter.emit(key as any, value)
-      })
-    }, [])
-  }
+  const Storage = { get, set, clear }
 
-  type OutputLocal = {
-    useLocalStorage: typeof useStorage
-    useClearLocalStorage: typeof useClearStorage
-  }
-
-  type OutputSession = {
-    useSessionStorage: typeof useStorage
-    useClearSessionStorage: typeof useClearStorage
-  }
-
-  type OutputType = TServiceOptions['type'] extends 'local'
-    ? OutputLocal
-    : OutputSession
-
-  // assign to a typed variable before returning lets JSDocs work
-  return options.type === 'local'
-    ? ({
-        useLocalStorage: useStorage,
-        useClearLocalStorage: useClearStorage,
-      } satisfies OutputLocal as OutputType)
-    : ({
-        useSessionStorage: useStorage,
-        useClearSessionStorage: useClearStorage,
-      } satisfies OutputSession as OutputType)
+  return [useStorage, Storage] as const
 }

@@ -73,10 +73,11 @@ export type CookieService<TConfig extends Record<string, CookieConfig>> = {
   /**
    * Get a cookie value.
    *
-   * @remarks `<T>(name: string) => T`
+   * @remarks `<T>(name: string, allCookies?:string) => T`
    */
   get: <TName extends CookieName<TConfig>>(
     name: TName,
+    allCookies?: string,
   ) => CookieValue<TConfig, TName>
   /**
    * Remove a cookie.
@@ -89,19 +90,21 @@ export type CookieService<TConfig extends Record<string, CookieConfig>> = {
    *
    * @remarks `(name: string, value: string | undefined) => T`
    */
-  parse: <TName extends CookieName<TConfig>>(
+  parseSerialized: <TName extends CookieName<TConfig>>(
     name: TName,
     value: string | undefined,
   ) => CookieValue<TConfig, TName>
+  /**
+   * Get a raw cookie string.
+   *
+   * @remarks `(allCookies: string, name: string) => string | undefined`
+   */
+  getSerialized: <TName extends CookieName<TConfig>>(
+    allCookies: string,
+    name: TName,
+  ) => string | undefined
 }
 
-/**
- * ----
- * Client only cookie management service
- *
- * No `clear` method is exposed to avoid inconsistent behaviors:
- * cookies should be removed using the same attributes they were created with
- */
 export function createCookieService<
   TConfig extends Record<string, CookieConfig>,
 >(config: TConfig, options: ServiceOptions = {}): CookieService<TConfig> {
@@ -134,8 +137,8 @@ export function createCookieService<
     set(name, value) {
       return setCookie(name, value, config[name] as any)
     },
-    get(name) {
-      return this.parse(name, readValue(name, decode))
+    get(name, allCookies = document.cookie) {
+      return this.parseSerialized(name, this.getSerialized(allCookies, name))
     },
     remove(name) {
       setCookie(name, '' as any, {
@@ -144,9 +147,16 @@ export function createCookieService<
         expires: -1,
       })
     },
-    parse(name, value) {
+    parseSerialized(name, value) {
       const parsed = value === undefined ? undefined : deserialize(value)
       return validateSync((config[name] as any).validate, parsed)
+    },
+    getSerialized(allCookies: string, name: string): string | undefined {
+      for (let cookie of allCookies.split(';')) {
+        cookie = cookie.trim()
+        const exists = cookie.startsWith(`${name}=`)
+        if (exists) return decode(cookie.replace(`${name}=`, ''))
+      }
     },
   }
   return service
@@ -158,12 +168,4 @@ function toUTCString(expires: number | Date) {
       ? new Date(Date.now() + expires * 864e5) // 864e5 are the ms of one day
       : expires
   ).toUTCString()
-}
-
-function readValue(key: string, decode: (value: string) => string) {
-  for (let cookie of document.cookie.split(';')) {
-    cookie = cookie.trim()
-    const exists = cookie.startsWith(`${key}=`)
-    if (exists) return decode(cookie.replace(`${key}=`, ''))
-  }
 }

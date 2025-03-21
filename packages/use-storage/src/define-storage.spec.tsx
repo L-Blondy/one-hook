@@ -11,7 +11,7 @@ import {
 import React from 'react'
 import * as v from 'valibot'
 
-const { useLocalStorage } = defineStorage(
+const [useLocalStorage] = defineStorage(
   {
     name1: {
       validate: (data) => String(data ?? ''),
@@ -44,19 +44,19 @@ afterEach(() => {
 
 test('type inferrence', () => {
   renderHook(() => {
-    const [state1, setState1] = useLocalStorage('name1')
-    expectTypeOf(state1).toEqualTypeOf<string>()
-    expectTypeOf(setState1).toEqualTypeOf<
+    const state1 = useLocalStorage('name1')
+    expectTypeOf(state1.value).toEqualTypeOf<string>()
+    expectTypeOf(state1.set).toEqualTypeOf<
       React.Dispatch<React.SetStateAction<string>>
     >()
-    const [state2, setState2] = useLocalStorage('name2')
-    expectTypeOf(state2).toEqualTypeOf<number>()
-    expectTypeOf(setState2).toEqualTypeOf<
+    const state2 = useLocalStorage('name2')
+    expectTypeOf(state2.value).toEqualTypeOf<number>()
+    expectTypeOf(state2.set).toEqualTypeOf<
       React.Dispatch<React.SetStateAction<number>>
     >()
-    const [state3, setState3] = useLocalStorage('object')
-    expectTypeOf(state3).toEqualTypeOf<{ key: string } | undefined>()
-    expectTypeOf(setState3).toEqualTypeOf<
+    const state3 = useLocalStorage('object')
+    expectTypeOf(state3.value).toEqualTypeOf<{ key: string } | undefined>()
+    expectTypeOf(state3.set).toEqualTypeOf<
       React.Dispatch<React.SetStateAction<{ key: string } | undefined>>
     >()
   })
@@ -64,21 +64,21 @@ test('type inferrence', () => {
 
 test('should behave like useState with shared state between hooks', () => {
   const { result } = renderHook(() => {
-    const [state1, setState1] = useLocalStorage('name2')
-    const [state2, setState2] = useLocalStorage('name2')
-    return { state1, setState1, state2, setState2 }
+    const state1 = useLocalStorage('name2')
+    const state2 = useLocalStorage('name2')
+    return { state1, state2 }
   })
-  expect(result.current.state1).toBe(0)
-  expect(result.current.state2).toBe(0)
-  act(() => result.current.setState1(2))
-  expect(result.current.state1).toBe(2)
-  expect(result.current.state2).toBe(2)
+  expect(result.current.state1.value).toBe(0)
+  expect(result.current.state2.value).toBe(0)
+  act(() => result.current.state1.set(2))
+  expect(result.current.state1.value).toBe(2)
+  expect(result.current.state2.value).toBe(2)
   act(() => {
-    result.current.setState1((prev) => prev * prev)
-    result.current.setState1((prev) => prev * prev)
+    result.current.state1.set((prev) => prev * prev)
+    result.current.state1.set((prev) => prev * prev)
   })
-  expect(result.current.state1).toBe(16)
-  expect(result.current.state2).toBe(16)
+  expect(result.current.state1.value).toBe(16)
+  expect(result.current.state2.value).toBe(16)
 })
 
 test('should synchronize state updates across multiple components', () => {
@@ -146,10 +146,7 @@ test('should only reset cookies for specified keys when calling clearStorage', (
   screen.getByText('Consumer4 changed')
 })
 
-const {
-  useLocalStorage: useAppStorage,
-  useClearLocalStorage: useClearAppStorage,
-} = defineStorage(
+const [useAppStorage, appClientStorage] = defineStorage(
   {
     ch1: { validate: (v) => Number(v ?? 0) },
     ch2: { validate: (v) => String(v ?? 'init') },
@@ -158,7 +155,7 @@ const {
 )
 
 type KeysToReset = NonNullable<
-  NonNullable<Parameters<ReturnType<typeof useClearAppStorage>>[0]>
+  Parameters<(typeof appClientStorage)['clear']>[0]
 >
 
 function initTestApp() {
@@ -166,8 +163,7 @@ function initTestApp() {
     keysToReset?: KeysToReset
     serverCookies?: Record<string, string>
   }) {
-    const clear = useClearAppStorage()
-    React.useEffect(() => () => clear(), [clear])
+    React.useEffect(() => () => appClientStorage.clear(), [])
     return (
       <div>
         <Consumer1 />
@@ -178,36 +174,41 @@ function initTestApp() {
   }
 
   function Consumer1() {
-    const [state, setState] = useAppStorage('ch1')
+    const state = useAppStorage('ch1')
     return (
-      <button onClick={() => setState((s) => ++s)}>Consumer1 {state}</button>
+      <button onClick={() => state.set((s) => ++s)}>
+        Consumer1 {state.value}
+      </button>
     )
   }
 
   function Consumer2(props: { keysToReset?: KeysToReset }) {
-    const [state, setState] = useAppStorage('ch1')
+    const state = useAppStorage('ch1')
     return (
       <>
-        <button onClick={() => setState((s) => ++s)}>Consumer2 {state}</button>
-        {state === 2 && <Consumer3 keysToReset={props.keysToReset} />}
+        <button onClick={() => state.set((s) => ++s)}>
+          Consumer2 {state.value}
+        </button>
+        {state.value === 2 && <Consumer3 keysToReset={props.keysToReset} />}
       </>
     )
   }
 
   function Consumer3(props: { keysToReset?: KeysToReset }) {
-    const [state] = useAppStorage('ch1')
-    const clearCookies = useClearAppStorage()
+    const state = useAppStorage('ch1')
     return (
-      <button onClick={() => clearCookies(props.keysToReset)}>
-        Consumer3 {state}
+      <button onClick={() => appClientStorage.clear(props.keysToReset)}>
+        Consumer3 {state.value}
       </button>
     )
   }
 
   function Consumer4() {
-    const [state, setState] = useAppStorage('ch2')
+    const state = useAppStorage('ch2')
     return (
-      <button onClick={() => setState('changed')}>Consumer4 {state}</button>
+      <button onClick={() => state.set('changed')}>
+        Consumer4 {state.value}
+      </button>
     )
   }
 

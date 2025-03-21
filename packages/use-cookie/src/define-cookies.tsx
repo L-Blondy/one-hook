@@ -7,16 +7,12 @@ import {
 import type { KeyOf } from '@one-stack/utils/types'
 import { createEmitter } from '@one-stack/utils/emitter'
 import { isServer } from '@one-stack/utils/is-server'
-import { entriesOf } from '@one-stack/utils/entries-of'
 import { keysOf } from '@one-stack/utils/keys-of'
 import { useIsomorphicLayoutEffect } from '@one-stack/use-isomorphic-layout-effect'
 import type { ValidatorOutput } from '@one-stack/utils/validate'
 
 export type CookieProviderProps = {
-  /**
-   * The initial cookies retrieved on the server.
-   */
-  serverCookies: Record<string, string>
+  headers: Headers
   children: React.ReactNode
 }
 
@@ -42,89 +38,118 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
     }
   })
 
-  function CookieProvider(props: {
-    children: React.ReactNode
-    serverCookies: Record<string, string>
-  }) {
-    const prevServerCookies = React.useRef<Record<string, string> | undefined>(
-      undefined,
-    )
+  // server
+  function getServerCookie<TName extends CookieName>(
+    serverCookieString: string,
+    name: TName,
+  ): CookieValue<TName> {
+    return service.get(name, serverCookieString)
+  }
 
-    React.useState(() => {
-      keysOf(config as Record<CookieName, any>).forEach((name) => {
-        store.set(name, service.parse(name, props.serverCookies[name]))
-      })
+  // client
+  function get<TName extends CookieName>(name: TName) {
+    return store.get(name)!
+  }
+
+  // client
+  function set<TName extends CookieName>(
+    name: TName,
+    updater: React.SetStateAction<CookieValue<TName>>,
+  ) {
+    const value =
+      typeof updater === 'function'
+        ? (updater as any)(store.get(name))
+        : updater
+    store.set(name, value)
+    service.set(name, value)
+    emitter.emit(name, value)
+    emitCrossTabMessage(name)
+  }
+
+  // client
+  function clear(names: CookieName[] = keysOf(config)) {
+    names.forEach((name) => {
+      const value = service.parseSerialized(name, undefined)
+      store.set(name, value)
+      service.remove(name)
+      emitter.emit(name, value)
+      emitCrossTabMessage(name)
     })
-
-    // Notify the listeners when server-side cookies change
-    React.useEffect(() => {
-      entriesOf(props.serverCookies).forEach(([name, cookie]) => {
-        if (
-          // check if the cookie name is ours
-          keysOf(config).includes(name) &&
-          // check if the serialized version of the cookie has changed
-          cookie !== prevServerCookies.current?.[name]
-        ) {
-          const value = service.parse(name as CookieName, cookie)
-          store.set(name as CookieName, value)
-          emitter.emit(name, value)
-          emitCrossTabMessage(name)
-        }
-      })
-      prevServerCookies.current = props.serverCookies
-    }, [props.serverCookies])
-
-    return props.children
-  }
-
-  function useCookie<TName extends CookieName>(name: TName) {
-    const [state, setState] = React.useState<CookieValue<TName>>(
-      () => store.get(name)!,
-    )
-
-    useIsomorphicLayoutEffect(
-      () =>
-        emitter.on((channel, updater) => {
-          channel === (name as string) && setState(updater)
-        }),
-      [name],
-    )
-
-    const set = React.useCallback(
-      (updater: React.SetStateAction<CookieValue<TName>>) => {
-        const value =
-          typeof updater === 'function'
-            ? (updater as any)(store.get(name))
-            : updater
-        store.set(name, value)
-        service.set(name, value)
-        emitter.emit(name, value)
-        emitCrossTabMessage(name)
-      },
-      [name],
-    )
-
-    return [state, set] as const
-  }
-
-  // could be non-hook
-  function useClearCookies() {
-    return React.useCallback((names: CookieName[] = keysOf(config)) => {
-      names.forEach((name) => {
-        const value = service.parse(name, undefined)
-        store.set(name, value)
-        service.remove(name)
-        emitter.emit(name, value)
-        emitCrossTabMessage(name)
-      })
-    }, [])
   }
 
   return {
-    CookieProvider,
-    useCookie,
-    useClearCookies,
-    cookieService: service,
+    CookieProvider(props: CookieProviderProps) {
+      const serverCookieString: string = props.headers.get('Cookie') ?? ''
+      const prevServerCookieString = React.useRef(serverCookieString)
+
+      React.useState(() => {
+        keysOf(config as Record<CookieName, any>).forEach((name) => {
+          store.set(name, getServerCookie(serverCookieString, name))
+        })
+      })
+
+      // Notify the listeners when server-side cookies change
+      React.useEffect(() => {
+        keysOf(config).forEach((name: any) => {
+          const prevRawValue = service.getSerialized(
+            prevServerCookieString.current,
+            name as CookieName,
+          )
+          const curRawValue = service.getSerialized(
+            serverCookieString,
+            name as CookieName,
+          )
+          if (prevRawValue !== curRawValue) {
+            store.set(name, service.parseSerialized(name, curRawValue))
+            emitter.emit(name, service.parseSerialized(name, curRawValue))
+            emitCrossTabMessage(name)
+          }
+        })
+        prevServerCookieString.current = serverCookieString
+      }, [serverCookieString])
+
+      return props.children
+    },
+
+    useCookie<TName extends CookieName>(name: TName) {
+      type State = {
+        value: CookieValue<TName>
+        set: (updater: React.SetStateAction<CookieValue<TName>>) => void
+        clear: () => void
+        get: () => CookieValue<TName>
+      }
+
+      const [state, setState] = React.useState<State>(() => ({
+        value: get(name),
+        set: (updater) => set(name, updater),
+        clear: () => clear([name]),
+        get: () => get(name),
+      }))
+
+      useIsomorphicLayoutEffect(
+        () =>
+          emitter.on((channel, updater) => {
+            channel === (name as string) &&
+              setState((prev) => ({
+                ...prev,
+                value:
+                  typeof updater === 'function' ? updater(prev.value) : updater,
+              }))
+          }),
+        [name],
+      )
+
+      return state
+    },
+
+    clientCookies: { get, set, clear },
+
+    serverCookies: {
+      get: <TName extends CookieName>(
+        headers: Headers,
+        name: TName,
+      ): CookieValue<TName> => service.get(name, headers.get('Cookie') ?? ''),
+    },
   }
 }
 

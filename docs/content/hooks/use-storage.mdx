@@ -24,7 +24,7 @@ description: A simple typesafe state manager using localStorage or sessionStorag
 
 Use `defineStorage` to configure validation rules for each key and specify the storage type (`'local'` or `'session'`).
 
-```tsx twoslash title='local-storage.ts'
+```tsx twoslash title='local-storage.ts' include use-local-storage
 'use client'
 import { z } from 'zod'
 import { defineStorage } from '@one-stack/use-storage'
@@ -51,8 +51,10 @@ export const [useLocalStorage, LocalStorage] = defineStorage(
 
 Instead of the initial state, pass the storage key you want to read / write from.
 
-```tsx
-'use client'
+```tsx twoslash
+// @noErrors
+// @include: use-local-storage
+// ---cut---
 import { useLocalStorage } from './local-storage'
 
 function Search() {

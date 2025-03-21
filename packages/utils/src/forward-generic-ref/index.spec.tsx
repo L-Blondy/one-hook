@@ -2,6 +2,7 @@ import type React from 'react'
 import { test } from 'vitest'
 import { forwardGenericRef } from '.'
 import { render } from '@testing-library/react'
+import { noop } from 'src/noop'
 
 const defaultTag = 'div'
 
@@ -21,8 +22,8 @@ const ComponentAs = forwardGenericRef(
 )
 
 test('type inferrence', () => {
-  render(<ComponentAs as="input" value="string" />)
+  render(<ComponentAs as="input" onChange={noop} value="string" />)
   // @ts-expect-error div has no `value` prop
-  render(<ComponentAs as="div" value="string" />)
-  render(<ComponentAs as="div" />)
+  render(<ComponentAs as="div" onChange={noop} value="string" />)
+  render(<ComponentAs as="div" onChange={noop} />)
 })

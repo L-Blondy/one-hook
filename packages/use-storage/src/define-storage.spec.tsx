@@ -11,7 +11,7 @@ import {
 import React from 'react'
 import * as v from 'valibot'
 
-const [useLocalStorage] = defineStorage(
+const [useLocalStorage, LocalStorage] = defineStorage(
   {
     name1: {
       validate: (data) => String(data ?? ''),
@@ -59,6 +59,7 @@ test('type inferrence', () => {
     expectTypeOf(state3.set).toEqualTypeOf<
       React.Dispatch<React.SetStateAction<{ key: string } | undefined>>
     >()
+    expectTypeOf(LocalStorage.get('name1')).toEqualTypeOf<string>()
   })
 })
 

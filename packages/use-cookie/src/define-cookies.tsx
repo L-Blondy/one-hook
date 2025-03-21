@@ -47,7 +47,7 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
   }
 
   // client
-  function get<TName extends CookieName>(name: TName) {
+  function get<TName extends CookieName>(name: TName): CookieValue<TName> {
     return store.get(name)!
   }
 

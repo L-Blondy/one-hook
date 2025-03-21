@@ -11,24 +11,25 @@ import {
 import React from 'react'
 import * as v from 'valibot'
 
-const { CookieProvider, useCookie, clientCookies } = defineCookies({
-  name1: {
-    validate: (data) => String(data ?? ''),
-  },
-  name2: {
-    validate: v.fallback(v.number(), 0),
-  },
-  object: {
-    validate: v.optional(
-      v.object({
-        key: v.string(),
-      }),
-    ),
-  },
-  anyCookie: {
-    validate: (v) => v,
-  },
-})
+const { CookieProvider, useCookie, clientCookies, serverCookies } =
+  defineCookies({
+    name1: {
+      validate: (data) => String(data ?? ''),
+    },
+    name2: {
+      validate: v.fallback(v.number(), 0),
+    },
+    object: {
+      validate: v.optional(
+        v.object({
+          key: v.string(),
+        }),
+      ),
+    },
+    anyCookie: {
+      validate: (v) => v,
+    },
+  })
 
 afterEach(() => {
   cleanup()
@@ -57,6 +58,10 @@ test('type inferrence', () => {
       expectTypeOf(state3.set).toEqualTypeOf<
         React.Dispatch<React.SetStateAction<{ key: string } | undefined>>
       >()
+      expectTypeOf(clientCookies.get('name1')).toEqualTypeOf<string>()
+      expectTypeOf(
+        serverCookies.get(new Headers(), 'name1'),
+      ).toEqualTypeOf<string>()
     },
     { wrapper: CookieWrapper },
   )

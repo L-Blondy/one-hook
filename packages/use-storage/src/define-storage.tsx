@@ -40,7 +40,7 @@ export function defineStorage<
     }
   })
 
-  function get<TKey extends StorageKey>(key: TKey) {
+  function get<TKey extends StorageKey>(key: TKey): StorageValue<TKey> {
     return store.get(key)!
   }
 

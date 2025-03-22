@@ -274,9 +274,15 @@ Manage cookie state providing the cookie name.
 function useCookie(name: string): { value; set; clear; get }
 ```
 
+`set`, `clear` and `get` are convenience wrappers around `Cookies` methods.
+
 ### 👉 Cookies
 
-Read and write cookies on the client, outside of React.
+Read and write cookies outside of React.
+
+- `get`, `set`, `clear` are client only methods.
+- `set` and `clear` will trigger a **React re-render**
+- use `fromHeaders` to read cookies on the server.
 
 ```ts
 const Cookies = { set; clear; get; fromHeaders }

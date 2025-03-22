@@ -2,7 +2,7 @@ import React from 'react'
 import {
   createStorageService,
   type ServiceOptions,
-  type StorageConfig,
+  type StorageValidator,
 } from './vanilla'
 import type { KeyOf } from '@one-stack/utils/types'
 import { createEmitter } from '@one-stack/utils/emitter'
@@ -11,13 +11,11 @@ import { useIsomorphicLayoutEffect } from '@one-stack/use-isomorphic-layout-effe
 import type { ValidatorOutput } from '@one-stack/utils/validate'
 
 export function defineStorage<
-  TConfig extends Record<string, StorageConfig>,
+  TConfig extends Record<string, StorageValidator>,
   TServiceOptions extends ServiceOptions,
 >(config: TConfig, options: TServiceOptions) {
   type StorageKey = KeyOf<TConfig>
-  type StorageValue<TKey extends StorageKey> = ValidatorOutput<
-    TConfig[TKey]['validate']
-  >
+  type StorageValue<TKey extends StorageKey> = ValidatorOutput<TConfig[TKey]>
   type Store = {
     [Key in StorageKey]: StorageValue<Key>
   }

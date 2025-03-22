@@ -13,24 +13,12 @@ import * as v from 'valibot'
 
 const [useLocalStorage, LocalStorage] = defineStorage(
   {
-    name1: {
-      validate: (data) => String(data ?? ''),
-    },
-    name2: {
-      validate: v.fallback(v.number(), 0),
-    },
-    object: {
-      validate: v.optional(
-        v.object({
-          key: v.string(),
-        }),
-      ),
-    },
-    anyCookie: {
-      validate: (v) => {
-        expectTypeOf(v).toEqualTypeOf<unknown>()
-        return v
-      },
+    name1: (data) => String(data ?? ''),
+    name2: v.fallback(v.number(), 0),
+    object: v.optional(v.object({ key: v.string() })),
+    anyCookie: (v) => {
+      expectTypeOf(v).toEqualTypeOf<unknown>()
+      return v
     },
   },
   { type: 'local' },
@@ -149,8 +137,8 @@ test('should only reset cookies for specified keys when calling clearStorage', (
 
 const [useAppStorage, appClientStorage] = defineStorage(
   {
-    ch1: { validate: (v) => Number(v ?? 0) },
-    ch2: { validate: (v) => String(v ?? 'init') },
+    ch1: (v) => Number(v ?? 0),
+    ch2: (v) => String(v ?? 'init'),
   },
   { type: 'local' },
 )

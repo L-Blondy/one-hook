@@ -31,13 +31,9 @@ import { defineStorage } from '@one-stack/use-storage'
 export const [useLocalStorage, LocalStorage] = defineStorage(
   {
     // "search" storage key with a string value
-    search: {
-      validate: z.string().default(''),
-    },
+    search: z.string().default(''),
     // "selected" storage key with an optional object value
-    selected: {
-      validate: z.object({ id: z.number(), name: z.string() }).optional(),
-    },
+    selected: z.object({ id: z.number(), name: z.string() }).optional(),
   },
   { type: 'local' },
 )
@@ -86,13 +82,17 @@ To ensure data integrity, the storage values should be validated.
 
 For simple cases you can use a function to validate the storage.
 
-The following example ensures the value is a string and adds a fallback value of `''` in case the value is `undefined`.
+The following example ensures the search is a string & the count is a number,
+and adds a fallback value in case the value is `null | undefined`.
 
 ```ts twoslash
 import { defineStorage } from '@one-stack/use-storage'
 // ---cut---
 defineStorage(
-  { search: { validate: (value) => String(value ?? '') } },
+  {
+    search: (value) => String(value ?? ''),
+    count: (value) => Number(value ?? 0),
+  },
   { type: 'local' },
 )
 ```
@@ -109,7 +109,8 @@ For more complex cases you can use a schema to validate the cookie value.
   validate the cookies.
 </Callout>
 
-The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
+The following example ensures the search is a string & the count is a number,
+and adds a fallback value in case the value is `null | undefined`.
 
 ```ts twoslash
 import { defineStorage } from '@one-stack/use-storage'
@@ -117,7 +118,10 @@ import { defineStorage } from '@one-stack/use-storage'
 import { z } from 'zod'
 
 defineStorage(
-  { search: { validate: z.string().default('') } },
+  {
+    search: z.string().default(''),
+    count: z.number().default(0),
+  },
   { type: 'local' },
 )
 ```
@@ -131,7 +135,7 @@ import { z } from 'zod'
 import { defineStorage } from '@one-stack/use-storage'
 // ---cut---
 export const [useLocalStorage, LocalStorage] = defineStorage(
-  { accessToken: { validate: z.string().optional() } },
+  { accessToken: z.string().optional() },
   { type: 'local' },
 )
 ```
@@ -167,7 +171,7 @@ You can do this by using the `serialize` and `deserialize` options.
 import { defineStorage } from '@one-stack/use-storage'
 // ---cut---
 defineStorage(
-  { search: { validate: (value) => String(value ?? '') } },
+  { search: (value) => String(value ?? '') },
   {
     type: 'local',
     serialize: (value) => JSON.stringify(value), // Custom serialization
@@ -188,14 +192,8 @@ Generate typesafe hooks and a Provider from a storage configuration object.
 function defineStorage(
   config: Record<string, StorageConfig>,
   options?: ServiceOptions,
-): [ useStorage Storage ]
+): [useStorage, Storage]
 ```
-
-<AutoTypeTable
-  name="StorageConfig"
-  description="The config of a storage key."
-  path="packages/use-storage/src/index.ts"
-/>
 
 <AutoTypeTable
   name="ServiceOptions"

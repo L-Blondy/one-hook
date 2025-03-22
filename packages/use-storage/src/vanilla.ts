@@ -12,17 +12,13 @@ export type ServiceOptions = {
   deserialize?: (value: string) => any
 }
 
-export type StorageConfig<TOutput = unknown> = {
-  validate: Validator<TOutput>
-}
+export type StorageValidator<TOutput = unknown> = Validator<TOutput>
 
 export function createStorageService<
-  TConfig extends Record<string, StorageConfig>,
+  TConfig extends Record<string, StorageValidator>,
 >(config: TConfig, options: ServiceOptions) {
   type StorageKey = KeyOf<TConfig>
-  type StorageValue<TKey extends StorageKey> = ValidatorOutput<
-    TConfig[TKey]['validate']
-  >
+  type StorageValue<TKey extends StorageKey> = ValidatorOutput<TConfig[TKey]>
 
   const storage = options.type === 'local' ? localStorage : sessionStorage
   const serialize = options.serialize ?? defaultSerializer
@@ -35,7 +31,7 @@ export function createStorageService<
     get<TKey extends StorageKey>(key: TKey): StorageValue<TKey> {
       let value = storage.getItem(key) ?? undefined
       let parsed = value === undefined ? value : deserialize(value)
-      return validateSync((config[key] as any).validate, parsed)
+      return validateSync(config[key] as any, parsed)
     },
     remove: (key: StorageKey) => storage.removeItem(key),
   }

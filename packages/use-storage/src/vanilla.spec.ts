@@ -5,32 +5,16 @@ import * as v from 'valibot'
 
 const local_storage = createStorageService(
   {
-    name1: {
-      validate: (value) => Number(value ?? 0),
-    },
-    name2: {
-      validate: (data) => String(data ?? ''),
-    },
-    object: {
-      validate: v.optional(
-        v.object({
-          key: v.string(),
-        }),
-      ),
-    },
-    anyValue: {
-      validate: (v) => v,
-    },
+    name1: (value) => Number(value ?? 0),
+    name2: (data) => String(data ?? ''),
+    object: v.optional(v.object({ key: v.string() })),
+    anyValue: (v) => v,
   },
   { type: 'local' },
 )
 
 const session_storage = createStorageService(
-  {
-    name1: {
-      validate: v.optional(v.number(), 0),
-    },
-  },
+  { name1: v.optional(v.number(), 0) },
   { type: 'session' },
 )
 

@@ -152,15 +152,15 @@ defineCookies({
 })
 ```
 
-## Read, Write & Clear cookies outside of React
+## Read, Write & Clear outside of React
 
-You can read and write cookies outside of React by using the `clientCookies` object.
+You can read and write cookies outside of React using the `Cookies` object.
 
-```ts twoslash include clientcookies
+```ts twoslash include cookies-outside
 import { z } from 'zod'
 import { defineCookies } from '@one-stack/use-cookie'
 // ---cut---
-export const { CookieProvider, useCookie, clientCookies } = defineCookies({
+export const { CookieProvider, useCookie, Cookies } = defineCookies({
   accessToken: {
     validate: z.string().optional(),
     expires: 7, // days from now
@@ -168,54 +168,39 @@ export const { CookieProvider, useCookie, clientCookies } = defineCookies({
 })
 ```
 
-Using the `clientCookies` to write or clear cookies will still trigger a **React re-render**.
+Using `Cookies` to set or clear cookies will still trigger a **React re-render**.
 
 ```tsx twoslash
 // @noErrors
-// @include: clientcookies
+// @include: cookies-outside
 // ---cut---
-import { clientCookies } from './cookies'
+import { Cookies } from './cookies'
 
 // Write a cookie
-clientCookies.set('accessToken', '123')
+Cookies.set('accessToken', '123')
 
 // Read a cookie
-const accessToken = clientCookies.get('accessToken')
+const accessToken = Cookies.get('accessToken')
 
 // Clear specific cookies
-clientCookies.clear(['accessToken'])
+Cookies.clear(['accessToken'])
 
 // Clear all cookies
-clientCookies.clear()
+Cookies.clear()
 ```
 
 ## Read cookies on the server
 
-You can read cookies on the server by using the `serverCookies` object.
-
-```ts twoslash include servercookies
-import { z } from 'zod'
-import { defineCookies } from '@one-stack/use-cookie'
-// ---cut---
-export const { CookieProvider, useCookie, serverCookies } = defineCookies({
-  accessToken: {
-    validate: z.string().optional(),
-    expires: 7, // days from now
-  },
-})
-```
-
-The `serverCookies` has only one `get` method, which expect the headers and the cookie name. \
-It ensures the cookie is properly **decoded**, **deserialized** and **validated**.
+To read cookies on the server, use `Cookies.fromHeaders`.
 
 ```tsx twoslash
 // @noErrors
-// @include: servercookies
+// @include: cookies-outside
 // ---cut---
 import { headers } from 'next/headers'
-import { serverCookies } from './cookies'
+import { Cookies } from './cookies'
 
-const accessToken = serverCookies.get(await headers(), 'accessToken')
+const accessToken = Cookies.fromHeaders(await headers()).get('accessToken')
 ```
 
 ## Custom (de)serialization
@@ -251,8 +236,7 @@ function defineCookies(
 ): {
   CookieProvider
   useCookie
-  clientCookies
-  serverCookies
+  Cookies
 }
 ```
 
@@ -290,18 +274,10 @@ Manage cookie state providing the cookie name.
 function useCookie(name: string): { value; set; clear; get }
 ```
 
-### 👉 clientCookies
+### 👉 Cookies
 
 Read and write cookies on the client, outside of React.
 
 ```ts
-const clientCookies = { set; clear; get }
-```
-
-### 👉 serverCookies
-
-Read cookies on the server.
-
-```ts
-const serverCookies = { get }
+const Cookies = { set; clear; get; fromHeaders }
 ```

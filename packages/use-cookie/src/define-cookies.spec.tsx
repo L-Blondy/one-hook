@@ -11,29 +11,28 @@ import {
 import React from 'react'
 import * as v from 'valibot'
 
-const { CookieProvider, useCookie, clientCookies, serverCookies } =
-  defineCookies({
-    name1: {
-      validate: (data) => String(data ?? ''),
-    },
-    name2: {
-      validate: v.fallback(v.number(), 0),
-    },
-    object: {
-      validate: v.optional(
-        v.object({
-          key: v.string(),
-        }),
-      ),
-    },
-    anyCookie: {
-      validate: (v) => v,
-    },
-  })
+const { CookieProvider, useCookie, Cookies } = defineCookies({
+  name1: {
+    validate: (data) => String(data ?? ''),
+  },
+  name2: {
+    validate: v.fallback(v.number(), 0),
+  },
+  object: {
+    validate: v.optional(
+      v.object({
+        key: v.string(),
+      }),
+    ),
+  },
+  anyCookie: {
+    validate: (v) => v,
+  },
+})
 
 afterEach(() => {
   cleanup()
-  clientCookies.clear()
+  Cookies.clear()
 })
 
 test('type inferrence', () => {
@@ -58,9 +57,9 @@ test('type inferrence', () => {
       expectTypeOf(state3.set).toEqualTypeOf<
         React.Dispatch<React.SetStateAction<{ key: string } | undefined>>
       >()
-      expectTypeOf(clientCookies.get('name1')).toEqualTypeOf<string>()
+      expectTypeOf(Cookies.get('name1')).toEqualTypeOf<string>()
       expectTypeOf(
-        serverCookies.get(new Headers(), 'name1'),
+        Cookies.fromHeaders(new Headers()).get('name1'),
       ).toEqualTypeOf<string>()
     },
     { wrapper: CookieWrapper },
@@ -196,14 +195,14 @@ test('hooks should update when serverCookies cookies are modified', () => {
 const {
   CookieProvider: AppCookiesProvider,
   useCookie: useAppCookie,
-  clientCookies: appClientCookies,
+  Cookies: appCookies,
 } = defineCookies({
   ch1: { validate: (v) => Number(v ?? 0) },
   ch2: { validate: (v) => String(v ?? 'init') },
 })
 
 type KeysToReset = NonNullable<
-  NonNullable<Parameters<(typeof appClientCookies)['clear']>[0]>
+  NonNullable<Parameters<(typeof appCookies)['clear']>[0]>
 >
 
 function TestApp(props: { keysToReset?: KeysToReset; headers?: Headers }) {
@@ -240,7 +239,7 @@ function Consumer2(props: { keysToReset?: KeysToReset }) {
 function Consumer3(props: { keysToReset?: KeysToReset }) {
   const state = useAppCookie('ch1')
   return (
-    <button onClick={() => appClientCookies.clear(props.keysToReset)}>
+    <button onClick={() => appCookies.clear(props.keysToReset)}>
       Consumer3 {state.value}
     </button>
   )

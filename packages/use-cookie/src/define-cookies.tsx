@@ -16,6 +16,13 @@ export type CookieProviderProps = {
   children: React.ReactNode
 }
 
+function clientOnly() {
+  if (isServer)
+    throw new Error(
+      'This method cannot be used on the server. To read cookies from the server use `Cookie.fromHeaders`',
+    )
+}
+
 export function defineCookies<TConfig extends Record<string, CookieConfig>>(
   config: TConfig,
   options: ServiceOptions = {},
@@ -38,53 +45,63 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
     }
   })
 
-  // server
-  function getServerCookie<TName extends CookieName>(
-    serverCookieString: string,
-    name: TName,
-  ): CookieValue<TName> {
-    return service.get(name, serverCookieString)
-  }
+  const Cookies = {
+    /**
+     * client only
+     */
+    get<TName extends CookieName>(name: TName): CookieValue<TName> {
+      clientOnly()
+      return store.get(name)!
+    },
 
-  // client
-  function get<TName extends CookieName>(name: TName): CookieValue<TName> {
-    return store.get(name)!
-  }
-
-  // client
-  function set<TName extends CookieName>(
-    name: TName,
-    updater: React.SetStateAction<CookieValue<TName>>,
-  ) {
-    const value =
-      typeof updater === 'function'
-        ? (updater as any)(store.get(name))
-        : updater
-    store.set(name, value)
-    service.set(name, value)
-    emitter.emit(name, value)
-    emitCrossTabMessage(name)
-  }
-
-  // client
-  function clear(names: CookieName[] = keysOf(config)) {
-    names.forEach((name) => {
-      const value = service.parseSerialized(name, undefined)
+    /**
+     * client only
+     */
+    set<TName extends CookieName>(
+      name: TName,
+      updater: React.SetStateAction<CookieValue<TName>>,
+    ) {
+      clientOnly()
+      const value =
+        typeof updater === 'function'
+          ? (updater as any)(store.get(name))
+          : updater
       store.set(name, value)
-      service.remove(name)
+      service.set(name, value)
       emitter.emit(name, value)
       emitCrossTabMessage(name)
-    })
+    },
+
+    /**
+     * client only
+     */
+    clear(names: CookieName[] = keysOf(config)) {
+      clientOnly()
+      names.forEach((name) => {
+        const value = service.parseSerialized(name, undefined)
+        store.set(name, value)
+        service.remove(name)
+        emitter.emit(name, value)
+        emitCrossTabMessage(name)
+      })
+    },
+
+    fromHeaders: (headers: Headers) => ({
+      get: <TName extends CookieName>(name: TName): CookieValue<TName> =>
+        service.get(name, headers.get('Cookie') ?? ''),
+    }),
   }
 
   return {
+    Cookies,
+
     CookieProvider(props: CookieProviderProps) {
       const serverCookieString: string = props.headers.get('Cookie') ?? ''
       const prevServerCookieString = React.useRef(serverCookieString)
 
       React.useState(() => {
         keysOf(config as Record<CookieName, any>).forEach((name) => {
-          store.set(name, getServerCookie(serverCookieString, name))
+          store.set(name, Cookies.fromHeaders(props.headers).get(name))
         })
       })
 
@@ -120,10 +137,10 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
       }
 
       const [state, setState] = React.useState<State>(() => ({
-        value: get(name),
-        set: (updater) => set(name, updater),
-        clear: () => clear([name]),
-        get: () => get(name),
+        value: Cookies.get(name),
+        set: (updater) => Cookies.set(name, updater),
+        clear: () => Cookies.clear([name]),
+        get: () => Cookies.get(name),
       }))
 
       useIsomorphicLayoutEffect(
@@ -140,15 +157,6 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
       )
 
       return state
-    },
-
-    clientCookies: { get, set, clear },
-
-    serverCookies: {
-      get: <TName extends CookieName>(
-        headers: Headers,
-        name: TName,
-      ): CookieValue<TName> => service.get(name, headers.get('Cookie') ?? ''),
     },
   }
 }

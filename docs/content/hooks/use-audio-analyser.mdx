@@ -192,13 +192,3 @@ function CanvasVisualizer() {
   description="The options for the audio analyzer."
   path="packages/use-audio-analyser/src/index.ts"
 />
-
-Although data is always an array of numbers, changing the method parameter will
-change the size and the values of the array as follows:
-
-| AnalyserMethod           | data type                                | data size     |
-| ------------------------ | ---------------------------------------- | ------------- |
-| `getByteFrequencyData`   | `number[]` created from a `Uint8Array`   | `fftSize / 2` |
-| `getFloatFrequencyData`  | `number[]` created from a `Float32Array` | `fftSize / 2` |
-| `getByteTimeDomainData`  | `number[]` created from a `Uint8Array`   | `fftSize`     |
-| `getFloatTimeDomainData` | `number[]` created from a `Float32Array` | `fftSize`     |

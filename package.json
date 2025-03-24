@@ -2,7 +2,7 @@
   "name": "one-stack",
   "private": true,
   "type": "module",
-  "version": "0.0.1-beta.4",
+  "version": "0.0.1",
   "scripts": {
     "align": "bun scripts/align-all-package-json.ts",
     "build": "pnpm run align && turbo --filter \"./packages/*\" build",

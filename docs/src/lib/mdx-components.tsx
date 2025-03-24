@@ -5,6 +5,7 @@ import { Step, Steps } from 'fumadocs-ui/components/steps'
 import type { FC } from 'react'
 import type { MDXProps } from 'mdx/types'
 import { AutoTypeTable } from './auto-type-table'
+import { TypeTable } from 'fumadocs-ui/components/type-table'
 
 export function MdxComponents({ MDX }: { MDX: FC<MDXProps> }) {
   return (
@@ -19,6 +20,7 @@ export function MdxComponents({ MDX }: { MDX: FC<MDXProps> }) {
         Step,
         Steps,
         AutoTypeTable,
+        TypeTable,
       }}
     />
   )

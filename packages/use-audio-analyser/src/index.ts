@@ -3,31 +3,40 @@ import { useEventHandler } from '@one-stack/use-event-handler'
 import { useIsHydrated } from '@one-stack/use-is-hydrated'
 
 export type AudioAnalyserOptions = {
+  /**
+   * The method to use from the [AnalyserNode](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode#instance_methods) instance. <br/>See the table below.
+   *
+   * @remarks `AnalyserMethod`
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode#instance_methods
+   */
   method:
     | 'getByteFrequencyData'
     | 'getFloatFrequencyData'
     | 'getByteTimeDomainData'
     | 'getFloatTimeDomainData'
   /**
-   * [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext#samplerate)
+   * The audio sampling rate in samples per second (Hz). <br/>Frequencies up to half the sample rate can be analyzed. <br/>For example, a 48000 Hz sample rate allows analysis up to 24000 Hz. <br/>See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext#samplerate) for more details.
    */
   sampleRate?: number
   /**
-   * [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/fftSize)
+   * Check out the [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/fftSize).<br/>Must be a power of 2 between 2^5 and 2^15, defaults to 2048.<br/>
    */
   fftSize?: number
   /**
-   * [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/minDecibels)
+   * The minimum power value in the scaling range for the data. <br/> See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/minDecibels) for more details.
    */
   minDecibels?: number
   /**
-   * [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/maxDecibels)
+   * The maximum power value in the scaling range for the data. <br/> See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/maxDecibels) for more details.
    */
   maxDecibels?: number
   /**
-   * [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/smoothingTimeConstant)
+   * A value between 0 and 1.<br/>Higher values create smoother transitions between frames.<br/> See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/smoothingTimeConstant) for more details.
    */
   smoothingTimeConstant?: number
+  /**
+   * Provides the data. See the table below.
+   */
   onData?: (data: number[]) => void
 }
 

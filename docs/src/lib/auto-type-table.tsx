@@ -3,9 +3,7 @@ import path from 'path'
 import type React from 'react'
 
 const fuma = createTypeTable({
-  transform(entry, ctx) {
-    // console.log(d, i)
-  },
+  transform(entry, ctx) {},
 })
 
 type Props = React.ComponentProps<typeof fuma.AutoTypeTable> & {

@@ -67,13 +67,3 @@ When the component unmounts, pending executions are automatically canceled.
   description="What `useDebounceFn` returns"
   path="packages/use-debounce-fn/src/index.ts"
 />
-
-| Arguments | type     | description                                                             |
-| --------- | -------- | ----------------------------------------------------------------------- |
-| `delay`   | `number` | The default delay (in milliseconds) for debouncing function executions. |
-
-| Returns     | type                                    | description                                                                                                         |
-| ----------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `debounce`  | `(fn: Function, delay?:number) => void` | Accepts the function to debounce as the first argument.<br/> Can also accept a custom delay as the second argument. |
-| `cancel`    | `() => void`                            | Cancels any pending execution of the debounced function.                                                            |
-| `isPending` | `boolean`                               | `true` if a debounced call is pending, `false` otherwise.                                                           |

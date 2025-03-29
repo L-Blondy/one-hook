@@ -16,6 +16,7 @@
     "@one-stack/use-countdown": "workspace:*",
     "@one-stack/use-cookie": "workspace:*",
     "@one-stack/use-debounce-fn": "workspace:*",
+    "@one-stack/use-debounce-value": "workspace:*",
     "@one-stack/use-global-state": "workspace:*",
     "@one-stack/use-storage": "workspace:*",
     "@one-stack/use-user-media": "workspace:*",

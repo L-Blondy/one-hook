@@ -131,6 +131,9 @@ importers:
       '@one-stack/use-debounce-fn':
         specifier: workspace:*
         version: link:../packages/use-debounce-fn
+      '@one-stack/use-debounce-value':
+        specifier: workspace:*
+        version: link:../packages/use-debounce-value
       '@one-stack/use-global-state':
         specifier: workspace:*
         version: link:../packages/use-global-state

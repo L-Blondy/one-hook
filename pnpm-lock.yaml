@@ -125,6 +125,12 @@ importers:
       '@one-stack/use-cookie':
         specifier: workspace:*
         version: link:../packages/use-cookie
+      '@one-stack/use-countdown':
+        specifier: workspace:*
+        version: link:../packages/use-countdown
+      '@one-stack/use-debounce-fn':
+        specifier: workspace:*
+        version: link:../packages/use-debounce-fn
       '@one-stack/use-global-state':
         specifier: workspace:*
         version: link:../packages/use-global-state

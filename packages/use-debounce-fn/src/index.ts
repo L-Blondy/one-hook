@@ -1,6 +1,24 @@
 import React from 'react'
 
-export function useDebounceFn(defaultDelay: number) {
+export type UseDebounceFnReturn = {
+  /**
+   * Debounce a function execution.
+   *
+   * @param fn - The function to debounce.
+   * @param delay - Override the default delay in milliseconds (optional).
+   */
+  debounce: (fn: () => any, delay?: number) => void
+  /**
+   * Cancel the debounce.
+   */
+  cancel: () => void
+  /**
+   * Whether a debounced call is pending.
+   */
+  isPending: boolean
+}
+
+export function useDebounceFn(defaultDelay: number = 0): UseDebounceFnReturn {
   const timeoutRef = React.useRef<NodeJS.Timeout | number>(0)
 
   // use async transitions in React 19
@@ -12,16 +30,16 @@ export function useDebounceFn(defaultDelay: number) {
   }, [])
 
   const debounce = React.useCallback(
-    (callback: () => any, delay: number = defaultDelay) => {
+    (fn: () => any, delay: number = defaultDelay) => {
       cancel()
       if (!delay) {
-        callback()
+        fn()
         return
       }
       setIsPending(true)
       timeoutRef.current = setTimeout(() => {
         setIsPending(false)
-        callback()
+        fn()
       }, delay)
     },
     [cancel, defaultDelay],

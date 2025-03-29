@@ -1,0 +1,90 @@
+---
+title: useCountdown
+description: Countdown utility based on useInterval.
+---
+
+## Usage
+
+```tsx twoslash include imports
+import { useCountdown } from '@one-stack/use-countdown'
+```
+
+Get the remaining milliseconds:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const milliseconds = useCountdown({
+  to: '2026-01-01',
+})
+```
+
+Transform the remaining time in seconds:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const seconds = useCountdown({
+  to: '2026-01-01',
+  transform: (ms) => Math.ceil(ms / 1000),
+})
+```
+
+Use a custom interval between each tick:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const seconds = useCountdown({
+  to: '2026-01-01',
+  interval: 100,
+})
+```
+
+Prevent rerendering the component on every tick:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+useCountdown({
+  to: '2026-01-01',
+  trackState: false,
+  onTick: (ms) => console.log(ms),
+})
+```
+
+Synchronize all countdowns using the same interval:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const milliseconds = useCountdown({
+  to: '2026-01-01',
+  sync: true,
+})
+```
+
+Add more details on the current countdown state:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { seconds, state } = useCountdown({
+  to: '2026-01-01',
+  transform(ms, to) {
+    const seconds = Math.ceil(ms / 1000)
+    return {
+      state: to ? (seconds <= 0 ? 'expired' : 'ticking') : 'idle',
+      seconds,
+    }
+  },
+})
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseCountdownOptions"
+  path="packages/use-countdown/src/index.ts"
+  description="The options of the `useCountdown` hook."
+/>

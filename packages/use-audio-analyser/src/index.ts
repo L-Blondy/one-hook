@@ -4,10 +4,18 @@ import { useIsHydrated } from '@one-stack/use-is-hydrated'
 
 export type AudioAnalyserOptions = {
   /**
-   * The method to use from the [AnalyserNode](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode#instance_methods) instance. <br/>See the table below.
+   * The method to use from the [AnalyserNode](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode#instance_methods) instance.
    *
-   * @remarks `AnalyserMethod`
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode#instance_methods
+   * All methods produce an array of numbers that contains either 8-bit or 32-bit values.
+   *
+   * - `getByteFrequencyData` produces a Uint8Array of size `fftSize / 2`.
+   * - `getFloatFrequencyData` produces a Float32Array of size `fftSize / 2`.
+   * - `getByteTimeDomainData` produces a Uint8Array of size `fftSize`.
+   * - `getFloatTimeDomainData` produces a Float32Array of size `fftSize`.
+   *
+   * See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode#instance_methods) for more details.
+   *
+   * @remarks `string`
    */
   method:
     | 'getByteFrequencyData'

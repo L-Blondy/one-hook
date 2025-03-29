@@ -1,0 +1,79 @@
+---
+title: useDebounceFn
+description: A debounce function, reactified.
+---
+
+Ensures that a function is only executed after a specified delay following the last invocation.
+
+## Usage
+
+```tsx twoslash include imports
+import { useDebounceFn } from '@one-stack/use-debounce-fn'
+```
+
+The `useDebounceFn` hook accepts a delay in milliseconds and returns a `debounce` function.
+
+All calls are delayed until 1000ms have passed since the last invocation,
+then only the final call executes.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { debounce } = useDebounceFn(1000)
+
+debounce(() => console.log('Skipped'))
+debounce(() => console.log('Executed after 1000ms'))
+```
+
+Override the default delay:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { debounce } = useDebounceFn(1000)
+
+debounce(() => console.log('Skipped'))
+debounce(() => console.log('Executed after 500ms'), 500)
+```
+
+Cancel pending execution:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { debounce, cancel, isPending } = useDebounceFn(1000)
+
+isPending && cancel()
+```
+
+When the component unmounts, pending executions are automatically canceled.
+
+## API Reference
+
+<TypeTable
+  type={{
+    delay: {
+      description:
+        'The default delay (in milliseconds) for debouncing function executions.',
+      type: 'number',
+      required: false,
+      default: '0',
+    },
+  }}
+/>
+
+<AutoTypeTable
+  name="UseDebounceFnReturn"
+  description="What `useDebounceFn` returns"
+  path="packages/use-debounce-fn/src/index.ts"
+/>
+
+| Arguments | type     | description                                                             |
+| --------- | -------- | ----------------------------------------------------------------------- |
+| `delay`   | `number` | The default delay (in milliseconds) for debouncing function executions. |
+
+| Returns     | type                                    | description                                                                                                         |
+| ----------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `debounce`  | `(fn: Function, delay?:number) => void` | Accepts the function to debounce as the first argument.<br/> Can also accept a custom delay as the second argument. |
+| `cancel`    | `() => void`                            | Cancels any pending execution of the debounced function.                                                            |
+| `isPending` | `boolean`                               | `true` if a debounced call is pending, `false` otherwise.                                                           |

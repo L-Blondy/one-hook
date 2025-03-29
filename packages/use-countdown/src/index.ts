@@ -11,13 +11,46 @@ type State<T> = {
   to: To
 }
 
-type UseCountdownOptions<T = number> = {
+export type UseCountdownOptions<T = number> = {
+  /**
+   * The Date to countdown to.
+   *
+   * Pass a falsy value to pause/disable the countdown.
+   *
+   * @remarks `Date | string | null | undefined | false`
+   */
   to: To
+  /**
+   * The interval in milliseconds between each tick.
+   *
+   * @defaultValue 1000
+   */
   interval?: number
+  /**
+   * Transform the value returned by the `onTick` callback.
+   */
   transform?: (ms: number, to: To) => T
+  /**
+   * Callback that receives the transformed value (returned by the `transform` option).
+   *
+   * Last called when the remaining time reaches 0 or less.
+   */
   onTick?: (value: T) => void
+  /**
+   * Called when the remaining time reaches 0 or less.
+   */
   onExpire?: () => void
+  /**
+   * Set to `false` to avoid tracking the state for better performance.
+   *
+   * @defaultValue true
+   */
   trackState?: boolean
+  /**
+   * Set to `true` to synchronize all countdowns that share the same interval.
+   *
+   * @defaultValue false
+   */
   sync?: boolean
 }
 

@@ -1,12 +1,11 @@
-import { createTypeTable } from 'fumadocs-typescript/ui'
 import path from 'path'
 import type React from 'react'
+import { createGenerator } from 'fumadocs-typescript'
+import { AutoTypeTable as FumaAutoTypeTable } from 'fumadocs-typescript/ui'
 
-const fuma = createTypeTable({
-  transform(entry, ctx) {},
-})
+const generator = createGenerator()
 
-type Props = React.ComponentProps<typeof fuma.AutoTypeTable> & {
+type Props = React.ComponentProps<typeof FumaAutoTypeTable> & {
   title?: string
   description?: string
 }
@@ -21,13 +20,15 @@ export function AutoTypeTable(props: Props) {
 
       {props.description && <p>{props.description}</p>}
 
-      <fuma.AutoTypeTable
+      <FumaAutoTypeTable
         {...props}
         path={
           typeof props.path === 'string'
             ? path.join(process.cwd(), '..', props.path)
             : props.path
         }
+        // @ts-expect-error outdated type
+        generator={generator}
       />
     </div>
   )

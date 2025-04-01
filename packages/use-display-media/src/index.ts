@@ -2,15 +2,15 @@ import React from 'react'
 import { useGetIsMounted } from '@one-stack/use-get-is-mounted'
 
 type ClosedMedia = {
-  stream: null
+  stream?: undefined
   state: 'closed'
-  error: null
+  error?: undefined
   audioState: 'none'
   videoState: 'none'
 }
 
 type ErrorMedia = {
-  stream: null
+  stream?: undefined
   state: 'error'
   error: Error
   audioState: 'none'
@@ -18,31 +18,68 @@ type ErrorMedia = {
 }
 
 type OpenMedia = {
+  /**
+   * The captured media stream when active, `undefined` otherwise
+   */
   stream: MediaStream
+  /**
+   * Current state of the media stream
+   */
   state: 'open'
-  error: null
+  /**
+   * Error object if state is 'error', `undefined` otherwise
+   */
+  error: undefined
+  /**
+   * - `'enabled' | 'disabled'` when at least one audio track is open. Use `toggleAudio` to switch between both states.
+   * - `'none'` when no audio track is open.
+   */
   audioState: 'none' | 'enabled' | 'disabled'
+  /**
+   * - `'enabled' | 'disabled'` when at least one video track is open. Use `toggleVideo` to switch between both states.
+   * - `'none'` when no video track is open.
+   */
   videoState: 'none' | 'enabled' | 'disabled'
 }
 
 type LoadingMedia = {
-  stream: null
+  stream?: undefined
   state: 'loading'
-  error: null
+  error?: undefined
   audioState: 'none'
   videoState: 'none'
 }
 
 export type DisplayMedia = ClosedMedia | ErrorMedia | OpenMedia | LoadingMedia
 
-export function useDisplayMedia(options: DisplayMediaStreamOptions = {}) {
+export type UseDisplayMediaOptions = DisplayMediaStreamOptions
+export type UseDisplayMediaReturn = DisplayMedia & {
+  /**
+   * Open the stream
+   */
+  open: () => void
+  /**
+   * Close the stream
+   */
+  close: () => void
+  /**
+   * Toggle `audioState` between `'enabled'` and `'disabled'` states. <br/>Effectively mutes or unmutes the audio stream
+   */
+  toggleAudio: () => void
+  /**
+   * Toggle `videoState` between `'enabled'` and `'disabled'` states. <br/>Effectively turns the camera on/off
+   */
+  toggleVideo: () => void
+}
+
+export function useDisplayMedia(options: UseDisplayMediaOptions = {}) {
   const getIsMounted = useGetIsMounted()
   const [_options, _setOptions] = React.useState(options)
 
   const [media, setMedia] = React.useState<DisplayMedia>({
-    stream: null,
+    stream: undefined,
     state: 'closed',
-    error: null,
+    error: undefined,
     audioState: 'none',
     videoState: 'none',
   })
@@ -57,9 +94,9 @@ export function useDisplayMedia(options: DisplayMediaStreamOptions = {}) {
       return media.state === 'error'
         ? media
         : {
-            stream: null,
+            stream: undefined,
             state: 'closed',
-            error: null,
+            error: undefined,
             audioState: 'none',
             videoState: 'none',
           }
@@ -71,9 +108,9 @@ export function useDisplayMedia(options: DisplayMediaStreamOptions = {}) {
       media.state === 'open'
         ? media
         : {
-            stream: null,
+            stream: undefined,
             state: 'loading',
-            error: null,
+            error: undefined,
             audioState: 'none',
             videoState: 'none',
           },
@@ -116,7 +153,7 @@ export function useDisplayMedia(options: DisplayMediaStreamOptions = {}) {
           setMedia({
             stream,
             state: 'open',
-            error: null,
+            error: undefined,
             audioState,
             videoState,
           })
@@ -128,7 +165,7 @@ export function useDisplayMedia(options: DisplayMediaStreamOptions = {}) {
       .catch((error) => {
         getIsMounted() &&
           setMedia({
-            stream: null,
+            stream: undefined,
             state: 'error',
             error,
             audioState: 'none',
@@ -139,9 +176,27 @@ export function useDisplayMedia(options: DisplayMediaStreamOptions = {}) {
 
   React.useEffect(() => close, [_options, close])
 
-  return { ...media, open, close, toggleAudio, toggleVideo }
+  return {
+    ...media,
+    /**
+     * Open the stream
+     */
+    open,
+    /**
+     * Close the stream
+     */
+    close,
+    /**
+     * Toggle `audioState` between `'enabled'` and `'disabled'` states. <br/>Effectively mutes or unmutes the audio stream
+     */
+    toggleAudio,
+    /**
+     * Toggle `videoState` between `'enabled'` and `'disabled'` states. <br/>Effectively turns the camera on/off
+     */
+    toggleVideo,
+  }
 }
 
-function closeStream(stream: MediaStream | null) {
+function closeStream(stream: MediaStream | undefined) {
   stream?.getTracks().forEach((track) => track.stop())
 }

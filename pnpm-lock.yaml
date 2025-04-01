@@ -134,6 +134,9 @@ importers:
       '@one-stack/use-debounce-value':
         specifier: workspace:*
         version: link:../packages/use-debounce-value
+      '@one-stack/use-display-media':
+        specifier: workspace:*
+        version: link:../packages/use-display-media
       '@one-stack/use-global-state':
         specifier: workspace:*
         version: link:../packages/use-global-state

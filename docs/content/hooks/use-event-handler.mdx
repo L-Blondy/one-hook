@@ -1,0 +1,37 @@
+---
+title: useEventHandler
+description: Stabilize a function's reference across renders.
+---
+
+`useEventHandler` returns a stable version of the function that can be used in:
+
+- DOM event handlers
+- useEffect
+
+## Usage
+
+```tsx twoslash include imports
+import { useEventHandler } from '@one-stack/use-event-handler'
+```
+
+Provide a function to `useEventHandler`:
+
+```tsx twoslash include onData
+// @include: imports
+const props = {
+  onData: (data: any) => {},
+}
+// ---cut---
+const onData = useEventHandler(props.onData)
+```
+
+`onData` now has a stable identity, making it safe to use in `useEffect`.
+
+```tsx twoslash
+import { useEffect } from 'react'
+// @include: onData
+// ---cut---
+useEffect(() => {
+  // only runs once
+}, [onData])
+```

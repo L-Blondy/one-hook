@@ -11,6 +11,17 @@ import type {
 import { getEventListener } from './vanilla'
 import type { MaybeRef } from '@one-stack/utils/types'
 
+export type UseEventListenerReturn = {
+  /**
+   * Manually attach the event listener to the target.
+   */
+  add: () => void
+  /**
+   * Manually detach the event listener from the target.
+   */
+  remove: () => void
+}
+
 export function useEventListener<
   const Target extends UseEventListenerTarget,
   Type extends UseEventListenerType<Target>,
@@ -19,7 +30,7 @@ export function useEventListener<
   type: Type,
   listener: UseEventListenerCallback<Target, Type>,
   { manual, capture, once, passive }: UseEventListenerOptions = {},
-) {
+): UseEventListenerReturn {
   // targets passed as `ref.current` do no work properly,
   // they are undefined in the first effect.
   // To work around it we have to trigger a state update on mount

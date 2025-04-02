@@ -137,6 +137,12 @@ importers:
       '@one-stack/use-display-media':
         specifier: workspace:*
         version: link:../packages/use-display-media
+      '@one-stack/use-event-handler':
+        specifier: workspace:*
+        version: link:../packages/use-event-handler
+      '@one-stack/use-event-listener':
+        specifier: workspace:*
+        version: link:../packages/use-event-listener
       '@one-stack/use-global-state':
         specifier: workspace:*
         version: link:../packages/use-global-state
@@ -146,6 +152,9 @@ importers:
       '@one-stack/use-user-media':
         specifier: workspace:*
         version: link:../packages/use-user-media
+      '@one-stack/utils':
+        specifier: workspace:*
+        version: link:../packages/utils
       fumadocs-core:
         specifier: 15.1.2
         version: 15.1.2(@types/react@19.0.10)(next@15.2.4(@babel/core@7.26.9)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -342,21 +351,6 @@ importers:
       '@one-stack/use-get-is-mounted':
         specifier: workspace:*
         version: link:../use-get-is-mounted
-      '@types/react':
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.0.10
-      '@types/react-dom':
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.0.4(@types/react@19.0.10)
-      react:
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.0.0
-      react-dom:
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.0.0(react@19.0.0)
-
-  packages/use-dom-id:
-    dependencies:
       '@types/react':
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.10

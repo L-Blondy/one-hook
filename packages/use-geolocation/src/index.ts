@@ -33,6 +33,11 @@ type WatchingState = {
 type ErrorState = {
   state: 'error'
   error: GeolocationPositionError
+  /**
+   * See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates) to learn more.
+   *
+   * @remarks `GeolocationCoordinates & { timestamp: number | null }`
+   */
   coords: {
     timestamp: number | null
     accuracy: number | null
@@ -45,11 +50,34 @@ type ErrorState = {
   }
 }
 
-export type GeolocationState = LoadingState | WatchingState | ErrorState
+export type UseGeolocationReturn = LoadingState | WatchingState | ErrorState
 
-export function useGeolocation(options?: PositionOptions): GeolocationState {
+export type UseGeolocationOptions = {
+  /**
+   * Provides more accurate position if `true`.
+   *
+   * See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition#options) for details.
+   */
+  enableHighAccuracy?: PositionOptions['enableHighAccuracy']
+  /**
+   * Maximum time (in milliseconds) to wait for a position.
+   *
+   * See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition#options) for details.
+   */
+  timeout?: PositionOptions['timeout']
+  /**
+   * Maximum age (in milliseconds) of a cached position.
+   *
+   * See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition#options) for details.
+   */
+  maximumAge?: PositionOptions['maximumAge']
+}
+
+export function useGeolocation(
+  options?: UseGeolocationOptions,
+): UseGeolocationReturn {
   const [stableOptions, setStableOptions] = React.useState(options)
-  const [state, setState] = React.useState<GeolocationState>({
+  const [state, setState] = React.useState<UseGeolocationReturn>({
     state: 'loading',
     error: null,
     coords: {

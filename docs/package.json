@@ -20,6 +20,7 @@
     "@one-stack/use-display-media": "workspace:*",
     "@one-stack/use-event-handler": "workspace:*",
     "@one-stack/use-event-listener": "workspace:*",
+    "@one-stack/use-geolocation": "workspace:*",
     "@one-stack/use-global-state": "workspace:*",
     "@one-stack/use-storage": "workspace:*",
     "@one-stack/use-user-media": "workspace:*",

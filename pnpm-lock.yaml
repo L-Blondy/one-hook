@@ -143,6 +143,9 @@ importers:
       '@one-stack/use-event-listener':
         specifier: workspace:*
         version: link:../packages/use-event-listener
+      '@one-stack/use-geolocation':
+        specifier: workspace:*
+        version: link:../packages/use-geolocation
       '@one-stack/use-global-state':
         specifier: workspace:*
         version: link:../packages/use-global-state

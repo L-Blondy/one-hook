@@ -15,7 +15,7 @@ type Props = React.ComponentProps<typeof FumaAutoTypeTable> & {
 export function AutoTypeTable(props: Props) {
   return (
     <div>
-      <TableTitle value={props.title} />
+      <TableTitle value={props.title || props.name} />
 
       <TableDescription value={props.description} />
 

@@ -2,15 +2,15 @@ import React from 'react'
 import { useGetIsMounted } from '@one-stack/use-get-is-mounted'
 
 type ClosedMedia = {
-  stream?: undefined
+  stream: null
   state: 'closed'
-  error?: undefined
+  error: null
   audioState: 'none'
   videoState: 'none'
 }
 
 type ErrorMedia = {
-  stream?: undefined
+  stream: null
   state: 'error'
   error: Error
   audioState: 'none'
@@ -29,7 +29,7 @@ type OpenMedia = {
   /**
    * Error object if state is 'error', `undefined` otherwise
    */
-  error: undefined
+  error: null
   /**
    * - `'enabled' | 'disabled'` when at least one audio track is open. Use `toggleAudio` to switch between both states.
    * - `'none'` when no audio track is open.
@@ -43,9 +43,9 @@ type OpenMedia = {
 }
 
 type LoadingMedia = {
-  stream?: undefined
+  stream: null
   state: 'loading'
-  error?: undefined
+  error: null
   audioState: 'none'
   videoState: 'none'
 }
@@ -77,9 +77,9 @@ export function useDisplayMedia(options: UseDisplayMediaOptions = {}) {
   const [_options, _setOptions] = React.useState(options)
 
   const [media, setMedia] = React.useState<DisplayMedia>({
-    stream: undefined,
+    stream: null,
     state: 'closed',
-    error: undefined,
+    error: null,
     audioState: 'none',
     videoState: 'none',
   })
@@ -94,9 +94,9 @@ export function useDisplayMedia(options: UseDisplayMediaOptions = {}) {
       return media.state === 'error'
         ? media
         : {
-            stream: undefined,
+            stream: null,
             state: 'closed',
-            error: undefined,
+            error: null,
             audioState: 'none',
             videoState: 'none',
           }
@@ -108,9 +108,9 @@ export function useDisplayMedia(options: UseDisplayMediaOptions = {}) {
       media.state === 'open'
         ? media
         : {
-            stream: undefined,
+            stream: null,
             state: 'loading',
-            error: undefined,
+            error: null,
             audioState: 'none',
             videoState: 'none',
           },
@@ -153,7 +153,7 @@ export function useDisplayMedia(options: UseDisplayMediaOptions = {}) {
           setMedia({
             stream,
             state: 'open',
-            error: undefined,
+            error: null,
             audioState,
             videoState,
           })
@@ -165,7 +165,7 @@ export function useDisplayMedia(options: UseDisplayMediaOptions = {}) {
       .catch((error) => {
         getIsMounted() &&
           setMedia({
-            stream: undefined,
+            stream: null,
             state: 'error',
             error,
             audioState: 'none',
@@ -197,6 +197,6 @@ export function useDisplayMedia(options: UseDisplayMediaOptions = {}) {
   }
 }
 
-function closeStream(stream: MediaStream | undefined) {
+function closeStream(stream: MediaStream | null) {
   stream?.getTracks().forEach((track) => track.stop())
 }

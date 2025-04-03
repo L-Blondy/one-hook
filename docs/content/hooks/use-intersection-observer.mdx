@@ -11,8 +11,8 @@ description: Use the IntersectionObserver API, reactified, simplified and optimi
 
 ## Usage
 
-```tsx
-import { useIntersectionObserver } from 'crustack/hooks'
+```tsx twoslash include imports
+import { useIntersectionObserver } from '@one-stack/use-intersection-observer'
 ```
 
 Observe an element's intersection with the viewport:
@@ -56,23 +56,19 @@ function MyComponent() {
 
 ## API Reference
 
-| Arguments      | description                                  |
-| -------------- | -------------------------------------------- |
-| (1) `listener` | The listener with unwrapped observe entries. |
-| (2) `options`  | See below                                    |
+| Arguments                            | description                                  |
+| ------------------------------------ | -------------------------------------------- |
+| <pre>(1) <Code>listener</Code></pre> | The listener with unwrapped observe entries. |
+| <pre>(2) <Code>options?</Code></pre> | `UseIntersectionObserverOptions`             |
 
-| (2) Options   | default | description                                                                                                        |
-| ------------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
-| `autoObserve` | `true`  | Set to `false` to observe the element manually.                                                                    |
-| `root`        | -       | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options) |
-| `rootMargin`  | -       | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options) |
-| `threshold`   | -       | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options) |
+<AutoTypeTable
+  name="UseIntersectionObserverOptions"
+  description="Options for the useIntersectionObserver hook."
+  path="packages/use-intersection-observer/src/index.ts"
+/>
 
-<br />
-
-| Returns     | description                                       |
-| ----------- | ------------------------------------------------- |
-| `ref`       | A callback ref to pass to the element to observe. |
-| `target`    | The observed element.                             |
-| `observe`   | Manually starts observing the element.            |
-| `unobserve` | Manually stops observing the element.             |
+<AutoTypeTable
+  name="UseIntersectionObserverReturn"
+  description="Return value for the useIntersectionObserver hook."
+  path="packages/use-intersection-observer/src/index.ts"
+/>

@@ -11,6 +11,8 @@ export type UseIntersectionObserverCallback = Callback
 export type UseIntersectionObserverOptions = IntersectionObserverInit & {
   /**
    * Set to `false` to observe the element manually.
+   *
+   * @default true
    */
   autoObserve?: boolean
 }

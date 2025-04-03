@@ -6,7 +6,7 @@ Every time you choose to apply a rule(s), explicitly state the rule(s) in the ou
 
 ## Project Context
 
-"1hook" is a monorepo where each package exports a React hook, except for the utils package.
+"one-stack" is a monorepo where each package exports a React hook, except for the utils package.
 
 ## Code Style and Structure
 

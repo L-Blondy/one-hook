@@ -26,7 +26,8 @@ export default async function Page(props: {
 
   const MDXContent = page.data.body
 
-  const isHook = params.slug?.includes('hooks')
+  const isHook =
+    params.slug?.[0] === 'hooks' && params.slug?.[1]?.startsWith('use')
 
   return (
     <DocsPage

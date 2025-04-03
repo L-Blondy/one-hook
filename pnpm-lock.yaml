@@ -194,6 +194,15 @@ importers:
       '@one-stack/use-previous':
         specifier: workspace:*
         version: link:../packages/use-previous
+      '@one-stack/use-rerender':
+        specifier: workspace:*
+        version: link:../packages/use-rerender
+      '@one-stack/use-resize-observer':
+        specifier: workspace:*
+        version: link:../packages/use-resize-observer
+      '@one-stack/use-size':
+        specifier: workspace:*
+        version: link:../packages/use-size
       '@one-stack/use-storage':
         specifier: workspace:*
         version: link:../packages/use-storage

@@ -28,6 +28,8 @@ export type UseIntersectionObserverReturn = {
   unobserve: () => void
   /**
    * A callback ref to pass to the element to observe.
+   *
+   * @remarks `Function`
    */
   ref: React.Dispatch<React.SetStateAction<Element | null>>
   /**

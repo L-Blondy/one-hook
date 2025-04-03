@@ -4,7 +4,33 @@ import { useIsomorphicLayoutEffect } from '@one-stack/use-isomorphic-layout-effe
 import { isServer } from '@one-stack/utils/is-server'
 
 export type UseResizeObserverOptions = ResizeObserverOptions & {
+  /**
+   * Automatically observe the target element.
+   *
+   * @default true
+   */
   autoObserve?: boolean
+}
+
+export type UseResizeObserverReturn = {
+  /**
+   * Manually starts observing the target element.
+   */
+  observe: () => void
+  /**
+   * Manually stops observing the target element.
+   */
+  unobserve: () => void
+  /**
+   * A callback ref to pass to the element to observe.
+   *
+   * @remarks `Function`
+   */
+  ref: React.Dispatch<React.SetStateAction<Element | null>>
+  /**
+   * The observed element.
+   */
+  target: Element | null
 }
 
 export type UseResizeObserverCallback = (
@@ -15,7 +41,7 @@ export type UseResizeObserverCallback = (
 export const useResizeObserver = (
   callback: UseResizeObserverCallback,
   { autoObserve = true, box }: UseResizeObserverOptions = {},
-) => {
+): UseResizeObserverReturn => {
   const stableCallback = useEventHandler(callback)
   const [target, ref] = React.useState<Element | null>(null)
   // since observing instantly triggers the observer callback

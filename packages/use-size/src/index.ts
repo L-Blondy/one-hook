@@ -3,25 +3,49 @@ import { useIsomorphicLayoutEffect } from '@one-stack/use-isomorphic-layout-effe
 import { useEventHandler } from '@one-stack/use-event-handler'
 
 export type Size = {
+  /**
+   * The width of the element.
+   */
   width?: number
+  /**
+   * The height of the element.
+   */
   height?: number
 }
 
-export type UseBoundingClientRectOptions = {
+export type UseSizeOptions = {
   /**
-   * Set to `false` to avoid tracking inView state for better performance
+   * Set to `false` to avoid tracking the state for better performance
    *
-   * default: `true`
+   * @default true
    */
   trackState?: boolean
+  /**
+   * Called with `{ width, height }` when the ResizeObserver is triggered.
+   *
+   * `onChange` is executed even if `trackState` is `false`.
+   */
   onChange?: (size: Size) => void
+}
+
+export type UseSizeReturn = Size & {
+  /**
+   * A callback ref to pass to the element to observe.
+   *
+   * @remarks `Function`
+   */
+  ref: React.Dispatch<React.SetStateAction<Element | null>>
+  /**
+   * The observed element.
+   */
+  target: Element | null
 }
 
 export function useSize({
   trackState = true,
   onChange,
-}: UseBoundingClientRectOptions = {}) {
-  const [target, ref] = React.useState<HTMLElement | null>(null)
+}: UseSizeOptions = {}): UseSizeReturn {
+  const [target, ref] = React.useState<Element | null>(null)
   const [size, setSize] = React.useState<Size>({})
   const handleChange = useEventHandler(onChange)
 

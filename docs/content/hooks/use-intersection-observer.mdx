@@ -1,0 +1,78 @@
+---
+title: useIntersectionObserver
+description: Use the IntersectionObserver API, reactified, simplified and optimized.
+---
+
+## Features
+
+- **Instance Reuse:** Optimizes performance by reusing IntersectionObserver instances based on options.
+- **Convenient Unwrapping:** Automatically unwraps the entries parameter, allowing direct access to each entry in the callback.
+- **Manual Observation Control:** Allows manual control over observation using the `observe` and `unobserve` functions.
+
+## Usage
+
+```tsx
+import { useIntersectionObserver } from 'crustack/hooks'
+```
+
+Observe an element's intersection with the viewport:
+
+```tsx
+function MyComponent() {
+  const { ref } = useIntersectionObserver((entry) => {
+    console.log({ isIntersecting: entry.isIntersecting })
+  })
+
+  return <div ref={ref} />
+}
+```
+
+Customize the intersection observer:
+
+```tsx
+function MyComponent() {
+  const { ref } = useIntersectionObserver(
+    (entry) => console.log({ isIntersecting: entry.isIntersecting }),
+    { rootMargin: '100px' },
+  )
+
+  return <div ref={ref} />
+}
+```
+
+Stop observing the target after the first intersection:
+
+```tsx
+function MyComponent() {
+  const { ref, unobserve } = useIntersectionObserver((entry) => {
+    if (!entry.isIntersecting) return
+    console.log('Intersected!')
+    unobserve()
+  })
+
+  return <div ref={ref} />
+}
+```
+
+## API Reference
+
+| Arguments      | description                                  |
+| -------------- | -------------------------------------------- |
+| (1) `listener` | The listener with unwrapped observe entries. |
+| (2) `options`  | See below                                    |
+
+| (2) Options   | default | description                                                                                                        |
+| ------------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
+| `autoObserve` | `true`  | Set to `false` to observe the element manually.                                                                    |
+| `root`        | -       | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options) |
+| `rootMargin`  | -       | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options) |
+| `threshold`   | -       | See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options) |
+
+<br />
+
+| Returns     | description                                       |
+| ----------- | ------------------------------------------------- |
+| `ref`       | A callback ref to pass to the element to observe. |
+| `target`    | The observed element.                             |
+| `observe`   | Manually starts observing the element.            |
+| `unobserve` | Manually stops observing the element.             |

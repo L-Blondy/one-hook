@@ -6,6 +6,7 @@
     "getting-started/index",
     "getting-started/other",
     "---Hooks---",
-    "..."
+    "...",
+    "!getting-started"
   ]
 }

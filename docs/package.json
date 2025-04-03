@@ -26,6 +26,8 @@
     "@one-stack/use-in-view": "workspace:*",
     "@one-stack/use-intersection-observer": "workspace:*",
     "@one-stack/use-interval": "workspace:*",
+    "@one-stack/use-invariant-context": "workspace:*",
+    "@one-stack/use-is-hydrated": "workspace:*",
     "@one-stack/use-storage": "workspace:*",
     "@one-stack/use-user-media": "workspace:*",
     "@one-stack/utils": "workspace:*",

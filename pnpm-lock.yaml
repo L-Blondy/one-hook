@@ -161,6 +161,12 @@ importers:
       '@one-stack/use-interval':
         specifier: workspace:*
         version: link:../packages/use-interval
+      '@one-stack/use-invariant-context':
+        specifier: workspace:*
+        version: link:../packages/use-invariant-context
+      '@one-stack/use-is-hydrated':
+        specifier: workspace:*
+        version: link:../packages/use-is-hydrated
       '@one-stack/use-storage':
         specifier: workspace:*
         version: link:../packages/use-storage

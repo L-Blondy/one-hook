@@ -191,6 +191,9 @@ importers:
       '@one-stack/use-navigator-permission':
         specifier: workspace:*
         version: link:../packages/use-navigator-permission
+      '@one-stack/use-previous':
+        specifier: workspace:*
+        version: link:../packages/use-previous
       '@one-stack/use-storage':
         specifier: workspace:*
         version: link:../packages/use-storage

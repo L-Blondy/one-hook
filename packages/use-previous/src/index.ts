@@ -1,6 +1,11 @@
 import React from 'react'
 
 export type UsePreviousOptions<T> = {
+  /**
+   * The function to compare the previous and current values.
+   *
+   * @default Object.is
+   */
   isEqual?: (prev: T | undefined, next: T) => boolean
 }
 

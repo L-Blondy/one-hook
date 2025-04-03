@@ -1,0 +1,18 @@
+---
+title: useIsHydrated
+description: Once `true`, no hydration error can occur.
+---
+
+Useful for preventing hydration mismatches by conditionally rendering content that depends on browser APIs.
+
+```ts twoslash include imports
+import { useIsHydrated } from '@one-stack/use-is-hydrated'
+```
+
+Usage:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const isHydrated = useIsHydrated()
+```

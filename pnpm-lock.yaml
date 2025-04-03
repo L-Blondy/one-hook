@@ -203,6 +203,9 @@ importers:
       '@one-stack/use-size':
         specifier: workspace:*
         version: link:../packages/use-size
+      '@one-stack/use-speech-synthesis':
+        specifier: workspace:*
+        version: link:../packages/use-speech-synthesis
       '@one-stack/use-storage':
         specifier: workspace:*
         version: link:../packages/use-storage

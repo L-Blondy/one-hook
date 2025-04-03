@@ -3,7 +3,7 @@ import { isServer } from '@one-stack/utils/is-server'
 import { useGetIsMounted } from '@one-stack/use-get-is-mounted'
 import React from 'react'
 
-export type SpeechSynthesisOptions = {
+export type UseSpeechSynthesisOptions = {
   lang?: string
   voice?: SpeechSynthesisVoice | null
   rate?: number
@@ -13,8 +13,17 @@ export type SpeechSynthesisOptions = {
 
 type SpeechState =
   | {
+      /**
+       *  The current utterance being spoken
+       */
       utterance: SpeechSynthesisUtterance | null
+      /**
+       * The current state of speech synthesis
+       */
       state: 'idle' | 'speaking'
+      /**
+       * Error information if state is 'error'
+       */
       error: null
     }
   | {
@@ -24,9 +33,17 @@ type SpeechState =
     }
 
 type SpeechActions = {
+  /**
+   * Start speaking the provided text
+   */
   speak(text: string): void
+  /**
+   * Stop the current speech
+   */
   cancel(): void
 }
+
+export type UseSpeechSynthesisReturn = SpeechState & SpeechActions
 
 export function useSpeechSynthesis({
   lang = 'en-US',
@@ -34,7 +51,7 @@ export function useSpeechSynthesis({
   rate = 1,
   voice = null,
   volume = 1,
-}: SpeechSynthesisOptions = {}) {
+}: UseSpeechSynthesisOptions = {}) {
   const getIsMounted = useGetIsMounted()
   const lastActionRef = React.useRef<keyof SpeechActions | null>(null)
   const [speech, setSpeech] = React.useState<SpeechState>(() => {

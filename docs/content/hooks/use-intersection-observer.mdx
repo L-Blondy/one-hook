@@ -17,7 +17,9 @@ import { useIntersectionObserver } from '@one-stack/use-intersection-observer'
 
 Observe an element's intersection with the viewport:
 
-```tsx
+```tsx twoslash
+// @include: imports
+// ---cut---
 function MyComponent() {
   const { ref } = useIntersectionObserver((entry) => {
     console.log({ isIntersecting: entry.isIntersecting })
@@ -29,7 +31,9 @@ function MyComponent() {
 
 Customize the intersection observer:
 
-```tsx
+```tsx twoslash
+// @include: imports
+// ---cut---
 function MyComponent() {
   const { ref } = useIntersectionObserver(
     (entry) => console.log({ isIntersecting: entry.isIntersecting }),
@@ -42,7 +46,9 @@ function MyComponent() {
 
 Stop observing the target after the first intersection:
 
-```tsx
+```tsx twoslash
+// @include: imports
+// ---cut---
 function MyComponent() {
   const { ref, unobserve } = useIntersectionObserver((entry) => {
     if (!entry.isIntersecting) return
@@ -55,11 +61,6 @@ function MyComponent() {
 ```
 
 ## API Reference
-
-| Arguments                            | description                                  |
-| ------------------------------------ | -------------------------------------------- |
-| <pre>(1) <Code>listener</Code></pre> | The listener with unwrapped observe entries. |
-| <pre>(2) <Code>options?</Code></pre> | `UseIntersectionObserverOptions`             |
 
 <AutoTypeTable
   name="UseIntersectionObserverOptions"

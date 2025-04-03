@@ -158,6 +158,9 @@ importers:
       '@one-stack/use-intersection-observer':
         specifier: workspace:*
         version: link:../packages/use-intersection-observer
+      '@one-stack/use-interval':
+        specifier: workspace:*
+        version: link:../packages/use-interval
       '@one-stack/use-storage':
         specifier: workspace:*
         version: link:../packages/use-storage

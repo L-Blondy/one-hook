@@ -4,15 +4,40 @@ import type { AnyFunction } from '@one-stack/utils/types'
 import { set, clear, type IntervalToken } from './vanilla'
 
 export type UseIntervalOptions = {
+  /**
+   * Set to `true` to execute the callback immediately, without waiting for the first tick.
+   *
+   * @default false
+   */
   leading?: boolean
+  /**
+   * Set to `true` to synchronize with other intervals that share the same delay.
+   *
+   * @default false
+   */
   sync?: boolean
+}
+
+export type UseIntervalReturn = {
+  /**
+   * `true` if the interval is running, indicating that the callback execution is scheduled.
+   */
+  isPending: boolean
+  /**
+   * Cancels the interval. Achieves the same result as setting the delay to `null`
+   */
+  cancel: () => void
+  /**
+   * Restart the interval. Also cancels the current interval.
+   */
+  reset: () => void
 }
 
 export function useInterval(
   callback: AnyFunction,
   delay: number | null | false | undefined,
   { leading, sync }: UseIntervalOptions = {},
-) {
+): UseIntervalReturn {
   const [isPending, setIsPending] = React.useState(isEnabled(delay))
   const cb = useEventHandler(callback)
   const tokenRef = React.useRef<IntervalToken>(0)

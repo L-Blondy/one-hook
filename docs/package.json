@@ -34,6 +34,8 @@
     "@one-stack/use-media-recorder": "workspace:*",
     "@one-stack/use-merge-refs": "workspace:*",
     "@one-stack/use-mount-effect": "workspace:*",
+    "@one-stack/use-mutation-observer": "workspace:*",
+    "@one-stack/use-navigator-permission": "workspace:*",
     "@one-stack/use-storage": "workspace:*",
     "@one-stack/use-user-media": "workspace:*",
     "@one-stack/utils": "workspace:*",

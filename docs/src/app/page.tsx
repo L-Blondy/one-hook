@@ -6,7 +6,7 @@ export default function Homepage() {
       <Link
         className="bg-fd-primary rounded-full px-4 py-2 text-white"
         children="Get Started"
-        href="/docs"
+        href="/docs/hooks"
       />
     </div>
   )

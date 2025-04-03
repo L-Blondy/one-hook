@@ -1,0 +1,70 @@
+---
+title: useMutationObserver
+description: The MutationObserver API, reactified and simplified
+---
+
+## Usage
+
+```tsx twoslash include imports
+import { useMutationObserver } from '@one-stack/use-mutation-observer'
+```
+
+Observe an element’s child list mutation:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref } = useMutationObserver(
+    (entry) => console.log("The element's child list has changed!"),
+    { childList: true },
+  )
+
+  return <div ref={ref} />
+}
+```
+
+Manual observation control:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, observe, unobserve } = useMutationObserver(
+    (entry) => console.log("The element's child list has changed!"),
+    { childList: true, autoObserve: false }, // Disable automatic observation
+  )
+
+  return (
+    <div>
+      <div ref={ref} />
+
+      <button onClick={observe}>Start observing</button>
+
+      <button onClick={unobserve}>Stop observing</button>
+    </div>
+  )
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseMutationObserverOptions"
+  description={
+    <>
+      The options for the useMutationObserver hook. See&nbsp;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/observe#options">
+        MDN docs
+      </a>
+      &nbsp;for more details.
+    </>
+  }
+  path="packages/use-mutation-observer/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseMutationObserverReturn"
+  description="The return value of the useMutationObserver hook."
+  path="packages/use-mutation-observer/src/index.ts"
+/>

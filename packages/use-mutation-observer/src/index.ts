@@ -3,13 +3,37 @@ import { useEventHandler } from '@one-stack/use-event-handler'
 import { isServer } from '@one-stack/utils/is-server'
 
 export type UseMutationObserverOptions = MutationObserverInit & {
+  /**
+   * Automatically observe the target element.
+   *
+   * @default true
+   */
   autoObserve?: boolean
 }
 
 export type UseMutationObserverCallback = (
-  mutations: MutationRecord,
+  entry: MutationRecord,
   observer: MutationObserver,
 ) => void
+
+export type UseMutationObserverReturn = {
+  /**
+   * Manually starts observing the target element.
+   */
+  observe: () => void
+  /**
+   * Manually stops observing the target element.
+   */
+  unobserve: () => void
+  /**
+   * A callback ref to pass to the element to observe.
+   */
+  ref: React.Dispatch<React.SetStateAction<Element | null>>
+  /**
+   * The observed element.
+   */
+  target: Element | null
+}
 
 export const useMutationObserver = (
   callback: UseMutationObserverCallback,

@@ -28,6 +28,8 @@
     "@one-stack/use-interval": "workspace:*",
     "@one-stack/use-invariant-context": "workspace:*",
     "@one-stack/use-is-hydrated": "workspace:*",
+    "@one-stack/use-is-online": "workspace:*",
+    "@one-stack/use-latest-ref": "workspace:*",
     "@one-stack/use-storage": "workspace:*",
     "@one-stack/use-user-media": "workspace:*",
     "@one-stack/utils": "workspace:*",

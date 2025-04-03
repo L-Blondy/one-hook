@@ -167,6 +167,12 @@ importers:
       '@one-stack/use-is-hydrated':
         specifier: workspace:*
         version: link:../packages/use-is-hydrated
+      '@one-stack/use-is-online':
+        specifier: workspace:*
+        version: link:../packages/use-is-online
+      '@one-stack/use-latest-ref':
+        specifier: workspace:*
+        version: link:../packages/use-latest-ref
       '@one-stack/use-storage':
         specifier: workspace:*
         version: link:../packages/use-storage

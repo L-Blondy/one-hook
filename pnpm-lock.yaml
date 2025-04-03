@@ -179,6 +179,12 @@ importers:
       '@one-stack/use-media-recorder':
         specifier: workspace:*
         version: link:../packages/use-media-recorder
+      '@one-stack/use-merge-refs':
+        specifier: workspace:*
+        version: link:../packages/use-merge-refs
+      '@one-stack/use-mount-effect':
+        specifier: workspace:*
+        version: link:../packages/use-mount-effect
       '@one-stack/use-storage':
         specifier: workspace:*
         version: link:../packages/use-storage

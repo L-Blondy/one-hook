@@ -9,7 +9,29 @@ import {
 export type UseIntersectionObserverCallback = Callback
 
 export type UseIntersectionObserverOptions = IntersectionObserverInit & {
+  /**
+   * Set to `false` to observe the element manually.
+   */
   autoObserve?: boolean
+}
+
+export type UseIntersectionObserverReturn = {
+  /**
+   * Manually starts observing the element.
+   */
+  observe: () => void
+  /**
+   * Manually stops observing the element.
+   */
+  unobserve: () => void
+  /**
+   * A callback ref to pass to the element to observe.
+   */
+  ref: React.Dispatch<React.SetStateAction<Element | null>>
+  /**
+   * The observed element.
+   */
+  target: Element | null
 }
 
 export const useIntersectionObserver = (

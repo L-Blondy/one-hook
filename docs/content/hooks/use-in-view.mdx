@@ -1,0 +1,84 @@
+---
+title: useInView
+description: Track the visibility of an element.
+---
+
+Slim wrapper around [useIntersectionObserver](./use-intersection-observer) to track the visibility of an element.
+
+## Usage
+
+```tsx twoslash include imports
+import { useInView } from '@one-stack/use-in-view'
+```
+
+Track the visibility of an element:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, inView } = useInView()
+
+  return <div ref={ref}>...</div>
+}
+```
+
+Set a default value until the target is observed:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, inView = true } = useInView()
+
+  return <div ref={ref}>...</div>
+}
+```
+
+Customize the intersection observer:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, inView } = useInView({
+    root: document.querySelector('#root'),
+    rootMargin: '10px',
+    threshold: 0.5,
+  })
+
+  return <div ref={ref}>...</div>
+}
+```
+
+Stop observing the target when the target has been viewed:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, unobserve } = useInView({
+    onChange: (inView) => inView && unobserve(),
+  })
+
+  return <div ref={ref}>...</div>
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseInViewOptions"
+  description="Options for the useInView hook."
+  path="packages/use-in-view/src/index.ts"
+/>
+
+<br />
+
+| Returns     | description                                                                                                                                                 |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `inView`    | The `inView` state, `undefined` until the target is observed or if `trackState` is `false`                                                                  |
+| `ref`       | A callback ref to pass to the element to observe.                                                                                                           |
+| `target`    | The observed element.                                                                                                                                       |
+| `observe`   | Manually starts observing the element. <br/> See [useIntersectionObserver](/hooks/use-intersection-observer#3-manual-observation-control) for more details. |
+| `unobserve` | Manually stops observing the element. <br/> See [useIntersectionObserver](/hooks/use-intersection-observer#3-manual-observation-control) for more details.  |

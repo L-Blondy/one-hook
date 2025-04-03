@@ -3,20 +3,28 @@ import { usePrevious } from '@one-stack/use-previous'
 import {
   useIntersectionObserver,
   type UseIntersectionObserverOptions,
+  type UseIntersectionObserverReturn,
 } from '@one-stack/use-intersection-observer'
 import { useEventHandler } from '@one-stack/use-event-handler'
 
 export type UseInViewOptions = UseIntersectionObserverOptions & {
   /**
-   * Set to `false` to avoid tracking inView state for better performance
+   * Set to `false` to avoid tracking `inView` state for better performance
    *
-   * default: `true`
+   * @defaultValue true
    */
   trackState?: boolean
   onChange?: (inView: boolean) => void
 }
 
-export const useInView = (options: UseInViewOptions = {}) => {
+export type UseInViewReturn = UseIntersectionObserverReturn & {
+  /**
+   * The visibility state of the element.
+   */
+  inView: boolean | undefined
+}
+
+export const useInView = (options: UseInViewOptions = {}): UseInViewReturn => {
   const [inView, setInView] = React.useState<boolean>()
   const onChange = useEventHandler(options.onChange)
   let prevIntersecting = React.useRef(inView)

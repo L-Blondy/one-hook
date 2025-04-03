@@ -31,7 +31,7 @@ This predictable state flow makes it easy to build UIs that respond appropriatel
 
 ## Example
 
-Use the `useDisplayMedia` hook to capture and display screen sharing.
+Capture and display the device's screen:
 
 ```tsx twoslash
 import { useEffect, useRef } from 'react'
@@ -66,10 +66,17 @@ export default function ScreenShare() {
 
 <AutoTypeTable
   name="UseDisplayMediaOptions"
-  description="Options of the useDisplayMedia hook."
+  description={
+    <>
+      The options of the useDisplayMedia hook. See&nbsp;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia#options">
+        MDN docs
+      </a>
+      &nbsp; for more details.
+    </>
+  }
   path="packages/use-display-media/src/index.ts"
 />
-
 <AutoTypeTable
   name="UseDisplayMediaReturn"
   description="Return value of the useDisplayMedia hook."

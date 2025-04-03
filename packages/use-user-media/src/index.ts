@@ -18,10 +18,27 @@ type ErrorMedia = {
 }
 
 type OpenMedia = {
+  /**
+   * The captured media stream when active, `undefined` otherwise
+   */
   stream: MediaStream
+  /**
+   * Current state of the media stream
+   */
   state: 'open'
+  /**
+   * Error object if state is 'error', `undefined` otherwise
+   */
   error: null
+  /**
+   * - `'enabled' | 'disabled'` when at least one audio track is open. Use `toggleAudio` to switch between both states.
+   * - `'none'` when no audio track is open.
+   */
   audioState: 'none' | 'enabled' | 'disabled'
+  /**
+   * - `'enabled' | 'disabled'` when at least one video track is open. Use `toggleVideo` to switch between both states.
+   * - `'none'` when no video track is open.
+   */
   videoState: 'none' | 'enabled' | 'disabled'
 }
 
@@ -33,12 +50,34 @@ type LoadingMedia = {
   videoState: 'none'
 }
 
-export type UserMedia = ClosedMedia | ErrorMedia | OpenMedia | LoadingMedia
+type UserMedia = ClosedMedia | ErrorMedia | OpenMedia | LoadingMedia
+
+export type UseUserMediaOptions = MediaStreamConstraints
+export type UseUserMediaReturn = UserMedia & {
+  /**
+   * Open the stream
+   */
+  open: () => void
+  /**
+   * Close the stream
+   */
+  close: () => void
+  /**
+   * Toggle `audioState` between `'enabled'` and `'disabled'` states. <br/>Effectively mutes or unmutes the audio stream
+   */
+  toggleAudio: () => void
+  /**
+   * Toggle `videoState` between `'enabled'` and `'disabled'` states. <br/>Effectively turns the camera on/off
+   */
+  toggleVideo: () => void
+}
 
 /**
  * https://crustack.vercel.app/hooks/use-user-media/
  */
-export function useUserMedia(constraints: MediaStreamConstraints = {}) {
+export function useUserMedia(
+  constraints: UseUserMediaOptions = {},
+): UseUserMediaReturn {
   const getIsMounted = useGetIsMounted()
   const [_constraints, _setConstraints] = React.useState(constraints)
 

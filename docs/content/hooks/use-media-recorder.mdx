@@ -1,0 +1,118 @@
+---
+title: useMediaRecorder
+description: Record media streams.
+---
+
+React hook to record media streams (audio and/or video) using the [MediaRecorder API](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder).
+
+## Usage
+
+```tsx twoslash include imports
+const stream = new MediaStream()
+//---cut---
+import { useMediaRecorder } from '@one-stack/use-media-recorder'
+```
+
+The recording automatically starts when a media stream is provided and stops when the stream is nullish.
+
+```tsx twoslash
+// @include: imports
+import { useState } from 'react'
+const [recordingSrc, setRecordingSrc] = useState<string>()
+// ---cut---
+useMediaRecorder(stream, {
+  onComplete(chunks) {
+    const blob = new Blob(chunks, { type: 'video/webm' })
+    const url = URL.createObjectURL(blob)
+    setRecordingSrc(url)
+  },
+})
+```
+
+You can pause and resume the recording:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { pause, resume } = useMediaRecorder(stream, {
+  onComplete(chunks) {
+    // transform the chunks into a file or url
+  },
+})
+```
+
+Transform the recorded data into a File:
+
+```tsx twoslash
+// @include: imports
+import { useState } from 'react'
+const [file, setFile] = useState<File>()
+// ---cut---
+const { pause, resume } = useMediaRecorder(stream, {
+  onComplete(chunks) {
+    const type = 'video/webm'
+    const blob = new Blob(chunks, { type })
+    const file = new File([blob], 'recording.webm', { type })
+    setFile(file)
+  },
+})
+```
+
+## Example
+
+Record video from the device's camera:
+
+```tsx twoslash include imports
+import { useMediaRecorder } from '@one-stack/use-media-recorder'
+import { useUserMedia } from '@one-stack/use-user-media'
+import { useState } from 'react'
+
+export default function VideoRecorder() {
+  const [recordingSrc, setRecordingSrc] = useState<string>()
+
+  const media = useUserMedia({ video: true })
+
+  const recorder = useMediaRecorder(media.stream, {
+    onComplete(chunks) {
+      const blob = new Blob(chunks, { type: 'video/webm' })
+      const src = URL.createObjectURL(blob)
+      setRecordingSrc(src)
+    },
+  })
+
+  return (
+    <div>
+      {recordingSrc && <video src={recordingSrc} controls />}
+
+      {recorder.state === 'inactive' && (
+        <button onClick={media.open}>Start Recording</button>
+      )}
+      {recorder.state === 'recording' && (
+        <button onClick={media.close}>Stop Recording</button>
+      )}
+    </div>
+  )
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseMediaRecorderOptions"
+  description={
+    <>
+      The options of the useMediaRecorder hook. See&nbsp;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/MediaRecorder#options">
+        MDN docs
+      </a>
+      &nbsp; for more details.
+    </>
+  }
+  path="packages/use-media-recorder/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseMediaRecorderReturn"
+  description="The return value of the useMediaRecorder hook."
+  path="packages/use-media-recorder/src/index.ts"
+/>

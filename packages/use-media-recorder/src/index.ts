@@ -2,7 +2,7 @@ import React from 'react'
 import { useLatestRef } from '@one-stack/use-latest-ref'
 import type { Prettify } from '@one-stack/utils/types'
 
-export type RecorderOptions = Prettify<
+export type UseMediaRecorderOptions = Prettify<
   MediaRecorderOptions & {
     timeslice?: number
     onStop?: () => void
@@ -13,6 +13,12 @@ export type RecorderOptions = Prettify<
   }
 >
 
+export type UseMediaRecorderReturn = {
+  state: RecordingState
+  pause: () => void
+  resume: () => void
+}
+
 export function useMediaRecorder(
   stream: MediaStream | null | undefined,
   {
@@ -22,8 +28,8 @@ export function useMediaRecorder(
     mimeType,
     videoBitsPerSecond,
     ...listeners
-  }: RecorderOptions = {},
-) {
+  }: UseMediaRecorderOptions = {},
+): UseMediaRecorderReturn {
   const recorderRef = React.useRef<MediaRecorder | null>(null)
   const listenersRef = useLatestRef(listeners)
   const [state, setState] = React.useState<RecordingState>('inactive')

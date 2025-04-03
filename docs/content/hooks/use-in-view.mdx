@@ -73,12 +73,8 @@ function MyComponent() {
   path="packages/use-in-view/src/index.ts"
 />
 
-<br />
-
-| Returns     | description                                                                                                                                                 |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `inView`    | The `inView` state, `undefined` until the target is observed or if `trackState` is `false`                                                                  |
-| `ref`       | A callback ref to pass to the element to observe.                                                                                                           |
-| `target`    | The observed element.                                                                                                                                       |
-| `observe`   | Manually starts observing the element. <br/> See [useIntersectionObserver](/hooks/use-intersection-observer#3-manual-observation-control) for more details. |
-| `unobserve` | Manually stops observing the element. <br/> See [useIntersectionObserver](/hooks/use-intersection-observer#3-manual-observation-control) for more details.  |
+<AutoTypeTable
+  name="UseInViewReturn"
+  description="Return value for the useInView hook."
+  path="packages/use-in-view/src/index.ts"
+/>

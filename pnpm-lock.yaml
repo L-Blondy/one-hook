@@ -114,107 +114,107 @@ importers:
   docs:
     dependencies:
       '@1hook/use-actions':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-actions
       '@1hook/use-audio-analyser':
-        specifier: latest
-        version: 0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-audio-analyser
       '@1hook/use-contextual-state':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-contextual-state
       '@1hook/use-cookie':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-cookie
       '@1hook/use-countdown':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-countdown
       '@1hook/use-debounce-fn':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-debounce-fn
       '@1hook/use-debounce-value':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-debounce-value
       '@1hook/use-display-media':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-display-media
       '@1hook/use-event-handler':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-event-handler
       '@1hook/use-event-listener':
-        specifier: latest
-        version: 0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-event-listener
       '@1hook/use-geolocation':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-geolocation
       '@1hook/use-get-is-mounted':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-get-is-mounted
       '@1hook/use-global-state':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-global-state
       '@1hook/use-in-view':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-in-view
       '@1hook/use-intersection-observer':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-intersection-observer
       '@1hook/use-interval':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-interval
       '@1hook/use-invariant-context':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-invariant-context
       '@1hook/use-is-hydrated':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-is-hydrated
       '@1hook/use-is-online':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-is-online
       '@1hook/use-latest-ref':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-latest-ref
       '@1hook/use-lock-body-scroll':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-lock-body-scroll
       '@1hook/use-media-recorder':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-media-recorder
       '@1hook/use-merge-refs':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-merge-refs
       '@1hook/use-mount-effect':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-mount-effect
       '@1hook/use-mutation-observer':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-mutation-observer
       '@1hook/use-navigator-permission':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-navigator-permission
       '@1hook/use-previous':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-previous
       '@1hook/use-rerender':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-rerender
       '@1hook/use-resize-observer':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-resize-observer
       '@1hook/use-size':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-size
       '@1hook/use-speech-synthesis':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-speech-synthesis
       '@1hook/use-storage':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-storage
       '@1hook/use-user-media':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/use-user-media
       '@1hook/utils':
-        specifier: latest
-        version: 0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)
+        specifier: workspace:*
+        version: link:../packages/utils
       '@eslint/js':
         specifier: ^9.24.0
         version: 9.24.0
@@ -1044,496 +1044,6 @@ importers:
         version: 1.0.0
 
 packages:
-
-  '@1hook/use-actions@0.0.4':
-    resolution: {integrity: sha512-qRowjHgciExZ++lQ4ONX707TvV874YgNP8mGCyMW/5Mr5zreFh1gnvfrbCefXWbyzjSMYF5Z71tF5Gq43/oGoQ==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-audio-analyser@0.0.3':
-    resolution: {integrity: sha512-Sd5ZprMDfryNS586XPzK/zfwPfwRA1pTwr7nnb/bFSnqasYulivnrJnswtz0mhmXFOi/SHT16ojEEWE96Z5rfQ==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-contextual-state@0.0.4':
-    resolution: {integrity: sha512-xm5sNFBCTtJhhqZNnbZCL8ZAg7bkRLr1lcSYrqUg4IcgFbCqhSfH9Gjef+CTAaJ07KF1TecEAnT9K7yc/WB4hA==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-cookie@0.0.4':
-    resolution: {integrity: sha512-WXGsBSdlNgz0A6v82lIMEGDFOEYnAiaSKSATWyxDJQ44fdTCN2MVVyWpVgDG+IHuup84UwvHdNsrb/gGPZwtFA==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-countdown@0.0.4':
-    resolution: {integrity: sha512-X+j+2SG547AtNwNhRyWUEo8w4S/W+8NlX0/AdTkMkxFyJYrajLvD3TaOVezovVYDZPBo422JEd13pPVTI81ztw==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-debounce-fn@0.0.4':
-    resolution: {integrity: sha512-nU97Pe4yNtDjlevLDCBRHtd+Z6KrZ+5lL9A/Mo0zCnvqhY0YP/ar3plTLO8cAUEKmyhOMMoYdwbge69hN/NoGg==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-debounce-value@0.0.4':
-    resolution: {integrity: sha512-ug5SXl3hvX6pyAd9DzTi2U6UVjl6GO/ZGk/z6m1ajkCpav5zdRYhEuwW+2Yn1z9owbnVSiGao5YWA02xv1013w==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-display-media@0.0.4':
-    resolution: {integrity: sha512-bQ13Pdk4cd8V/9dxKaQhVFiXyAkHFKkt1wrHzcEtqELq0KabjgwneMnEbQqUo5RDbgtNqBc2jIShzVaxFP9hcA==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-event-handler@0.0.3':
-    resolution: {integrity: sha512-y5op4jfCIu+ng7kMcOnzrVAaNVMmmCgFmT1MFu+gxDorOLKJh1N6XB97y0akWkGvKdGe83d0Pm89eXrkIKDN3A==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-event-handler@0.0.4':
-    resolution: {integrity: sha512-jrW6ajlMUgkwig3v5xnARcocH/nvgaBdbCiDMHr6W3G8x9cQFrZ0Ay4/cZK5/yJ30mbdW9bYVT69SS0x7NWrTQ==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-event-listener@0.0.3':
-    resolution: {integrity: sha512-NZc8gVrFG2j9ug/KahLI64OWRbAdWqR9y4Rtw6SMHmp47kte6DmhbIwcVSuKgoXPc00tnuVeFOrzikWjts+lTQ==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-geolocation@0.0.4':
-    resolution: {integrity: sha512-xaz6kSdsyUQUF/jkqBxa7KaCQvLUMW3PigjWWyt8g4J9tX7h7nvaFM8ak9C2kNtRlWbbTs1BNNjb2Hhua6i+Iw==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-get-is-mounted@0.0.4':
-    resolution: {integrity: sha512-C92qRh8Zzcdg1EZGj7GOVuQC7rnQ+Swm2XFZyUqa5nv+W6AoFMc/uGg+R6+G6GfWhPUZC1WZZbmMynIy5L95WA==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-global-state@0.0.4':
-    resolution: {integrity: sha512-VZUY17RevPRZHOK8zpl24e8tMpiLdWwXE4B7iQDnF7GTxDcxfctnOeJ/PoI5S6ujuCBW2wNdAlmUn9Qzyi3Fow==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-in-view@0.0.4':
-    resolution: {integrity: sha512-8GkfP+fWB4yLw45VNp2ADbbkXzPpiJ7bmnThh2N/b9UFZu5pn2J50Gfwg11ySuUSBq6ebRFWYrKq8gPRo+1waA==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-intersection-observer@0.0.4':
-    resolution: {integrity: sha512-4TdIKikCuDP8GO8RGKH/BeyU4v7QSVjwkLWGyqMlD+ukcsKv3wpQZlOMj5igJ4WGEIDI68EzF7wWetJ9fyASCA==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-interval@0.0.4':
-    resolution: {integrity: sha512-zbUoc9BGToyvng/wTlQbWIF11afbDfm0a1C9KHVJAsqyMAGJR5J+VNWL2YWdDZrtGJWIA8xamqztBXENEHW6+Q==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-invariant-context@0.0.4':
-    resolution: {integrity: sha512-6zB9iSf1qNyq9n1/GRam22UaWRSZU3wxwmcfXmMnjCb+U36xybbWAzN6ZX6/Y+87Yfkxr2L3szcmXe8LmiYSfw==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-is-hydrated@0.0.3':
-    resolution: {integrity: sha512-zR+Vap1SlzemB8r886IpkVJDN1m45jaU6UItUZFXrBiNoIFNDoBn8waw5rf4YY8/vTaCfnT+XyHtEkCaXfysKw==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-is-hydrated@0.0.4':
-    resolution: {integrity: sha512-/YSc8D3uyFPVa04BhMuJtyaEHj59B5DBnxYvCnfdosz0nAe5KqB8B1NBRabrrB+xEpQ8MF9tW5F6rox2ZUHTnQ==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-is-online@0.0.4':
-    resolution: {integrity: sha512-0Mx5oM6F/IKYXxMkQNswy9X6OSIdf4S5pYJuefnuwxpLQGIs0Cpf0vbR4El08w0oO7Wnz7bFUvH/U2k3PSV/1Q==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-isomorphic-layout-effect@0.0.3':
-    resolution: {integrity: sha512-JtrDdr+q8p0Y4HxEy/kcNDUGphBhqD6c8PHPf12s3ai2xWZgCjhVUIAcvNW0ZCSxFLvQEKPuQXjlG8O73iT72w==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-latest-ref@0.0.4':
-    resolution: {integrity: sha512-L0zR4Aq4fC9Wu/EYwIeZhtNWvjJpcC76QA4+5ndrLPalpAUdxIWuv0ELyu1cwWQXarK96Ygnf5YWvT30yx1+5w==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-lock-body-scroll@0.0.4':
-    resolution: {integrity: sha512-XaqS9+zXtERkVHnX7zHjkRCS7/NQ/uHBBBeTUdM9JIszuPWoYWtK8iJ5QYoRbI9PvopwX0IdydWfR7jc6EkvZg==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-media-recorder@0.0.4':
-    resolution: {integrity: sha512-KhhYUuBDRlmVpplySorBPS/POC8B3Q4/lWEoRtCU9/jh1btRIp1Dwde7QJlvG1BfyohzXBu4uX2F3AnA/QGXRA==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-merge-refs@0.0.4':
-    resolution: {integrity: sha512-5SqUjlceSwuHphfqFlywEwfnhsuGNRzV0bAT5HFeXnyC6S9wVlj5EfkzvrBXXbr868dnz9OE9R7mAuNIGWqcNA==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-mount-effect@0.0.4':
-    resolution: {integrity: sha512-imU0bwi75uTN1ViKlwKRrr6HYyDplqBf9tpA6NJ508RxFn5cgR0k1z5r1LMC5c/U7k+FffWkePmemDJKW+2EgA==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-mutation-observer@0.0.4':
-    resolution: {integrity: sha512-lZrFOZ+W6e+keDk9JQoZK5pSl96tKt6hKS8S/V3cFJ1okSyRjmCXtRTHVTaNperiC+KVBGbrFmcitMCAwW2nmQ==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-navigator-permission@0.0.4':
-    resolution: {integrity: sha512-4P35js/eV6p8r2tM01bPIqIyUpGh83yZYIB+rkD6bdWWlhnoWyteTmgDKu7Dpvs8na25o5twN+nymbIz2BObYA==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-previous@0.0.4':
-    resolution: {integrity: sha512-O/2GGsyIY8GEg33HnT/nRN+ZPJwWx5RJykEcgp0G1yXwPIb/Eg1SoR+Z91CkjMRNrcnq4M/7qu1aip1Cd1lgUQ==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-rerender@0.0.4':
-    resolution: {integrity: sha512-6S7VliCjQV9o3sBZgf4eoASe8hJ3qIKk6ztD5iJgY+MDKmvfo8nEEWywbhDdvRHEqUNpRsN7fXgxnsyepQJwCg==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-resize-observer@0.0.4':
-    resolution: {integrity: sha512-vZOQQjHQugGvPKKQJ/OzRXFCXUN5YMSo7k/APFCgPcLpt0gfNINXoIdmMT6ffbFZfID99ZYTAxhP6SLb96U0Pg==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-size@0.0.4':
-    resolution: {integrity: sha512-EbVVtq65gG46yf1odwuDimdujnfVpc5REqFDpqYcpIhaRepEotAzqZNvdqyCMjHlC7ii0rKgCqEF7Yc/l/SFnA==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-speech-synthesis@0.0.4':
-    resolution: {integrity: sha512-4KKRrNmkCdLD+JwiueQ5J6AgM72BYnV2FJKmYZuk4T3WYsKZC+V/JZ69ENT8DTXPY5LQHOaJ1JNW2Y1tq+UQTQ==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-storage@0.0.4':
-    resolution: {integrity: sha512-4W4VRrWuB7irJ0b6J/UdZy1V6Sa4eFSlOH8cO86iLYBZTzpODHfUKfspIvZBxg/+Cy04k9TpBrH+Y1nCdqE51A==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/use-user-media@0.0.4':
-    resolution: {integrity: sha512-zMvOLyAMpdPyKRpMW4T1u3p6TFRNAtrtBHrrpuJUYIynhXimYxW0kwVej5JvwpRNHpyUvlKUuNNFr19xfsbcKw==}
-    peerDependencies:
-      '@types/react': '>=18.0.0 || >=19.0.0'
-      '@types/react-dom': '>=18.0.0 || >=19.0.0'
-      react: '>=18.0.0 || >=19.0.0'
-      react-dom: '>=18.0.0 || >=19.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/utils@0.0.3':
-    resolution: {integrity: sha512-PBCqxGO2UnQ+po2PrKLpf17hY/OItoYJgdi3YF1k5BlB8Id5WSHqpRC6+6stSdjM/tVZzwhJnKL8RBrBJ+ubtQ==}
-    peerDependencies:
-      '@types/react': '*'
-      '@types/react-dom': '*'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@1hook/utils@0.0.4':
-    resolution: {integrity: sha512-t9On8iNmW/aZSX9Ai3DhMk984hRoEoBtdwuzZF8p55x22k5DNJiS6ZubcmSIMXN773KELPqdrBkQOsGzvxwLeA==}
-    peerDependencies:
-      '@types/react': '*'
-      '@types/react-dom': '*'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
 
   '@adobe/css-tools@4.4.2':
     resolution: {integrity: sha512-baYZExFpsdkBNuvGKTKWCwKH57HRZLVtycZS05WTQNVOiXVSeAki3nU35zlRbToeMW8aHlJfyS+1C4BOv27q0A==}
@@ -5513,355 +5023,6 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
 snapshots:
-
-  '@1hook/use-actions@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-audio-analyser@0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-event-handler': 0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@1hook/use-is-hydrated': 0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-contextual-state@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-invariant-context': link:packages/use-invariant-context
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-cookie@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-isomorphic-layout-effect': link:packages/use-isomorphic-layout-effect
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-countdown@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-interval': link:packages/use-interval
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-debounce-fn@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-debounce-value@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-display-media@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-get-is-mounted': link:packages/use-get-is-mounted
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-event-handler@0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-latest-ref': link:packages/use-latest-ref
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-event-handler@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-latest-ref': link:packages/use-latest-ref
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-event-listener@0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-event-handler': 0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@1hook/use-is-hydrated': 0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@1hook/utils': 0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-geolocation@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-get-is-mounted@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-global-state@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-isomorphic-layout-effect': link:packages/use-isomorphic-layout-effect
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-in-view@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-event-handler': link:packages/use-event-handler
-      '@1hook/use-intersection-observer': link:packages/use-intersection-observer
-      '@1hook/use-previous': link:packages/use-previous
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-intersection-observer@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-event-handler': link:packages/use-event-handler
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-interval@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-event-handler': link:packages/use-event-handler
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-invariant-context@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-is-hydrated@0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-isomorphic-layout-effect': 0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-is-hydrated@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-isomorphic-layout-effect': link:packages/use-isomorphic-layout-effect
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-is-online@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-isomorphic-layout-effect@0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-latest-ref@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-isomorphic-layout-effect': link:packages/use-isomorphic-layout-effect
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-lock-body-scroll@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-media-recorder@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-latest-ref': link:packages/use-latest-ref
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-merge-refs@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-mount-effect@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-event-handler': link:packages/use-event-handler
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-mutation-observer@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-event-handler': link:packages/use-event-handler
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-navigator-permission@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-previous@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-rerender@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-resize-observer@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-event-handler': link:packages/use-event-handler
-      '@1hook/use-isomorphic-layout-effect': link:packages/use-isomorphic-layout-effect
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-size@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-event-handler': link:packages/use-event-handler
-      '@1hook/use-isomorphic-layout-effect': link:packages/use-isomorphic-layout-effect
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-speech-synthesis@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-get-is-mounted': link:packages/use-get-is-mounted
-      '@1hook/use-unmount-effect': link:packages/use-unmount-effect
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-storage@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-isomorphic-layout-effect': link:packages/use-isomorphic-layout-effect
-      '@1hook/utils': link:packages/utils
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/use-user-media@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@1hook/use-get-is-mounted': link:packages/use-get-is-mounted
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/utils@0.0.3(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)':
-    dependencies:
-      '@standard-schema/spec': 1.0.0
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
-
-  '@1hook/utils@0.0.4(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)':
-    dependencies:
-      '@standard-schema/spec': 1.0.0
-    optionalDependencies:
-      '@types/react': 19.1.0
-      '@types/react-dom': 19.1.1(@types/react@19.1.0)
 
   '@adobe/css-tools@4.4.2': {}
 

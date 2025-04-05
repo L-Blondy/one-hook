@@ -43,7 +43,7 @@ SSR example:
 // @include: imports
 const target = document.getElementById('target')
 // ---cut---
-import { isServer } from '@1hook/utils/is-server'
+import { isServer } from '@1hook/use-event-listener'
 
 useEventListener(!isServer && window, 'click', (e) => console.log(e.target))
 ```

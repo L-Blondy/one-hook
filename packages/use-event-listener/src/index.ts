@@ -10,6 +10,7 @@ import type {
 } from './types'
 import { getEventListener } from './vanilla'
 import type { MaybeRef } from '@1hook/utils/types'
+export { isServer } from '@1hook/utils/is-server'
 
 export type UseEventListenerReturn = {
   /**

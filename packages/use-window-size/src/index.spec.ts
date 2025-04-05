@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { beforeEach, expect, expectTypeOf, test, vi } from 'vitest'
-import { useWindowSize } from '.'
+import { defineUseWindowSize } from '.'
 
 const triggerResize = (dimension: 'width' | 'height', value: number) => {
   if (dimension === 'width') {
@@ -22,14 +22,14 @@ beforeEach(() => {
 test('type inference', () => {
   type Size = { width: number; height: number }
   renderHook(() => {
-    const ws1 = useWindowSize()
-    const ws2 = useWindowSize({ spa: false })
-    const ws3 = useWindowSize({ spa: true })
+    const ws1 = defineUseWindowSize()()
+    const ws2 = defineUseWindowSize({ spa: false })()
+    const ws3 = defineUseWindowSize({ spa: true })()
     expectTypeOf(ws1).toEqualTypeOf<Partial<Size>>()
     expectTypeOf(ws2).toEqualTypeOf<Partial<Size>>()
     expectTypeOf(ws3).toEqualTypeOf<Size>()
 
-    useWindowSize({
+    defineUseWindowSize()({
       onChange(size) {
         expectTypeOf(size).toEqualTypeOf<Size>()
       },
@@ -38,6 +38,7 @@ test('type inference', () => {
 })
 
 test('size should update with resize events', () => {
+  const useWindowSize = defineUseWindowSize()
   const { result } = renderHook(() => useWindowSize())
 
   expect(result.current.width).toBe(100)
@@ -53,6 +54,7 @@ test('size should update with resize events', () => {
 })
 
 test('Should work with several concurrent hooks', () => {
+  const useWindowSize = defineUseWindowSize()
   const { result: r1 } = renderHook(() => useWindowSize())
   const { result: r2 } = renderHook(() => useWindowSize())
 
@@ -69,6 +71,7 @@ test('Should work with several concurrent hooks', () => {
 })
 
 test('onChange should be called with resize events', () => {
+  const useWindowSize = defineUseWindowSize()
   const spy = vi.fn()
   renderHook(() => useWindowSize({ onChange: spy }))
 
@@ -77,6 +80,7 @@ test('onChange should be called with resize events', () => {
 })
 
 test('`trackState: false` onChange should trigger, state should not change', () => {
+  const useWindowSize = defineUseWindowSize()
   const spy = vi.fn()
   const { result } = renderHook(() =>
     useWindowSize({ trackState: false, onChange: spy }),

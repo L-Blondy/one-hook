@@ -23,56 +23,62 @@ const callAllListeners = () =>
     }),
   )
 
-export type UseWindowSizeOptions<TSpa extends boolean> = {
+export type DefineUseWindowSizeOptions<TSpa extends boolean> = {
   spa?: TSpa
+}
+
+export type UseWindowSizeOptions = {
   onChange?: (size: Size<true>) => void
   trackState?: boolean
 }
 
 export type UseWindowSizeReturn<TSpa extends boolean> = Size<TSpa>
 
-export function useWindowSize<TSpa extends boolean = false>({
-  spa = false as TSpa,
-  trackState = true,
-  onChange,
-}: UseWindowSizeOptions<TSpa> = {}): UseWindowSizeReturn<TSpa> {
-  const handleChange = useEventHandler(onChange)
-  const [size, setSize] = React.useState<Size>({
-    width: spa && !isServer ? window.innerWidth : undefined,
-    height: spa && !isServer ? window.innerHeight : undefined,
-  })
+export function defineUseWindowSize<TSpa extends boolean = false>({
+  spa,
+}: DefineUseWindowSizeOptions<TSpa> = {}) {
+  return function useWindowSize({
+    trackState = true,
+    onChange,
+  }: UseWindowSizeOptions = {}): UseWindowSizeReturn<TSpa> {
+    const handleChange = useEventHandler(onChange)
+    const [size, setSize] = React.useState<Size>({
+      width: spa && !isServer ? window.innerWidth : undefined,
+      height: spa && !isServer ? window.innerHeight : undefined,
+    })
 
-  useIsomorphicLayoutEffect(() => {
-    if (!spa) {
-      const size = {
-        width: window.innerWidth,
-        height: window.innerHeight,
+    useIsomorphicLayoutEffect(() => {
+      if (!spa) {
+        const size = {
+          width: window.innerWidth,
+          height: window.innerHeight,
+        }
+        setSize(size)
+        handleChange(size)
       }
-      setSize(size)
-      handleChange(size)
-    }
-  }, [spa, handleChange])
+    }, [spa, handleChange])
 
-  React.useEffect(() => {
-    if (listeners.size === 0) {
-      window.addEventListener('resize', callAllListeners, { passive: true })
-    }
-
-    function listener(size: Size<true>) {
-      trackState && setSize(size)
-      handleChange(size)
-    }
-
-    listeners.add(listener)
-
-    return () => {
-      listeners.delete(listener)
-
-      if (!listeners.size) {
-        window.removeEventListener('resize', callAllListeners)
+    React.useEffect(() => {
+      if (listeners.size === 0) {
+        window.addEventListener('resize', callAllListeners, { passive: true })
       }
-    }
-  }, [setSize, trackState, handleChange])
 
-  return size as Size<TSpa>
+      function listener(size: Size<true>) {
+        trackState && setSize(size)
+        handleChange(size)
+      }
+
+      listeners.add(listener)
+
+      return () => {
+        listeners.delete(listener)
+
+        if (!listeners.size) {
+          window.removeEventListener('resize', callAllListeners)
+        }
+      }
+    }, [setSize, trackState, handleChange])
+
+    return size as Size<TSpa>
+  }
 }

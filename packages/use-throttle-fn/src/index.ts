@@ -1,6 +1,11 @@
 import React from 'react'
 
 export type UseThrottleFnOptions = {
+  /**
+   * Schedule the last call.
+   *
+   * @default true
+   */
   trailing?: boolean
 }
 

@@ -1,0 +1,82 @@
+---
+title: useThrottleFn
+description: A throttle function, reactified.
+---
+
+Ensures that a function is only executed once in a specified time interval, no matter how many times it is invoked.
+
+## Usage
+
+```tsx twoslash include imports
+import { useThrottleFn } from '@1hook/use-throttle-fn'
+```
+
+The `useThrottleFn` hook accepts an interval in milliseconds and returns a `throttle` function.
+
+The first call executes right away, while subsequent calls within interval are throttled. \
+The final call is scheduled to run after the interval expires.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { throttle } = useThrottleFn(1000)
+
+throttle(() => console.log('Executes immediately'))
+throttle(() => console.log('Skipped'))
+throttle(() => console.log('Scheduled to execute after 1000ms'))
+```
+
+Override the default interval:
+
+```diff lang='tsx'
+const { throttle } = useThrottleFn(1000)
+
+throttle(() => console.log('Executes immediately'))
+throttle(() => console.log('Scheduled to execute after 500ms'), 500)
+```
+
+Use `trailing: false` to avoid scheduling the last call:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { throttle } = useThrottleFn(1000, { trailing: false })
+
+throttle(() => console.log('Executes immediately'))
+throttle(() => console.log('Skipped'))
+```
+
+Cancel pending executions:
+
+```tsx
+const { throttle, cancel, isPending } = useThrottleFn(1000)
+
+isPending && cancel()
+```
+
+When the component unmounts, pending executions are automatically canceled.
+
+## API Reference
+
+<AutoTypeTable
+  name="UseThrottleFnOptions"
+  description="The options of the useThrottleFn hook."
+  path="packages/use-throttle-fn/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseThrottleFnReturn"
+  description="The return value of the useThrottleFn hook."
+  path="packages/use-throttle-fn/src/index.ts"
+/>
+
+| Arguments              | type      | Description                                                                 |
+| ---------------------- | --------- | --------------------------------------------------------------------------- |
+| (1) `delay`            | `number`  | The default delay (in milliseconds) for throttling function executions.     |
+| (2) `options.trailing` | `boolean` | If `false`, the last excess call will not be scheduled. Defaults to `true`. |
+
+| Returns     | type                                    | Description                                                                                                         |
+| ----------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `throttle`  | `(fn: Function, delay?:number) => void` | Accepts the function to throttle as the first argument.<br/> Can also accept a custom delay as the second argument. |
+| `cancel`    | `() => void`                            | Cancels any pending execution of the throttled function.                                                            |
+| `isPending` | `boolean`                               | `true` if a throttle call is pending, `false` otherwise.                                                            |

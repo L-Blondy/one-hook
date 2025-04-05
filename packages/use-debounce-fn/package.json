@@ -1,6 +1,6 @@
 {
   "name": "@1hook/use-debounce-fn",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "files": [
     "dist",
     "README.md"

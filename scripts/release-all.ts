@@ -9,22 +9,20 @@ await Promise.all(
     const packagePath = path.join(packageJsonPath, '..')
     const packageJson = readPackageJson(packageJsonPath)
     const shortName = packageJson.name.replace('@1hook/', '')
-    const tag = packageJson.version.replace(/[.\-0-9]/g, '')
-
+    const tag = packageJson.version.replace(/[.\-0-9]/g, '') || 'latest'
     try {
       execSync(
         [
           `cd ${packagePath}`,
-          'pnpm run build',
-          'pnpm run test',
-          tag
-            ? `pnpm publish --quiet --access public --tag ${tag}`
-            : `pnpm publish --quiet --access public`,
+          // 'npm run build',
+          // 'npm run test',
+          // `npm publish --quiet --access public --tag ${tag}`,
+          `npm dist-tag add ${packageJson.name}@${packageJson.version} ${tag}`,
         ].join(' && '),
       )
-      consola.success(`RELEASED: v${packageJson.version} - ${shortName}`)
+      consola.success(`RELEASED: v${packageJson.version} ${tag} - ${shortName}`)
     } catch (_) {
-      consola.fail(`FAILED  : v${packageJson.version} - ${shortName}`)
+      consola.fail(`FAILED  : v${packageJson.version} ${tag} - ${shortName}`)
     }
   }),
 )

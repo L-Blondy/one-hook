@@ -1,0 +1,58 @@
+---
+title: useWindowSize
+description: Track the dimensions of the window.
+---
+
+## Features
+
+- **Optimized performance:** Leverages a shared listener pool to reduce event subscriptions.
+- **Custom state tracking:** disable internal state tracking with `trackState`.
+- **Event-driven updates:** Provides an `onChange` callback for reacting to dimension changes.
+
+## Usage
+
+<Steps>
+<Step>
+### Define the hook
+
+`defineUseWindowSize` accepts a `spa` option that enables Single Page Application optimizations.
+
+```tsx twoslash include imports
+import { defineUseWindowSize } from '@1hook/use-window-size'
+
+export const useWindowSize = defineUseWindowSize({ spa: true })
+```
+
+</Step>
+<Step>
+
+### Get the current window size:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { width, height } = useWindowSize()
+```
+
+</Step>
+</Steps>
+
+## API Reference
+
+<AutoTypeTable
+  name="DefineUseWindowSizeOptions"
+  description="Options for the `defineUseWindowSize` hook."
+  path="packages/use-window-size/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseWindowSizeOptions"
+  description="Options for the `useWindowSize` hook."
+  path="packages/use-window-size/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseWindowSizeReturn"
+  description="The return value of the `useWindowSize` hook."
+  path="packages/use-window-size/src/index.ts"
+/>

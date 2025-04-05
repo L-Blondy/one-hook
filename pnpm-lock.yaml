@@ -224,6 +224,9 @@ importers:
       '@1hook/use-user-media':
         specifier: workspace:*
         version: link:../packages/use-user-media
+      '@1hook/use-window-size':
+        specifier: workspace:*
+        version: link:../packages/use-window-size
       '@1hook/utils':
         specifier: workspace:*
         version: link:../packages/utils

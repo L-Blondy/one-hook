@@ -1,0 +1,19 @@
+---
+title: useUpdateEffect
+description: useEffect without the initial effect.
+---
+
+## Usage
+
+```tsx twoslash include imports
+import { useUpdateEffect } from '@1hook/use-update-effect'
+```
+
+Execute on dependency change:
+
+```tsx twoslash
+// @include: imports
+const state: string = ''
+// ---cut---
+useUpdateEffect(() => console.log('State has changed'), [state])
+```

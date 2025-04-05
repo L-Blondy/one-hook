@@ -28,8 +28,16 @@ export type DefineUseWindowSizeOptions<TSpa extends boolean> = {
 }
 
 export type UseWindowSizeOptions = {
-  onChange?: (size: Size<true>) => void
+  /**
+   * Set to `false` to avoid tracking the size state for better performance
+   *
+   * @default true
+   */
   trackState?: boolean
+  /**
+   * Executes when the size changes, even if `trackState` is `false`.
+   */
+  onChange?: (size: Size<true>) => void
 }
 
 export type UseWindowSizeReturn<TSpa extends boolean> = Size<TSpa>

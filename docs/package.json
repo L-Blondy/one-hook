@@ -47,6 +47,7 @@
     "@1hook/use-unmount-effect": "workspace:*",
     "@1hook/use-update-effect": "workspace:*",
     "@1hook/use-user-media": "workspace:*",
+    "@1hook/use-window-size": "workspace:*",
     "@1hook/utils": "workspace:*",
     "@eslint/js": "^9.24.0",
     "@next/eslint-plugin-next": "^15.2.4",

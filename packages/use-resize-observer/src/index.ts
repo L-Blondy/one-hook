@@ -1,7 +1,7 @@
 import React from 'react'
-import { useEventHandler } from '@one-stack/use-event-handler'
-import { useIsomorphicLayoutEffect } from '@one-stack/use-isomorphic-layout-effect'
-import { isServer } from '@one-stack/utils/is-server'
+import { useEventHandler } from '@1hook/use-event-handler'
+import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
+import { isServer } from '@1hook/utils/is-server'
 
 export type UseResizeObserverOptions = ResizeObserverOptions & {
   /**

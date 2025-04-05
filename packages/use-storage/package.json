@@ -1,5 +1,5 @@
 {
-  "name": "@one-stack/use-storage",
+  "name": "@1hook/use-storage",
   "version": "0.0.1",
   "files": [
     "dist",
@@ -29,8 +29,8 @@
   },
   "tag": "beta",
   "dependencies": {
-    "@one-stack/utils": "workspace:*",
-    "@one-stack/use-isomorphic-layout-effect": "workspace:*"
+    "@1hook/utils": "workspace:*",
+    "@1hook/use-isomorphic-layout-effect": "workspace:*"
   },
   "repository": {
     "type": "git",

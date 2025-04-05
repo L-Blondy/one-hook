@@ -12,7 +12,7 @@ import { createContext } from 'react'
 type Value = any[]
 const MyContext = React.createContext<Value | null>(null)
 // ---cut---
-import { useInvariantContext } from '@one-stack/use-invariant-context'
+import { useInvariantContext } from '@1hook/use-invariant-context'
 ```
 
 An error is thrown if the context value is falsy.
@@ -33,7 +33,7 @@ const ctx = useInvariantContext(MyContext, 'Context not found')
 This example shows how to use `useInvariantContext` to avoid missing context provider.
 
 ```tsx twoslash
-import { useInvariantContext } from '@one-stack/use-invariant-context'
+import { useInvariantContext } from '@1hook/use-invariant-context'
 import { createContext, ReactNode, useContext } from 'react'
 type Value = any[]
 // @noErrors

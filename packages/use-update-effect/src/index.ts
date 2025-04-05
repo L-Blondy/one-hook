@@ -1,8 +1,5 @@
 import React from 'react'
 
-/**
- * https://crustack.vercel.app/hooks/use-update-effect/
- */
 export const useUpdateEffect: typeof React.useEffect = (effect, deps) => {
   const isFirstRef = React.useRef(true)
 

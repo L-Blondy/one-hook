@@ -12,7 +12,7 @@ description: React version of `addEventListener`, optimized for performance and 
 ## Usage
 
 ```tsx twoslash include imports
-import { useEventListener } from '@one-stack/use-event-listener'
+import { useEventListener } from '@1hook/use-event-listener'
 ```
 
 Attach an event listener to the target.
@@ -43,7 +43,7 @@ SSR example:
 // @include: imports
 const target = document.getElementById('target')
 // ---cut---
-import { isServer } from '@one-stack/utils/is-server'
+import { isServer } from '@1hook/utils/is-server'
 
 useEventListener(!isServer && window, 'click', (e) => console.log(e.target))
 ```

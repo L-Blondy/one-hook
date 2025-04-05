@@ -4,10 +4,28 @@ export type UseThrottleFnOptions = {
   trailing?: boolean
 }
 
+export type UseThrottleFnReturn = {
+  /**
+   * Throttle a function execution.
+   *
+   * @param callback - The function to throttle.
+   * @param interval - Override the default interval in milliseconds (optional).
+   */
+  throttle: (callback: () => any, interval?: number) => void
+  /**
+   * Cancel the throttle.
+   */
+  cancel: () => void
+  /**
+   * Whether a throttled call is pending.
+   */
+  isPending: boolean
+}
+
 export function useThrottleFn(
   defaultInterval: number,
   { trailing = true }: UseThrottleFnOptions = {},
-) {
+): UseThrottleFnReturn {
   const [isPending, setIsPending] = React.useState(false)
   const lastCallTimestampRef = React.useRef(0)
   const timeoutRef = React.useRef<NodeJS.Timeout | number>(0)

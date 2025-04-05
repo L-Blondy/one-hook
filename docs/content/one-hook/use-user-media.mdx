@@ -6,7 +6,7 @@ description: Access and manage media devices like camera and microphone.
 ## Usage
 
 ```tsx twoslash include imports
-import { useUserMedia } from '@one-stack/use-user-media'
+import { useUserMedia } from '@1hook/use-user-media'
 ```
 
 Pass the media constraints to the hook.
@@ -35,7 +35,7 @@ Capture and display video from the device's camera.
 
 ```tsx twoslash
 import { useEffect, useRef } from 'react'
-import { useUserMedia } from '@one-stack/use-user-media'
+import { useUserMedia } from '@1hook/use-user-media'
 
 export default function VideoCapture() {
   const { state, stream, open, close } = useUserMedia({

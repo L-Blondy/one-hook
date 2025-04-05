@@ -1,7 +1,7 @@
 import React from 'react'
-import { useEventHandler } from '@one-stack/use-event-handler'
-import { isServer } from '@one-stack/utils/is-server'
-import { useIsomorphicLayoutEffect } from '@one-stack/use-isomorphic-layout-effect'
+import { useEventHandler } from '@1hook/use-event-handler'
+import { isServer } from '@1hook/utils/is-server'
+import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 
 type Size<TSpa extends boolean = false> = TSpa extends true
   ? {
@@ -23,20 +23,19 @@ const callAllListeners = () =>
     }),
   )
 
-/**
- * Tracks the inner dimensions of the browser window.
- *
- * https://crustack.vercel.app/hooks/use-window-size/
- */
+export type UseWindowSizeOptions<TSpa extends boolean> = {
+  spa?: TSpa
+  onChange?: (size: Size<true>) => void
+  trackState?: boolean
+}
+
+export type UseWindowSizeReturn<TSpa extends boolean> = Size<TSpa>
+
 export function useWindowSize<TSpa extends boolean = false>({
   spa = false as TSpa,
   trackState = true,
   onChange,
-}: {
-  spa?: TSpa
-  onChange?: (size: Size<true>) => void
-  trackState?: boolean
-} = {}) {
+}: UseWindowSizeOptions<TSpa> = {}): UseWindowSizeReturn<TSpa> {
   const handleChange = useEventHandler(onChange)
   const [size, setSize] = React.useState<Size>({
     width: spa && !isServer ? window.innerWidth : undefined,

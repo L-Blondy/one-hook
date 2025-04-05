@@ -1,9 +1,6 @@
 import React from 'react'
 import { getClosestScrollable, isIosDevice } from './utils'
 
-/**
- * https://crustack.vercel.app/hooks/use-lock-body-scroll/
- */
 export const useLockBodyScroll = function useLockBody() {
   const [locked, setLocked] = React.useState(false)
   const initialBodyStyles = React.useRef<React.CSSProperties>({})

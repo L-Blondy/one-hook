@@ -10,7 +10,7 @@ React hook to record media streams (audio and/or video) using the [MediaRecorder
 ```tsx twoslash include imports
 const stream = new MediaStream()
 //---cut---
-import { useMediaRecorder } from '@one-stack/use-media-recorder'
+import { useMediaRecorder } from '@1hook/use-media-recorder'
 ```
 
 The recording automatically starts when a media stream is provided and stops when the stream is nullish.
@@ -63,8 +63,8 @@ const { pause, resume } = useMediaRecorder(stream, {
 Record video from the device's camera:
 
 ```tsx twoslash include imports
-import { useMediaRecorder } from '@one-stack/use-media-recorder'
-import { useUserMedia } from '@one-stack/use-user-media'
+import { useMediaRecorder } from '@1hook/use-media-recorder'
+import { useUserMedia } from '@1hook/use-user-media'
 import { useState } from 'react'
 
 export default function VideoRecorder() {

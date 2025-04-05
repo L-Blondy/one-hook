@@ -1,4 +1,4 @@
-import { getElementUid } from '@one-stack/utils/get-element-uid'
+import { getElementUid } from '@1hook/utils/get-element-uid'
 import type { UseIntersectionObserverOptions } from '.'
 
 export type InstanceId = string & { instanceId: true }

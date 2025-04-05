@@ -3,7 +3,7 @@ import { afterEach, expect, expectTypeOf, test, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { useMutationObserver } from '.'
 import React from 'react'
-import { useMergeRefs } from '@one-stack/use-merge-refs'
+import { useMergeRefs } from '@1hook/use-merge-refs'
 import { scheduler } from 'timers/promises'
 
 afterEach(() => {

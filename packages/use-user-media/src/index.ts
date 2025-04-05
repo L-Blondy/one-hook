@@ -1,5 +1,5 @@
 import React from 'react'
-import { useGetIsMounted } from '@one-stack/use-get-is-mounted'
+import { useGetIsMounted } from '@1hook/use-get-is-mounted'
 
 type ClosedMedia = {
   stream: null
@@ -72,9 +72,6 @@ export type UseUserMediaReturn = UserMedia & {
   toggleVideo: () => void
 }
 
-/**
- * https://crustack.vercel.app/hooks/use-user-media/
- */
 export function useUserMedia(
   constraints: UseUserMediaOptions = {},
 ): UseUserMediaReturn {

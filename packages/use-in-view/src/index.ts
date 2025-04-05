@@ -1,11 +1,11 @@
 import React from 'react'
-import { usePrevious } from '@one-stack/use-previous'
+import { usePrevious } from '@1hook/use-previous'
 import {
   useIntersectionObserver,
   type UseIntersectionObserverOptions,
   type UseIntersectionObserverReturn,
-} from '@one-stack/use-intersection-observer'
-import { useEventHandler } from '@one-stack/use-event-handler'
+} from '@1hook/use-intersection-observer'
+import { useEventHandler } from '@1hook/use-event-handler'
 
 export type UseInViewOptions = UseIntersectionObserverOptions & {
   /**

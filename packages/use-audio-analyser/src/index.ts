@@ -1,6 +1,6 @@
 import React from 'react'
-import { useEventHandler } from '@one-stack/use-event-handler'
-import { useIsHydrated } from '@one-stack/use-is-hydrated'
+import { useEventHandler } from '@1hook/use-event-handler'
+import { useIsHydrated } from '@1hook/use-is-hydrated'
 
 export type AudioAnalyserOptions = {
   /**

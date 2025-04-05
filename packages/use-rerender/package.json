@@ -1,5 +1,5 @@
 {
-  "name": "@one-stack/use-rerender",
+  "name": "@1hook/use-rerender",
   "version": "0.0.1",
   "files": [
     "dist",

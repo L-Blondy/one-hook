@@ -4,11 +4,11 @@ import {
   type ServiceOptions,
   type StorageValidator,
 } from './vanilla'
-import type { KeyOf } from '@one-stack/utils/types'
-import { createEmitter } from '@one-stack/utils/emitter'
-import { keysOf } from '@one-stack/utils/keys-of'
-import { useIsomorphicLayoutEffect } from '@one-stack/use-isomorphic-layout-effect'
-import type { ValidatorOutput } from '@one-stack/utils/validate'
+import type { KeyOf } from '@1hook/utils/types'
+import { createEmitter } from '@1hook/utils/emitter'
+import { keysOf } from '@1hook/utils/keys-of'
+import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
+import type { ValidatorOutput } from '@1hook/utils/validate'
 
 export function defineStorage<
   TConfig extends Record<string, StorageValidator>,

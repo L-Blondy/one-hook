@@ -13,7 +13,7 @@ Minimalistic & Performant global state manager.
 ### Define the global state
 
 ```tsx twoslash title="use-count.ts" include use-count
-import { defineGlobalState } from '@one-stack/use-global-state'
+import { defineGlobalState } from '@1hook/use-global-state'
 
 export const [useCount] = defineGlobalState({ initialState: 0 })
 ```
@@ -38,7 +38,7 @@ To help prevent unnecessary rerenders, `defineGlobalState` provides a standalone
 It helps prevent unnecessary rerenders by not listening to the state.
 
 ```tsx twoslash title="use-count.ts" include set-count
-import { defineGlobalState } from '@one-stack/use-global-state'
+import { defineGlobalState } from '@1hook/use-global-state'
 // ---cut---
 export const [useCount, setCount] = defineGlobalState({ initialState: 0 })
 ```

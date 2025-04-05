@@ -1,5 +1,5 @@
 {
-  "name": "@one-stack/use-debounce-fn",
+  "name": "@1hook/use-debounce-fn",
   "version": "0.0.1",
   "files": [
     "dist",

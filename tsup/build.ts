@@ -30,7 +30,7 @@ export const tsupBuildOptions = (
     outExtension: () => ({
       js: minExtension,
     }),
-    noExternal: [/^@one-stack/],
+    noExternal: [/^@1hook/],
     async onSuccess() {
       const files = (await fs.promises.readdir(outDir)).filter((file) =>
         file.endsWith(minExtension),

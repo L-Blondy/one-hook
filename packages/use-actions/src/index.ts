@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Prettify } from '@one-stack/utils/types'
+import type { Prettify } from '@1hook/utils/types'
 
 export function defineActions<
   State,

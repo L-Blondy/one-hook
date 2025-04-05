@@ -1,5 +1,5 @@
 {
-  "name": "@one-stack/use-event-handler",
+  "name": "@1hook/use-event-handler",
   "version": "0.0.1",
   "files": [
     "dist",
@@ -28,8 +28,8 @@
     "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "dependencies": {
-    "@one-stack/use-latest-ref": "workspace:*",
-    "@one-stack/utils": "workspace:*"
+    "@1hook/use-latest-ref": "workspace:*",
+    "@1hook/utils": "workspace:*"
   },
   "tag": "beta",
   "repository": {

@@ -1,5 +1,5 @@
 {
-  "name": "@one-stack/use-update-effect",
+  "name": "@1hook/use-update-effect",
   "version": "0.0.1",
   "files": [
     "dist",

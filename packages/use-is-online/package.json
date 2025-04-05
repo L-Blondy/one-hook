@@ -1,5 +1,5 @@
 {
-  "name": "@one-stack/use-is-online",
+  "name": "@1hook/use-is-online",
   "version": "0.0.1",
   "files": [
     "dist",
@@ -28,7 +28,7 @@
     "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "dependencies": {
-    "@one-stack/utils": "workspace:*"
+    "@1hook/utils": "workspace:*"
   },
   "tag": "beta",
   "repository": {

@@ -6,7 +6,7 @@ description: React hook to access and manage screen sharing capabilities using t
 ## Usage
 
 ```tsx twoslash include imports
-import { useDisplayMedia } from '@one-stack/use-display-media'
+import { useDisplayMedia } from '@1hook/use-display-media'
 ```
 
 Pass the media constraints to the hook.
@@ -35,7 +35,7 @@ Capture and display the device's screen:
 
 ```tsx twoslash
 import { useEffect, useRef } from 'react'
-import { useDisplayMedia } from '@one-stack/use-display-media'
+import { useDisplayMedia } from '@1hook/use-display-media'
 
 export default function ScreenShare() {
   const { state, stream, error, open, close } = useDisplayMedia({

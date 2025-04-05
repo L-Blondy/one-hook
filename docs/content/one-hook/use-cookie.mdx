@@ -27,7 +27,7 @@ Use defineCookies to configure validation rules and expiration settings for each
 ```ts twoslash title="cookies.ts" include cookies
 'use client'
 import { z } from 'zod'
-import { defineCookies } from '@one-stack/use-cookie'
+import { defineCookies } from '@1hook/use-cookie'
 
 export const { CookieProvider, useCookie } = defineCookies({
   // "search" cookie with a string value
@@ -118,7 +118,7 @@ For simple cases you can use a function to validate the cookie value.
 The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
 
 ```ts twoslash
-import { defineCookies } from '@one-stack/use-cookie'
+import { defineCookies } from '@1hook/use-cookie'
 // ---cut---
 defineCookies({
   search: {
@@ -142,7 +142,7 @@ For more complex cases you can use a schema to validate the cookie value.
 The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
 
 ```ts twoslash
-import { defineCookies } from '@one-stack/use-cookie'
+import { defineCookies } from '@1hook/use-cookie'
 // ---cut---
 import { z } from 'zod'
 
@@ -159,7 +159,7 @@ You can read and write cookies outside of React using the `Cookies` object.
 
 ```ts twoslash include cookies-outside
 import { z } from 'zod'
-import { defineCookies } from '@one-stack/use-cookie'
+import { defineCookies } from '@1hook/use-cookie'
 // ---cut---
 export const { CookieProvider, useCookie, Cookies } = defineCookies({
   accessToken: {
@@ -211,7 +211,7 @@ In some cases you might need to customize the serialization and deserialization 
 You can do this by using the `serialize` and `deserialize` options.
 
 ```ts twoslash
-import { defineCookies } from '@one-stack/use-cookie'
+import { defineCookies } from '@1hook/use-cookie'
 // ---cut---
 defineCookies(
   { search: { validate: (value) => String(value ?? '') } },

@@ -2,9 +2,9 @@ import {
   validateSync,
   type Validator,
   type ValidatorOutput,
-} from '@one-stack/utils/validate'
+} from '@1hook/utils/validate'
 import { defaultDeserializer, defaultSerializer } from './serializers'
-import type { KeyOf } from '@one-stack/utils/types'
+import type { KeyOf } from '@1hook/utils/types'
 
 export type ServiceOptions = {
   type: 'local' | 'session'

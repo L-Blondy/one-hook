@@ -1,5 +1,5 @@
 {
-  "name": "@one-stack/use-global-state",
+  "name": "@1hook/use-global-state",
   "version": "0.0.1",
   "files": [
     "dist",
@@ -28,8 +28,8 @@
     "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "dependencies": {
-    "@one-stack/use-isomorphic-layout-effect": "workspace:*",
-    "@one-stack/utils": "workspace:*"
+    "@1hook/use-isomorphic-layout-effect": "workspace:*",
+    "@1hook/utils": "workspace:*"
   },
   "tag": "beta",
   "repository": {

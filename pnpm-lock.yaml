@@ -113,106 +113,106 @@ importers:
 
   docs:
     dependencies:
-      '@one-stack/use-actions':
+      '@1hook/use-actions':
         specifier: workspace:*
         version: link:../packages/use-actions
-      '@one-stack/use-audio-analyser':
+      '@1hook/use-audio-analyser':
         specifier: workspace:*
         version: link:../packages/use-audio-analyser
-      '@one-stack/use-contextual-state':
+      '@1hook/use-contextual-state':
         specifier: workspace:*
         version: link:../packages/use-contextual-state
-      '@one-stack/use-cookie':
+      '@1hook/use-cookie':
         specifier: workspace:*
         version: link:../packages/use-cookie
-      '@one-stack/use-countdown':
+      '@1hook/use-countdown':
         specifier: workspace:*
         version: link:../packages/use-countdown
-      '@one-stack/use-debounce-fn':
+      '@1hook/use-debounce-fn':
         specifier: workspace:*
         version: link:../packages/use-debounce-fn
-      '@one-stack/use-debounce-value':
+      '@1hook/use-debounce-value':
         specifier: workspace:*
         version: link:../packages/use-debounce-value
-      '@one-stack/use-display-media':
+      '@1hook/use-display-media':
         specifier: workspace:*
         version: link:../packages/use-display-media
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../packages/use-event-handler
-      '@one-stack/use-event-listener':
+      '@1hook/use-event-listener':
         specifier: workspace:*
         version: link:../packages/use-event-listener
-      '@one-stack/use-geolocation':
+      '@1hook/use-geolocation':
         specifier: workspace:*
         version: link:../packages/use-geolocation
-      '@one-stack/use-get-is-mounted':
+      '@1hook/use-get-is-mounted':
         specifier: workspace:*
         version: link:../packages/use-get-is-mounted
-      '@one-stack/use-global-state':
+      '@1hook/use-global-state':
         specifier: workspace:*
         version: link:../packages/use-global-state
-      '@one-stack/use-in-view':
+      '@1hook/use-in-view':
         specifier: workspace:*
         version: link:../packages/use-in-view
-      '@one-stack/use-intersection-observer':
+      '@1hook/use-intersection-observer':
         specifier: workspace:*
         version: link:../packages/use-intersection-observer
-      '@one-stack/use-interval':
+      '@1hook/use-interval':
         specifier: workspace:*
         version: link:../packages/use-interval
-      '@one-stack/use-invariant-context':
+      '@1hook/use-invariant-context':
         specifier: workspace:*
         version: link:../packages/use-invariant-context
-      '@one-stack/use-is-hydrated':
+      '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../packages/use-is-hydrated
-      '@one-stack/use-is-online':
+      '@1hook/use-is-online':
         specifier: workspace:*
         version: link:../packages/use-is-online
-      '@one-stack/use-latest-ref':
+      '@1hook/use-latest-ref':
         specifier: workspace:*
         version: link:../packages/use-latest-ref
-      '@one-stack/use-lock-body-scroll':
+      '@1hook/use-lock-body-scroll':
         specifier: workspace:*
         version: link:../packages/use-lock-body-scroll
-      '@one-stack/use-media-recorder':
+      '@1hook/use-media-recorder':
         specifier: workspace:*
         version: link:../packages/use-media-recorder
-      '@one-stack/use-merge-refs':
+      '@1hook/use-merge-refs':
         specifier: workspace:*
         version: link:../packages/use-merge-refs
-      '@one-stack/use-mount-effect':
+      '@1hook/use-mount-effect':
         specifier: workspace:*
         version: link:../packages/use-mount-effect
-      '@one-stack/use-mutation-observer':
+      '@1hook/use-mutation-observer':
         specifier: workspace:*
         version: link:../packages/use-mutation-observer
-      '@one-stack/use-navigator-permission':
+      '@1hook/use-navigator-permission':
         specifier: workspace:*
         version: link:../packages/use-navigator-permission
-      '@one-stack/use-previous':
+      '@1hook/use-previous':
         specifier: workspace:*
         version: link:../packages/use-previous
-      '@one-stack/use-rerender':
+      '@1hook/use-rerender':
         specifier: workspace:*
         version: link:../packages/use-rerender
-      '@one-stack/use-resize-observer':
+      '@1hook/use-resize-observer':
         specifier: workspace:*
         version: link:../packages/use-resize-observer
-      '@one-stack/use-size':
+      '@1hook/use-size':
         specifier: workspace:*
         version: link:../packages/use-size
-      '@one-stack/use-speech-synthesis':
+      '@1hook/use-speech-synthesis':
         specifier: workspace:*
         version: link:../packages/use-speech-synthesis
-      '@one-stack/use-storage':
+      '@1hook/use-storage':
         specifier: workspace:*
         version: link:../packages/use-storage
-      '@one-stack/use-user-media':
+      '@1hook/use-user-media':
         specifier: workspace:*
         version: link:../packages/use-user-media
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../packages/utils
       fumadocs-core:
@@ -282,7 +282,7 @@ importers:
 
   packages/use-actions:
     dependencies:
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -300,10 +300,10 @@ importers:
 
   packages/use-audio-analyser:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@one-stack/use-is-hydrated':
+      '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../use-is-hydrated
       '@types/react':
@@ -321,7 +321,7 @@ importers:
 
   packages/use-contextual-state:
     dependencies:
-      '@one-stack/use-invariant-context':
+      '@1hook/use-invariant-context':
         specifier: workspace:*
         version: link:../use-invariant-context
       '@types/react':
@@ -339,10 +339,10 @@ importers:
 
   packages/use-cookie:
     dependencies:
-      '@one-stack/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -360,7 +360,7 @@ importers:
 
   packages/use-countdown:
     dependencies:
-      '@one-stack/use-interval':
+      '@1hook/use-interval':
         specifier: workspace:*
         version: link:../use-interval
       '@types/react':
@@ -408,7 +408,7 @@ importers:
 
   packages/use-display-media:
     dependencies:
-      '@one-stack/use-get-is-mounted':
+      '@1hook/use-get-is-mounted':
         specifier: workspace:*
         version: link:../use-get-is-mounted
       '@types/react':
@@ -426,10 +426,10 @@ importers:
 
   packages/use-event-handler:
     dependencies:
-      '@one-stack/use-latest-ref':
+      '@1hook/use-latest-ref':
         specifier: workspace:*
         version: link:../use-latest-ref
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -447,13 +447,13 @@ importers:
 
   packages/use-event-listener:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@one-stack/use-is-hydrated':
+      '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../use-is-hydrated
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -501,10 +501,10 @@ importers:
 
   packages/use-global-state:
     dependencies:
-      '@one-stack/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -522,13 +522,13 @@ importers:
 
   packages/use-in-view:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@one-stack/use-intersection-observer':
+      '@1hook/use-intersection-observer':
         specifier: workspace:*
         version: link:../use-intersection-observer
-      '@one-stack/use-previous':
+      '@1hook/use-previous':
         specifier: workspace:*
         version: link:../use-previous
       '@types/react':
@@ -544,16 +544,16 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.0(react@19.0.0)
     devDependencies:
-      '@one-stack/use-merge-refs':
+      '@1hook/use-merge-refs':
         specifier: workspace:*
         version: link:../use-merge-refs
 
   packages/use-intersection-observer:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -569,16 +569,16 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.0(react@19.0.0)
     devDependencies:
-      '@one-stack/use-merge-refs':
+      '@1hook/use-merge-refs':
         specifier: workspace:*
         version: link:../use-merge-refs
 
   packages/use-interval:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -611,7 +611,7 @@ importers:
 
   packages/use-is-hydrated:
     dependencies:
-      '@one-stack/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
       '@types/react':
@@ -629,7 +629,7 @@ importers:
 
   packages/use-is-online:
     dependencies:
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -647,7 +647,7 @@ importers:
 
   packages/use-isomorphic-layout-effect:
     dependencies:
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -665,7 +665,7 @@ importers:
 
   packages/use-latest-ref:
     dependencies:
-      '@one-stack/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
       '@types/react':
@@ -683,7 +683,7 @@ importers:
 
   packages/use-lock-body-scroll:
     dependencies:
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -701,10 +701,10 @@ importers:
 
   packages/use-media-recorder:
     dependencies:
-      '@one-stack/use-latest-ref':
+      '@1hook/use-latest-ref':
         specifier: workspace:*
         version: link:../use-latest-ref
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -737,7 +737,7 @@ importers:
 
   packages/use-mount-effect:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
       '@types/react':
@@ -755,10 +755,10 @@ importers:
 
   packages/use-mutation-observer:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -774,13 +774,13 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.0(react@19.0.0)
     devDependencies:
-      '@one-stack/use-merge-refs':
+      '@1hook/use-merge-refs':
         specifier: workspace:*
         version: link:../use-merge-refs
 
   packages/use-navigator-permission:
     dependencies:
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -828,13 +828,13 @@ importers:
 
   packages/use-resize-observer:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@one-stack/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -850,16 +850,16 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.0.0(react@19.0.0)
     devDependencies:
-      '@one-stack/use-merge-refs':
+      '@1hook/use-merge-refs':
         specifier: workspace:*
         version: link:../use-merge-refs
 
   packages/use-size:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@one-stack/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
       '@types/react':
@@ -877,13 +877,13 @@ importers:
 
   packages/use-speech-synthesis:
     dependencies:
-      '@one-stack/use-get-is-mounted':
+      '@1hook/use-get-is-mounted':
         specifier: workspace:*
         version: link:../use-get-is-mounted
-      '@one-stack/use-unmount-effect':
+      '@1hook/use-unmount-effect':
         specifier: workspace:*
         version: link:../use-unmount-effect
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -901,10 +901,10 @@ importers:
 
   packages/use-storage:
     dependencies:
-      '@one-stack/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -937,10 +937,10 @@ importers:
 
   packages/use-timeout:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':
@@ -958,7 +958,7 @@ importers:
 
   packages/use-unmount-effect:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
       '@types/react':
@@ -991,7 +991,7 @@ importers:
 
   packages/use-user-media:
     dependencies:
-      '@one-stack/use-get-is-mounted':
+      '@1hook/use-get-is-mounted':
         specifier: workspace:*
         version: link:../use-get-is-mounted
       '@types/react':
@@ -1009,13 +1009,13 @@ importers:
 
   packages/use-window-size:
     dependencies:
-      '@one-stack/use-event-handler':
+      '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@one-stack/use-isomorphic-layout-effect':
+      '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect
-      '@one-stack/utils':
+      '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
       '@types/react':

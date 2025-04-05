@@ -1,5 +1,5 @@
 import React from 'react'
-import { useEventHandler } from '@one-stack/use-event-handler'
+import { useEventHandler } from '@1hook/use-event-handler'
 
 export function useUnmountEffect(callback: () => any) {
   const _cb = useEventHandler(callback)

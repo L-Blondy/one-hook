@@ -1,6 +1,6 @@
-import { useUnmountEffect } from '@one-stack/use-unmount-effect'
-import { isServer } from '@one-stack/utils/is-server'
-import { useGetIsMounted } from '@one-stack/use-get-is-mounted'
+import { useUnmountEffect } from '@1hook/use-unmount-effect'
+import { isServer } from '@1hook/utils/is-server'
+import { useGetIsMounted } from '@1hook/use-get-is-mounted'
 import React from 'react'
 
 export type UseSpeechSynthesisOptions = {

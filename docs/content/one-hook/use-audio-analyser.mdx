@@ -4,13 +4,13 @@ description: Real-time audio analysis based on the Web Audio API.
 ---
 
 ```package-install
-npm install @one-stack/use-audio-analyser
+npm install @1hook/use-audio-analyser
 ```
 
 ## Quick Start
 
 ```tsx twoslash include import
-import { useAudioAnalyser } from '@one-stack/use-audio-analyser'
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
 ```
 
 Pass the `MediaStream` or `HTMLAudioElement` to analyze to `useAudioAnalyser`.
@@ -34,7 +34,7 @@ Check out the [API reference](#api-reference) to learn more about the available 
 Visualize audio frequencies in real-time by analyzing data from an HTML audio element using the `useAudioAnalyser` hook.
 
 ```tsx twoslash
-import { useAudioAnalyser } from '@one-stack/use-audio-analyser'
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
 import { useRef, useState } from 'react'
 // ---cut---
 function AudioVisualizer() {
@@ -74,8 +74,8 @@ function AudioVisualizer() {
 Combine the `useUserMedia` hook to capture microphone input with the `useAudioAnalyser` hook to process and visualize the audio frequency data in real-time.
 
 ```tsx twoslash
-import { useUserMedia } from '@one-stack/use-user-media'
-import { useAudioAnalyser } from '@one-stack/use-audio-analyser'
+import { useUserMedia } from '@1hook/use-user-media'
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
 import { useState } from 'react'
 // ---cut---
 function AudioVisualizer() {
@@ -117,7 +117,7 @@ function AudioVisualizer() {
 This example uses the `useAudioAnalyser` hook to analyze the audio frequency data from an audio element and draw the frequency data on a canvas.
 
 ```tsx twoslash
-import { useAudioAnalyser } from '@one-stack/use-audio-analyser'
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
 import { useRef } from 'react'
 // ---cut---
 function CanvasVisualizer() {

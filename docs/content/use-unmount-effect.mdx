@@ -1,0 +1,16 @@
+---
+title: useUnmountEffect
+description: Execute the callback when the component unmounts (cleanup effect).
+---
+
+```tsx twoslash include imports
+import { useUnmountEffect } from '@1hook/use-unmount-effect'
+```
+
+Execute a function on unmount:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+useUnmountEffect(() => console.log('Unmounted!'))
+```

@@ -215,6 +215,12 @@ importers:
       '@1hook/use-timeout':
         specifier: workspace:*
         version: link:../packages/use-timeout
+      '@1hook/use-unmount-effect':
+        specifier: workspace:*
+        version: link:../packages/use-unmount-effect
+      '@1hook/use-update-effect':
+        specifier: workspace:*
+        version: link:../packages/use-update-effect
       '@1hook/use-user-media':
         specifier: workspace:*
         version: link:../packages/use-user-media

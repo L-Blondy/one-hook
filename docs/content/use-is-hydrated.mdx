@@ -3,16 +3,30 @@ title: useIsHydrated
 description: Once `true`, no hydration error can occur.
 ---
 
-Useful for preventing hydration mismatches by conditionally rendering content that depends on browser APIs.
+Useful to prevent hydration mismatches by conditionally rendering content that depends on browser APIs.
 
-```ts twoslash include imports
+## Installation
+
+```package-install
+npm install @1hook/use-is-hydrated
+```
+
+## Usage
+
+```tsx twoslash include imports
 import { useIsHydrated } from '@1hook/use-is-hydrated'
 ```
 
-Usage:
+Check if the component is hydrated:
 
 ```tsx twoslash
 // @include: imports
 // ---cut---
-const isHydrated = useIsHydrated()
+function MyComponent() {
+  const isHydrated = useIsHydrated()
+
+  if (!isHydrated) return null
+
+  return <div>{Date.now()}</div>
+}
 ```

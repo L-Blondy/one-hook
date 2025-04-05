@@ -5,6 +5,12 @@ description: A throttle function, reactified.
 
 Ensures that a function is only executed once in a specified time interval, no matter how many times it is invoked.
 
+## Installation
+
+```package-install
+npm install @1hook/use-throttle-fn
+```
+
 ## Usage
 
 ```tsx twoslash include imports
@@ -69,14 +75,3 @@ When the component unmounts, pending executions are automatically canceled.
   description="The return value of the useThrottleFn hook."
   path="packages/use-throttle-fn/src/index.ts"
 />
-
-| Arguments              | type      | Description                                                                 |
-| ---------------------- | --------- | --------------------------------------------------------------------------- |
-| (1) `delay`            | `number`  | The default delay (in milliseconds) for throttling function executions.     |
-| (2) `options.trailing` | `boolean` | If `false`, the last excess call will not be scheduled. Defaults to `true`. |
-
-| Returns     | type                                    | Description                                                                                                         |
-| ----------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `throttle`  | `(fn: Function, delay?:number) => void` | Accepts the function to throttle as the first argument.<br/> Can also accept a custom delay as the second argument. |
-| `cancel`    | `() => void`                            | Cancels any pending execution of the throttled function.                                                            |
-| `isPending` | `boolean`                               | `true` if a throttle call is pending, `false` otherwise.                                                            |

@@ -7,9 +7,7 @@ export const source = loader({
   baseUrl: '/docs', // in next.js app folder
   source: docs.toFumadocsSource(),
   icon(icon) {
-    if (!icon) {
-      return
-    }
+    if (!icon) return
 
     if (icon in icons)
       return React.createElement(icons[icon as keyof typeof icons])

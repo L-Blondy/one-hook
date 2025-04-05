@@ -1,0 +1,18 @@
+---
+title: useMountEffect
+description: Runs the callback when the component mounts (first effect).
+---
+
+## Usage
+
+```tsx twoslash include imports
+import { useMountEffect } from '@1hook/use-mount-effect'
+```
+
+Execute a function on mount:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+useMountEffect(() => console.log('Mounted!'))
+```

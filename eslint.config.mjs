@@ -7,6 +7,7 @@ import { config_js } from './eslint/config-js.mjs'
 import { config_ts } from './eslint/config-ts.mjs'
 import { config_vitest } from './eslint/config-vitest.mjs'
 import { config_react } from './eslint/config-react.mjs'
+import { config_next } from './eslint/config-next.mjs'
 
 /** @type {any} */
 const config = tseslint.config(
@@ -37,6 +38,7 @@ const config = tseslint.config(
   },
   {
     files: [
+      'docs/**',
       'packages/**',
       'tsup/**',
       'vitest/**',
@@ -47,6 +49,7 @@ const config = tseslint.config(
   },
   {
     files: [
+      'docs/**',
       'packages/**',
       'tsup/**',
       'vitest/**',
@@ -60,8 +63,13 @@ const config = tseslint.config(
     ...config_vitest,
   },
   {
-    files: ['packages/**'],
+    files: ['docs/**', 'packages/**'],
     ...config_react,
+  },
+  {
+    files: ['docs/**'],
+    ...config_next,
+    '@typescript-eslint/require-await': 0,
   },
 )
 

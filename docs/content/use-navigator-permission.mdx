@@ -1,0 +1,42 @@
+---
+title: useNavigatorPermission
+description: Query and track navigator permissions.
+---
+
+React hook to query and track navigator permissions using
+[navigator.permissions.query](https://developer.mozilla.org/en-US/docs/Web/API/Permissions/query).
+
+This hook is ideal for managing access to user-sensitive resources,
+while also handling permission state changes
+
+## Usage
+
+```tsx twoslash include imports
+import { useNavigatorPermission } from '@1hook/use-navigator-permission'
+```
+
+Query a permission state:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const permission = useNavigatorPermission({ name: 'geolocation' })
+
+console.log(permission.state)
+```
+
+The state will be updated in real-time as the user interacts with the browser.
+
+## API Reference
+
+<AutoTypeTable
+  name="UseNavigatorPermissionOptions"
+  description="The options for the useNavigatorPermission hook."
+  path="packages/use-navigator-permission/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseNavigatorPermissionReturn"
+  description="The return value of the useNavigatorPermission hook."
+  path="packages/use-navigator-permission/src/index.ts"
+/>

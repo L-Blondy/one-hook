@@ -1,0 +1,38 @@
+---
+title: useLatestRef
+description: Transform anything into a ref. The ref is always up to date in effects and DOM events.
+---
+
+`useLatestRef` transforms any value into a ref that can be used in:
+
+- DOM event handlers
+- useEffect
+
+```tsx twoslash include imports
+import { useLatestRef } from '@1hook/use-latest-ref'
+```
+
+Usage:
+
+```tsx twoslash
+// @include: imports
+type Value = any[]
+const value: Value = []
+// ---cut---
+const ref = useLatestRef(value)
+```
+
+We can now read the latest `value` in effects without triggering the effect.
+
+```tsx twoslash
+// @include: imports
+import { useEffect } from 'react'
+type Value = any[]
+const value: Value = []
+// ---cut---
+const ref = useLatestRef(value)
+
+useEffect(() => {
+  // only runs once
+}, [ref])
+```

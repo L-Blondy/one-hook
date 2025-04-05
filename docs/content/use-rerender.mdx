@@ -1,0 +1,20 @@
+---
+title: useRerender
+description: Trigger a rerender.
+---
+
+## Usage
+
+```tsx twoslash include imports
+import { useRerender } from '@1hook/use-rerender'
+```
+
+Rerender a component:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const rerender = useRerender()
+
+rerender()
+```

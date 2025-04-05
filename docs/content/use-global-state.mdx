@@ -1,0 +1,76 @@
+---
+title: useGlobalState
+description: Minimalistic & Performant global state manager.
+---
+
+Minimalistic & Performant global state manager.
+
+## Quick Start
+
+<Steps>
+
+<Step>
+### Define the global state
+
+```tsx twoslash title="use-count.ts" include use-count
+import { defineGlobalState } from '@1hook/use-global-state'
+
+export const [useCount] = defineGlobalState({ initialState: 0 })
+```
+
+</Step>
+
+<Step>
+### Use like useState
+
+```tsx twoslash
+// @include: use-count
+// ---cut---
+const [count, setCount] = useCount()
+```
+
+</Step>
+</Steps>
+
+## Prevent unnecessary rerenders
+
+To help prevent unnecessary rerenders, `defineGlobalState` provides a standalone setter function. \
+It helps prevent unnecessary rerenders by not listening to the state.
+
+```tsx twoslash title="use-count.ts" include set-count
+import { defineGlobalState } from '@1hook/use-global-state'
+// ---cut---
+export const [useCount, setCount] = defineGlobalState({ initialState: 0 })
+```
+
+✅ No rerender when count changes:
+
+```tsx twoslash
+// @noErrors
+// @include: set-count
+// ---cut---
+import { setCount } from './use-count'
+
+function Increment1() {
+  return (
+    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
+  )
+}
+```
+
+❌ Rerenders when count changes:
+
+```tsx twoslash
+// @noErrors
+// @include: set-count
+// ---cut---
+import { useCount } from './use-count'
+
+function Increment1() {
+  const [count, setCount] = useCount()
+
+  return (
+    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
+  )
+}
+```

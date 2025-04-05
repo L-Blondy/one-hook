@@ -1,0 +1,100 @@
+---
+title: useContextualState
+description: useState with a context.
+---
+
+```package-install
+npm install @1hook/use-contextual-state
+```
+
+## Quick Start
+
+<Steps>
+<Step>
+### Define the hook
+
+Pass the state **type** to `defineContextualState` to ensure type safety throughout your application.
+
+```tsx twoslash title="use-count.ts" include use-count
+import { defineContextualState } from '@1hook/use-contextual-state'
+
+export const [CountProvider, useCount] = defineContextualState<number>()
+```
+
+</Step>
+<Step>
+### Place the Provider
+
+Place the Provider in your component tree and initialize the state by passing `initialValues` to the provider.
+
+```tsx twoslash
+// @noErrors
+// @include: use-count
+// ---cut---
+'use client'
+import { CountProvider } from './use-count'
+
+function Providers(props: { children: ReactNode }) {
+  return <CountProvider initialState={0}>{props.children}</CountProvider>
+}
+```
+
+</Step>
+<Step>
+### Use like useState
+
+The state can be used like `useState` without initial state.
+
+```tsx twoslash
+// @include: use-count
+// ---cut---
+const [count, setCount] = useCount()
+```
+
+</Step>
+</Steps>
+
+## Prevent unnecessary rerenders
+
+To help prevent unnecessary rerenders, `defineContextualState` provides a `useSetState` hook. \
+It helps prevent unnecessary rerenders by not listening to the state.
+
+```tsx twoslash title="use-count.ts" include use-set-count
+import { defineContextualState } from '@1hook/use-contextual-state'
+// ---cut---
+export const [Provider, useCount, useSetCount] = defineContextualState<number>()
+```
+
+✅ No rerender when count changes:
+
+```tsx twoslash
+// @noErrors
+// @include: use-set-count
+// ---cut---
+import { useSetCount } from './use-count'
+
+function Increment1() {
+  const setCount = useSetCount()
+
+  return (
+    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
+  )
+}
+```
+
+❌ Rerenders when count changes:
+
+```tsx twoslash
+// @noErrors
+// @include: use-set-count
+// ---cut---
+import { useCount } from './use-count'
+
+function Increment1() {
+  const [count, setCount] = useCount()
+
+  return (
+    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
+  )
+}
+```

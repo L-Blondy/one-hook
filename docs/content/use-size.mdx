@@ -1,0 +1,44 @@
+---
+title: useSize
+description: Track the size of an element.
+---
+
+## Usage
+
+```tsx twoslash include imports
+import { useSize } from '@1hook/use-size'
+```
+
+Observe an element:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, width, height } = useSize()
+
+  return <div ref={ref}>...</div>
+}
+```
+
+Provide default values:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { ref, width = 0, height = 0 } = useSize()
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseSizeOptions"
+  description="The options for the useSize hook."
+  path="packages/use-size/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseSizeReturn"
+  description="The return value of the useSize hook."
+  path="packages/use-size/src/index.ts"
+/>

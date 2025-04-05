@@ -1,0 +1,123 @@
+---
+title: useActions
+description: Manage the state with predefined actions.
+---
+
+```package-install
+npm install @1hook/use-actions
+```
+
+## Quick Start
+
+<Steps>
+
+<Step>
+### Define the actions
+
+Lets define 3 actions that modify a `boolean` state: `toggle`, `on`, and `off`.
+
+```ts twoslash title="use-boolean.ts" include use-boolean
+import { defineActions } from '@1hook/use-actions'
+
+export const useBoolean = defineActions((state: boolean) => ({
+  toggle: () => !state,
+  on: () => true,
+  off: () => false,
+}))
+```
+
+</Step>
+
+<Step>
+### Use the actions
+
+```tsx twoslash
+// @noErrors
+// @include: use-boolean
+// ---cut---
+import { useBoolean } from './use-boolean'
+
+function Toggle() {
+  const [isOpen, actions] = useBoolean(false)
+
+  return (
+    <div>
+      <h1>Status: {isOpen ? 'Open' : 'Closed'}</h1>
+
+      <button onClick={actions.toggle}>Toggle</button>
+      <button onClick={actions.on}>Open</button>
+      <button onClick={actions.off}>Close</button>
+    </div>
+  )
+}
+```
+
+</Step>
+
+The actions can also be destructured:
+
+```tsx twoslash
+// @include: use-boolean
+// ---cut---
+const [isOpen, { toggle, on, off }] = useBoolean(false)
+```
+
+</Steps>
+
+## Pass arguments to actions
+
+The actions can also be passed arguments to update the state. \
+Let's say we want to create a counter that can be incremented or decremented by a certain amount.
+
+```tsx twoslash title="counter.ts" include use-counter
+import { defineActions } from '@1hook/use-actions'
+// ---cut---
+export const useCounter = defineActions((state: number) => ({
+  increment: (amount: number) => state + amount,
+  decrement: (amount: number) => state - amount,
+}))
+```
+
+Use the actions to update the state:
+
+```tsx twoslash
+// @include: use-counter
+// @filename: a
+// ---cut---
+const [count, actions] = useCounter(0)
+
+actions.increment(1)
+actions.decrement(3)
+```
+
+## Build a generic hook
+
+We can leverage typescript generics to build reusable hooks.
+
+Let's build a custom `useArray` hook:
+
+```tsx title="use-array.ts"
+export const useArray = defineActions(<T>(items: Array<T>) => ({
+  push: (item: T) => [...items, item],
+  remove: (item: T) => items.filter((i) => i !== item),
+  clear: () => [],
+}))
+```
+
+We can now use the `useArray` hook in our components:
+
+```tsx twoslash
+import { defineActions } from '@1hook/use-actions'
+
+const useArray = defineActions((items: Array<number>) => ({
+  push: (item: number) => [...items, item],
+  remove: (item: number) => items.filter((i) => i !== item),
+  clear: () => [],
+}))
+// ---cut---
+const [items, actions] = useArray([1, 2, 3])
+
+actions.push(4)
+actions.remove(2)
+actions.clear()
+```

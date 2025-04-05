@@ -1,0 +1,37 @@
+---
+title: usePrevious
+description: Returns the previous value.
+---
+
+The previous value is initialized with `undefined`
+
+## Usage
+
+```tsx twoslash include imports
+import { usePrevious } from '@1hook/use-previous'
+```
+
+Get the previous value:
+
+```tsx twoslash
+// @include: imports
+const value: number = 0
+// ---cut---
+const previous = usePrevious(value)
+```
+
+Custom `isEqual` function to compare the previous and current values.
+
+```tsx
+import { isEqual } from 'lodash'
+
+const previous = usePrevious(value, { isEqual })
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UsePreviousOptions"
+  description="The options for the usePrevious hook."
+  path="packages/use-previous/src/index.ts"
+/>

@@ -1,0 +1,194 @@
+---
+title: useAudioAnalyser
+description: Real-time audio analysis based on the Web Audio API.
+---
+
+```package-install
+npm install @1hook/use-audio-analyser
+```
+
+## Quick Start
+
+```tsx twoslash include import
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
+```
+
+Pass the `MediaStream` or `HTMLAudioElement` to analyze to `useAudioAnalyser`.
+
+```tsx twoslash
+const stream = new MediaStream()
+// @include: import
+// ---cut---
+useAudioAnalyser(stream, {
+  method: 'getByteFrequencyData',
+  onData: (data) => console.log(data),
+})
+```
+
+Check out the [API reference](#api-reference) to learn more about the available methods
+
+## Examples
+
+### 1. Visualize audio frequencies of a media element
+
+Visualize audio frequencies in real-time by analyzing data from an HTML audio element using the `useAudioAnalyser` hook.
+
+```tsx twoslash
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
+import { useRef, useState } from 'react'
+// ---cut---
+function AudioVisualizer() {
+  const [data, setData] = useState<number[]>([])
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
+
+  useAudioAnalyser(audio, {
+    method: 'getByteFrequencyData',
+    fftSize: 256, // the resolution of the frequency data
+    onData: setData,
+  })
+
+  return (
+    <div>
+      <audio ref={setAudio} src="/path/to/audio.mp3" controls />
+
+      <div className="flex h-64">
+        {data.map((value, i) => (
+          <div
+            key={i}
+            style={{
+              width: '4px',
+              height: '100%',
+              transform: `scaleY(${value / 255})`,
+              background: 'blue',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+### 2. Visualize audio frequencies from a microphone
+
+Combine the `useUserMedia` hook to capture microphone input with the `useAudioAnalyser` hook to process and visualize the audio frequency data in real-time.
+
+```tsx twoslash
+import { useUserMedia } from '@1hook/use-user-media'
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
+import { useState } from 'react'
+// ---cut---
+function AudioVisualizer() {
+  const [data, setData] = useState<number[]>([])
+  const media = useUserMedia({ audio: true })
+
+  useAudioAnalyser(media.stream, {
+    method: 'getByteFrequencyData',
+    fftSize: 256,
+    onData: setData,
+  })
+
+  return (
+    <div>
+      <div className="flex h-64">
+        {data.map((value, i) => (
+          <div
+            key={i}
+            style={{
+              width: '4px',
+              height: '100%',
+              transform: `scaleY(${value / 255})`,
+              background: 'blue',
+            }}
+          />
+        ))}
+      </div>
+
+      <button onClick={media.state === 'closed' ? media.open : media.close}>
+        {media.state === 'closed' ? 'Start' : 'Stop'} Visualizer
+      </button>
+    </div>
+  )
+}
+```
+
+### 3. Draw the frequency data on a canvas
+
+This example uses the `useAudioAnalyser` hook to analyze the audio frequency data from an audio element and draw the frequency data on a canvas.
+
+```tsx twoslash
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
+import { useRef } from 'react'
+// ---cut---
+function CanvasVisualizer() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  useAudioAnalyser(audioRef.current, {
+    method: 'getByteFrequencyData',
+    fftSize: 2048,
+    onData(data) {
+      const canvas = canvasRef.current
+      if (!canvas) return
+
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      // Draw frequency bars
+      const barWidth = canvas.width / data.length
+      ctx.fillStyle = '#4CAF50'
+
+      data.forEach((value, i) => {
+        const barHeight = (value / 255) * canvas.height
+        const x = i * barWidth
+        const y = canvas.height - barHeight
+
+        ctx.fillRect(x, y, barWidth - 1, barHeight)
+      })
+    },
+  })
+
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <canvas
+        ref={canvasRef}
+        width={800}
+        height={200}
+        className="border border-gray-300"
+      />
+      <audio ref={audioRef} src="/path/to/audio.mp3" controls />
+    </div>
+  )
+}
+```
+
+## API Reference
+
+### Parameters
+
+<TypeTable
+  type={{
+    source: {
+      description: (
+        <div>
+          The audio source to analyze. Pass <code>null</code> to disable.
+        </div>
+      ),
+      type: 'MediaStream | HTMLMediaElement | null',
+      required: true,
+    },
+    options: {
+      description: 'The options for the audio analyzer.',
+      type: 'AudioAnalyserOptions',
+    },
+  }}
+/>
+
+<AutoTypeTable
+  name="AudioAnalyserOptions"
+  description="The options for the audio analyzer."
+  path="packages/use-audio-analyser/src/index.ts"
+/>

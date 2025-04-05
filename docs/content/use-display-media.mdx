@@ -1,0 +1,84 @@
+---
+title: useDisplayMedia
+description: React hook to access and manage screen sharing capabilities using the Screen Capture API.
+---
+
+## Usage
+
+```tsx twoslash include imports
+import { useDisplayMedia } from '@1hook/use-display-media'
+```
+
+Pass the media constraints to the hook.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { stream, open, close, state, error } = useDisplayMedia({
+  video: true,
+})
+```
+
+The hook follows a simple state machine:
+
+- Initially starts in `"closed"` state with `stream: null`
+- Calling `open()` transitions to `"loading"` state while requesting screen sharing access
+- On successful access, transitions to `"open"` state with `stream: MediaStream`
+- If an error occurs during loading, transitions to `"error"` state with the error details
+- Calling `close()` returns to `"closed"` state, stops the stream, and sets `stream: null`
+
+This predictable state flow makes it easy to build UIs that respond appropriately to the screen sharing status.
+
+## Example
+
+Capture and display the device's screen:
+
+```tsx twoslash
+import { useEffect, useRef } from 'react'
+import { useDisplayMedia } from '@1hook/use-display-media'
+
+export default function ScreenShare() {
+  const { state, stream, error, open, close } = useDisplayMedia({
+    video: true,
+  })
+
+  const ref = useRef<HTMLVideoElement | null>(null)
+
+  // use the stream to reproduce the video
+  useEffect(() => {
+    if (!ref.current) return
+    ref.current.srcObject = stream
+  }, [stream])
+
+  return (
+    <div>
+      <video ref={ref} autoPlay />
+
+      <button onClick={state === 'closed' ? open : close}>
+        {state === 'open' ? 'Stop Sharing' : 'Share Screen'}
+      </button>
+    </div>
+  )
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseDisplayMediaOptions"
+  description={
+    <>
+      The options of the useDisplayMedia hook. See&nbsp;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia#options">
+        MDN docs
+      </a>
+      &nbsp; for more details.
+    </>
+  }
+  path="packages/use-display-media/src/index.ts"
+/>
+<AutoTypeTable
+  name="UseDisplayMediaReturn"
+  description="Return value of the useDisplayMedia hook."
+  path="packages/use-display-media/src/index.ts"
+/>

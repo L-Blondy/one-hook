@@ -16,7 +16,9 @@
   "overrides": [
     {
       "files": "**/*.md",
-      "options": { "printWidth": 80 }
+      "options": {
+        "printWidth": 80
+      }
     }
   ]
 }

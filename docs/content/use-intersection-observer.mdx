@@ -1,0 +1,75 @@
+---
+title: useIntersectionObserver
+description: The IntersectionObserver API, reactified, simplified and optimized.
+---
+
+## Features
+
+- **Instance Reuse:** Optimizes performance by reusing IntersectionObserver instances based on options.
+- **Convenient Unwrapping:** Automatically unwraps the entries parameter, allowing direct access to each entry in the callback.
+- **Manual Observation Control:** Allows manual control over observation using the `observe` and `unobserve` functions.
+
+## Usage
+
+```tsx twoslash include imports
+import { useIntersectionObserver } from '@1hook/use-intersection-observer'
+```
+
+Observe an element's intersection with the viewport:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref } = useIntersectionObserver((entry) => {
+    console.log({ isIntersecting: entry.isIntersecting })
+  })
+
+  return <div ref={ref} />
+}
+```
+
+Customize the intersection observer:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref } = useIntersectionObserver(
+    (entry) => console.log({ isIntersecting: entry.isIntersecting }),
+    { rootMargin: '100px' },
+  )
+
+  return <div ref={ref} />
+}
+```
+
+Stop observing the target after the first intersection:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, unobserve } = useIntersectionObserver((entry) => {
+    if (!entry.isIntersecting) return
+    console.log('Intersected!')
+    unobserve()
+  })
+
+  return <div ref={ref} />
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseIntersectionObserverOptions"
+  description="Options for the useIntersectionObserver hook."
+  path="packages/use-intersection-observer/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseIntersectionObserverReturn"
+  description="Return value for the useIntersectionObserver hook."
+  path="packages/use-intersection-observer/src/index.ts"
+/>

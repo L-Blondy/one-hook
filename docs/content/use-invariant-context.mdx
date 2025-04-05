@@ -1,0 +1,56 @@
+---
+title: useInvariantContext
+description: useContext that throws if the provider is not found.
+---
+
+Useful to avoid missing context provider and garantee a value is present.
+
+## Usage
+
+```tsx twoslash include imports
+import { createContext } from 'react'
+type Value = any[]
+const MyContext = React.createContext<Value | null>(null)
+// ---cut---
+import { useInvariantContext } from '@1hook/use-invariant-context'
+```
+
+An error is thrown if the context value is falsy.
+
+```tsx twoslash
+// @include: imports
+// @noErrors
+// ---cut---
+const ctx = useInvariantContext(MyContext)
+
+// optionally pass a custom error message
+
+const ctx = useInvariantContext(MyContext, 'Context not found')
+```
+
+## Example
+
+This example shows how to use `useInvariantContext` to avoid missing context provider.
+
+```tsx twoslash
+import { useInvariantContext } from '@1hook/use-invariant-context'
+import { createContext, ReactNode, useContext } from 'react'
+type Value = any[]
+// @noErrors
+// ---cut---
+const MyContext = createContext<Value | null>(null)
+
+type Props = { children: ReactNode; initialValue: Value }
+
+export function MyProvider({ children, initialValue }: Props) {
+  return (
+    <MyContext.Provider value={initialValue}>{children}</MyContext.Provider>
+  )
+}
+
+// ❌ returns `Value | null` since there is not garantee that the context provider is present
+export const useMyContext = () => useContext(MyContext)
+
+// ✅ returns `Value` or throws an error if the context provider is not found
+export const useMyContext = () => useInvariantContext(MyContext)
+```

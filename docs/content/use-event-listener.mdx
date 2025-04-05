@@ -1,0 +1,157 @@
+---
+title: useEventListener
+description: React version of `addEventListener`, optimized for performance and memory usage.
+---
+
+## Features
+
+- Reuses the same event listener instance for the same target, type, and options.
+- Automatically attaches and detaches the event listener when the component unmounts.
+- Provides methods to manually attach and detach the event listener.
+
+## Usage
+
+```tsx twoslash include imports
+import { useEventListener } from '@1hook/use-event-listener'
+```
+
+Attach an event listener to the target.
+
+```tsx twoslash
+// @include: imports
+const target = document.getElementById('target')
+// ---cut---
+useEventListener(target, 'click', () => console.log('click'))
+```
+
+## Examples
+
+### 1. Listen to a Window event
+
+SPA example:
+
+```tsx twoslash
+// @include: imports
+const target = document.getElementById('target')
+// ---cut---
+useEventListener(window, 'click', (e) => console.log(e.target))
+```
+
+SSR example:
+
+```tsx twoslash
+// @include: imports
+const target = document.getElementById('target')
+// ---cut---
+import { isServer } from '@1hook/utils/is-server'
+
+useEventListener(!isServer && window, 'click', (e) => console.log(e.target))
+```
+
+`!isServer && window` ensures the code is runs the client before accessing the
+window object
+
+### 2. Targeting a DOM Element
+
+You can use `useEventListener` to attach event listeners to specific DOM elements.
+
+Using a ref:
+
+```tsx twoslash
+// @include: imports
+import { useRef } from 'react'
+// ---cut---
+function MyComponent() {
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  useEventListener(ref, 'scroll', (e) => console.log('scroll'))
+
+  return <div ref={ref} />
+}
+```
+
+Using a stateful element:
+
+```tsx twoslash
+// @include: imports
+import { useState } from 'react'
+// ---cut---
+function MyComponent() {
+  const [target, setTarget] = useState<HTMLDivElement | null>(null)
+
+  useEventListener(target, 'scroll', (e) => console.log('scroll'))
+
+  return <div ref={setTarget} />
+}
+```
+
+Using querySelector:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const target = document.querySelector('body > .scrollable')
+
+  useEventListener(target, 'scroll', (e) => console.log('scroll'))
+
+  return <div />
+}
+```
+
+### 3. Trigger the listener manually
+
+This example shows how to listen for the `'mousemove'` & `'mouseup'` global events only after the `'mousedown'` event has occurred.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+useEventListener(document.getElementById('target'), 'mousedown', (e) => {
+  // Activate mousemove and mouseup listeners after mousedown occurs
+  mousemoveListener.add()
+  mouseupListener.add()
+})
+
+const mousemoveListener = useEventListener(
+  document,
+  'mousemove',
+  (e) => console.log('Mouse Move'),
+  { manual: true }, // Do not attach the listener automatically
+)
+
+const mouseupListener = useEventListener(
+  document,
+  'mouseup',
+  (e) => {
+    // Remove both listeners after mouseup event
+    mousemoveListener.remove()
+    mouseupListener.remove()
+  },
+  { manual: true }, // Do not attach the listener automatically
+)
+```
+
+## API Reference
+
+<TableTitle value="Parameters" />
+
+<TableDescription
+  value={
+    <>
+      The <code>useEventListener</code> hook accepts four arguments:
+    </>
+  }
+/>
+
+| Argument                             | Description                                                                                                                                                                                                                                                                |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <pre>(1) <Code>target</Code></pre>   | The element to attach the listener to.                                                                                                                                                                                                                                     |
+| <pre>(2) <Code>type</Code></pre>     | See [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)                                                                                                                                                                   |
+| <pre>(3) <Code>listener</Code></pre> | See [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)                                                                                                                                                                   |
+| <pre>(4) <Code>options</Code></pre>  | Event listener options (see [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)) with the following differences:<br/>- `manual`: if `true` the listener is not attached automatically on mount.<br/>- `signal` is omitted |
+
+<AutoTypeTable
+  name="UseEventListenerReturn"
+  description="What `useEventListener` returns"
+  path="packages/use-event-listener/src/index.ts"
+/>

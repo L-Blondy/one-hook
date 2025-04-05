@@ -1,0 +1,32 @@
+---
+title: useDebounceValue
+description: Debounce a value.
+---
+
+## Usage
+
+```tsx twoslash include imports
+import { useDebounceValue } from '@1hook/use-debounce-value'
+```
+
+Debounce a **state** or a **prop**:
+
+```tsx twoslash
+// @include: imports
+const value = 'Hello' as string
+// ---cut---
+const debounced = useDebounceValue(value, 500)
+
+// `debounced` will update 500ms after the last change of `value`
+```
+
+Pending indicator:
+
+```tsx twoslash
+// @include: imports
+const value = 'Hello' as string
+// ---cut---
+const debounced = useDebounceValue(value, 500)
+
+const pending = debounced !== value
+```

@@ -1,0 +1,36 @@
+---
+title: useTimeout
+description: setTimeout, reactified.
+---
+
+## Usage
+
+```tsx twoslash include imports
+import { useTimeout } from '@1hook/use-timeout'
+```
+
+Set a timeout:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { cancel, reset, isPending } = useTimeout(() => {
+  console.log('Hello')
+}, 1000)
+```
+
+Pause the timeout by setting the delay to `null`:
+
+```ts twoslash
+// @include: imports
+// ---cut---
+useTimeout(() => console.log('Hello'), null)
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseTimeoutReturn"
+  description="The return value of the useTimeout hook."
+  path="packages/use-timeout/src/index.ts"
+/>

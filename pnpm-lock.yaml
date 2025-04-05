@@ -212,6 +212,9 @@ importers:
       '@1hook/use-throttle-fn':
         specifier: workspace:*
         version: link:../packages/use-throttle-fn
+      '@1hook/use-timeout':
+        specifier: workspace:*
+        version: link:../packages/use-timeout
       '@1hook/use-user-media':
         specifier: workspace:*
         version: link:../packages/use-user-media

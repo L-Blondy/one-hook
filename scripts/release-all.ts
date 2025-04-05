@@ -14,9 +14,9 @@ await Promise.all(
       execSync(
         [
           `cd ${packagePath}`,
-          // 'npm run build',
-          // 'npm run test',
-          // `npm publish --quiet --access public --tag ${tag}`,
+          'npm run build',
+          'npm run test',
+          `npm publish --tag ${tag} --quiet --access public`,
           `npm dist-tag add ${packageJson.name}@${packageJson.version} ${tag}`,
         ].join(' && '),
       )

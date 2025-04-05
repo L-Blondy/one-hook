@@ -42,7 +42,7 @@ await Promise.all(
       },
       repository: {
         type: 'git',
-        url: 'https://github.com/L-Blondy/one-hook',
+        url: 'git+https://github.com/L-Blondy/one-hook',
       },
       homepage: 'https://github.com/L-Blondy/one-hook',
       bugs: {

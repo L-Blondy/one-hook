@@ -16,7 +16,7 @@ await Promise.all(
           `cd ${packagePath}`,
           'pnpm run build',
           'pnpm run test',
-          `pnpm publish --quiet --access public --tag ${tag} --no-git-checks`,
+          `pnpm publish --access public --tag ${tag} --no-git-checks`,
           `npm dist-tag add ${packageJson.name}@${packageJson.version} ${tag}`,
         ].join(' && '),
       )

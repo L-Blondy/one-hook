@@ -18,7 +18,7 @@ export type UseDebounceFnReturn = {
   isPending: boolean
 }
 
-export function useDebounceFn(defaultDelay: number = 0): UseDebounceFnReturn {
+export function useDebounceFn(defaultDelay: number): UseDebounceFnReturn {
   const timeoutRef = React.useRef<NodeJS.Timeout | number>(0)
 
   // use async transitions in React 19

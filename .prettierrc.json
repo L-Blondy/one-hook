@@ -1,5 +1,4 @@
 {
-  "plugins": ["prettier-plugin-tailwindcss"],
   "arrowParens": "always",
   "bracketSameLine": false,
   "bracketSpacing": true,
@@ -16,9 +15,7 @@
   "overrides": [
     {
       "files": "**/*.md",
-      "options": {
-        "printWidth": 80
-      }
+      "options": { "printWidth": 80 }
     }
   ]
 }

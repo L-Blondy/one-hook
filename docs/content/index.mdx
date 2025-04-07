@@ -4,4 +4,51 @@ description: One hook at a time.
 icon: Album
 ---
 
-Intro goes here.
+# What is one-hook?
+
+one-hook is a carefully crafted collection of React hooks,
+where each hook does one thing and does it well.
+Following the Unix philosophy of modularity, each hook is
+independently packaged and can be installed separately,
+ensuring minimal bundle size and maximum flexibility.
+
+# Why one-hook?
+
+React hooks have revolutionized how we manage state and side
+effects in React applications. However, many hook libraries either:
+
+- Bundle everything together, bloating your application with unused code
+- Mix multiple concerns into single hooks, making them hard to test and maintain
+- Lack proper TypeScript support and documentation
+
+one-hook solves these problems by:
+
+- Providing individually packaged hooks
+- Following the single responsibility principle
+- Offering first-class TypeScript support
+- Maintaining comprehensive documentation
+
+# Key Features
+
+- 🎯 **Single Responsibility**: Each hook does one thing exceptionally well.
+- 📦 **Tree-shakeable**: Import only what you need.
+- 💪 **TypeScript-first**: Built with TypeScript for excellent type safety and IntelliSense support.
+- 🧪 **Well-tested**: Comprehensive test coverage for reliability.
+- 📚 **Well-documented**: Clear, concise documentation with practical examples.
+- 🔄 **Unified Versioning**: All hooks share the same version number for easy updates and maintenance.
+
+# Getting Started
+
+Install any hook individually:
+
+```bash
+npm install @one-hook/use-rerender
+```
+
+Or install multiple hooks:
+
+```bash
+npm install @one-hook/use-rerender @one-hook/use-another-hook
+```
+
+Visit the [Hooks](/hooks) section to explore all available hooks.

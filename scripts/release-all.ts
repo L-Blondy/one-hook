@@ -22,9 +22,6 @@ await Promise.all(
       )
       consola.success(`RELEASED: v${packageJson.version} ${tag} - ${shortName}`)
     } catch (_) {
-      execSync(
-        `npm dist-tag add ${packageJson.name}@${packageJson.version} ${tag}`,
-      )
       consola.fail(`FAILED  : v${packageJson.version} ${tag} - ${shortName}`)
     }
   }),

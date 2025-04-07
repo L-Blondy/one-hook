@@ -6,19 +6,20 @@ description: one-hook is a carefully crafted collection of React hooks, where ea
 
 ## Why one-hook?
 
-React hooks have revolutionized how we manage state and side
-effects in React applications. However, many hook libraries either:
+Many React hook libraries bundle everything together in a single package with barrel exports. While this might seem convenient at first, it comes with several drawbacks:
 
-- Bundle everything together, bloating your application with unused code
-- Mix multiple concerns into single hooks, making them hard to test and maintain
-- Lack proper TypeScript support and documentation
+- **Performance Issues**: Barrel exports slow down TypeScript and bundlers, especially as the library grows.
+- **Dependency Hell**: When some hooks don't fit your needs, you end up with multiple hook libraries, each with its own dependencies and potential breaking changes.
+- **Editor Bloat**: Autocomplete gets cluttered with duplicate exports from different libraries.
+- **Inconsistent Quality**: Bundled libraries often contain hooks of mixed quality - some well-maintained, others neglected.
 
-one-hook solves these problems by:
+one-hook addresses these pain points by:
 
-- Providing individually packaged hooks
-- Following the single responsibility principle
-- Offering first-class TypeScript support
-- Maintaining comprehensive documentation
+- **Individual Packages**: Each hook is a separate package, improving TypeScript and bundler performance.
+- **Clean Autocomplete**: You only see what you've installed, keeping your editor suggestions clean and relevant.
+- **Seamless Integration**: Works well alongside other hook libraries without duplicate imports.
+- **Unified Versioning**: Update all one-hook packages with a single version change, making maintenance simple.
+- **Curated Quality**: Every hook is TypeScript-first and held to high quality standards.
 
 ## Key Features
 
@@ -28,19 +29,3 @@ one-hook solves these problems by:
 - 🧪 **Well-tested**: Comprehensive test coverage for reliability.
 - 📚 **Well-documented**: Clear, concise documentation with practical examples.
 - 🔄 **Unified Versioning**: All hooks share the same version number for easy updates and maintenance.
-
-## Getting Started
-
-Install any hook individually:
-
-```bash
-npm install @one-hook/use-rerender
-```
-
-Or install multiple hooks:
-
-```bash
-npm install @one-hook/use-rerender @one-hook/use-another-hook
-```
-
-Visit the [Hooks](/hooks) section to explore all available hooks.

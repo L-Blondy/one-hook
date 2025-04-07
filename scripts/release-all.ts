@@ -17,7 +17,7 @@ await Promise.all(
           'pnpm run build',
           'pnpm run test',
           `pnpm publish --access public --tag ${tag} --no-git-checks`,
-          `npm dist-tag add ${packageJson.name}@${packageJson.version} ${tag}`,
+          // `npm dist-tag add ${packageJson.name}@${packageJson.version} ${tag}`,
         ].join(' && '),
       )
       consola.success(`RELEASED: v${packageJson.version} ${tag} - ${shortName}`)

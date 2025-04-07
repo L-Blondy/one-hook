@@ -26,18 +26,18 @@ export default async function Page(props: {
 
   const MDXContent = page.data.body
 
-  const isHook =
-    params.slug?.[0] === 'hooks' && params.slug?.[1]?.startsWith('use')
+  const isHook = params.slug?.[0]?.startsWith('use')
 
   return (
     <DocsPage
       breadcrumb={{ enabled: false }}
       toc={page.data.toc.filter((t) => t.depth <= 2)}
       full={page.data.full}
+      article={{ className: '!pt-8' }}
     >
-      <DocsTitle className="border-b pb-4">{page.data.title}</DocsTitle>
-
       {!!isHook && <PackageDetails filename={page.file.name} />}
+
+      <DocsTitle className="border-b pb-4">{page.data.title}</DocsTitle>
 
       <DocsDescription className="mb-4">
         {page.data.description}

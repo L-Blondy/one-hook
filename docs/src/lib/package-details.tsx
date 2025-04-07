@@ -31,16 +31,16 @@ function BuildSize({ filename }: Props) {
       className="not-content"
       style={{
         width: 'max-content',
-        fontSize: '0.8125rem',
+        fontSize: '0.75rem',
         letterSpacing: '0.05em',
         fontWeight: '400',
         display: 'flex',
       }}
     >
-      <div className="flex h-6 w-max items-center rounded-l-sm bg-[#505050] px-2 py-1 text-white">
+      <div className="flex w-max items-center rounded-l-sm bg-[#505050] px-1.5 py-0.5 text-white">
         Size
       </div>
-      <div className="bg-fd-primary flex h-6 w-max items-center rounded-r-sm px-2 py-1 text-white">
+      <div className="bg-fd-primary flex w-max items-center rounded-r-sm px-1.5 py-0.5 text-white">
         {getFileSize()}
       </div>
     </div>
@@ -54,7 +54,7 @@ function SourceLink({ filename }: { filename: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-fd-primary inline-flex items-center gap-2 text-sm font-medium leading-5 no-underline hover:underline"
+      className="text-fd-primary inline-flex items-center gap-2 text-sm leading-5 font-medium no-underline hover:underline"
     >
       <span>View source</span>
 

@@ -28,64 +28,10 @@ Use the actions in your component:
 // @include: use-counter
 // ---cut---
 const [count, actions] = useCounter(0)
+
 actions.increment(1)
 actions.decrement(3)
 ```
-
-<Steps>
-
-<Step>
-### Define the actions
-
-Lets define 3 actions that modify a `boolean` state: `toggle`, `on`, and `off`.
-
-```ts twoslash title="use-boolean.ts" include use-boolean
-import { defineActions } from '@1hook/use-actions'
-
-export const useBoolean = defineActions((state: boolean) => ({
-  toggle: () => !state,
-  on: () => true,
-  off: () => false,
-}))
-```
-
-</Step>
-
-<Step>
-### Use the actions
-
-```tsx twoslash
-// @noErrors
-// @include: use-boolean
-// ---cut---
-import { useBoolean } from './use-boolean'
-
-function Toggle() {
-  const [isOpen, actions] = useBoolean(false)
-
-  return (
-    <div>
-      <h1>Status: {isOpen ? 'Open' : 'Closed'}</h1>
-
-      <button onClick={actions.toggle}>Toggle</button>
-      <button onClick={actions.on}>Open</button>
-      <button onClick={actions.off}>Close</button>
-    </div>
-  )
-}
-```
-
-</Step>
-
-The actions can also be destructured:
-
-```tsx twoslash
-// @include: use-boolean
-// ---cut---
-const [isOpen, { toggle, on, off }] = useBoolean(false)
-```
-
-</Steps>
 
 ## Build a generic hook
 

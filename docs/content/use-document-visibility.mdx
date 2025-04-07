@@ -1,0 +1,24 @@
+---
+title: useDocumentVisibility
+description: Track the visibility of the document.
+---
+
+## Installation
+
+```package-install
+npm install @1hook/use-document-visibility
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useDocumentVisibility } from '@1hook/use-document-visibility'
+```
+
+Track the document visibility:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const isVisible = useDocumentVisibility()
+```

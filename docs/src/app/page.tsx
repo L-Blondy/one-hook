@@ -1,3 +1,4 @@
+'use client'
 import Link from 'fumadocs-core/link'
 
 export default function Homepage() {

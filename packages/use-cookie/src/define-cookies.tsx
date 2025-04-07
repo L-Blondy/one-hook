@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   createCookieService,
-  type ServiceOptions,
+  type CookieServiceOptions,
   type CookieConfig,
 } from './vanilla'
 import type { KeyOf } from '@1hook/utils/types'
@@ -25,7 +25,7 @@ function clientOnly() {
 
 export function defineCookies<TConfig extends Record<string, CookieConfig>>(
   config: TConfig,
-  options: ServiceOptions = {},
+  options: CookieServiceOptions = {},
 ) {
   type CookieName = KeyOf<TConfig>
   type CookieValue<TName extends CookieName> = ValidatorOutput<

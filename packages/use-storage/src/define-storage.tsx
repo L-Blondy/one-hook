@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   createStorageService,
-  type ServiceOptions,
+  type StorageServiceOptions,
   type StorageValidator,
 } from './vanilla'
 import type { KeyOf } from '@1hook/utils/types'
@@ -12,7 +12,7 @@ import type { ValidatorOutput } from '@1hook/utils/validate'
 
 export function defineStorage<
   TConfig extends Record<string, StorageValidator>,
-  TServiceOptions extends ServiceOptions,
+  TServiceOptions extends StorageServiceOptions,
 >(config: TConfig, options: TServiceOptions) {
   type StorageKey = KeyOf<TConfig>
   type StorageValue<TKey extends StorageKey> = ValidatorOutput<TConfig[TKey]>

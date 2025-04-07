@@ -239,7 +239,7 @@ Generate typesafe hooks and a Provider from a cookie configuration object.
 ```ts
 function defineCookies(
   config: Record<string, CookieConfig>,
-  options?: ServiceOptions,
+  options?: CookieServiceOptions,
 ): {
   CookieProvider
   useCookie
@@ -254,7 +254,7 @@ function defineCookies(
 />
 
 <AutoTypeTable
-  name="ServiceOptions"
+  name="CookieServiceOptions"
   description="The options of the cookie service."
   path="packages/use-cookie/src/index.ts"
 />

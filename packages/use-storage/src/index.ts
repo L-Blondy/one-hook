@@ -1,2 +1,2 @@
-export { type StorageValidator, type ServiceOptions } from './vanilla'
+export { type StorageValidator, type StorageServiceOptions } from './vanilla'
 export { defineStorage } from './define-storage'

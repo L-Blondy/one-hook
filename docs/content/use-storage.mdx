@@ -197,12 +197,12 @@ Generate typesafe hooks and a Provider from a storage configuration object.
 ```ts
 function defineStorage(
   config: Record<string, StorageConfig>,
-  options?: ServiceOptions,
+  options?: StorageServiceOptions,
 ): [useStorage, Storage]
 ```
 
 <AutoTypeTable
-  name="ServiceOptions"
+  name="StorageServiceOptions"
   description="The options of the storage service."
   path="packages/use-storage/src/index.ts"
 />

@@ -6,7 +6,7 @@ import {
 import { defaultDeserializer, defaultSerializer } from './serializers'
 import type { KeyOf } from '@1hook/utils/types'
 
-export type ServiceOptions = {
+export type CookieServiceOptions = {
   /**
    * By default the cookie is encoded using `encodeURIComponent`. \
    * Set this to `true` to disable encoding.
@@ -107,7 +107,7 @@ export type CookieService<TConfig extends Record<string, CookieConfig>> = {
 
 export function createCookieService<
   TConfig extends Record<string, CookieConfig>,
->(config: TConfig, options: ServiceOptions = {}): CookieService<TConfig> {
+>(config: TConfig, options: CookieServiceOptions = {}): CookieService<TConfig> {
   const encode = options.disableEncoding
     ? (str: string) => str
     : encodeURIComponent

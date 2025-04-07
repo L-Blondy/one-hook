@@ -1,0 +1,89 @@
+{
+  "name": "@1hook/all",
+  "version": "0.0.5",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "NODE_ENV=production tsup",
+    "dev": "concurrently \"tsup --watch\" \"vitest\"",
+    "test": "vitest run && tsc --noEmit",
+    "lint": "eslint . && tsc --noEmit",
+    "lint:eslint": "eslint .",
+    "lint:typescript": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@types/react": ">=18.0.0 || >=19.0.0",
+    "@types/react-dom": ">=18.0.0 || >=19.0.0",
+    "react": ">=18.0.0 || >=19.0.0",
+    "react-dom": ">=18.0.0 || >=19.0.0"
+  },
+  "dependencies": {
+    "@1hook/use-actions": "workspace:*",
+    "@1hook/use-audio-analyser": "workspace:*",
+    "@1hook/use-contextual-state": "workspace:*",
+    "@1hook/use-cookie": "workspace:*",
+    "@1hook/use-countdown": "workspace:*",
+    "@1hook/use-debounce-fn": "workspace:*",
+    "@1hook/use-debounce-value": "workspace:*",
+    "@1hook/use-display-media": "workspace:*",
+    "@1hook/use-document-has-focus": "workspace:*",
+    "@1hook/use-document-visibility": "workspace:*",
+    "@1hook/use-event-handler": "workspace:*",
+    "@1hook/use-event-listener": "workspace:*",
+    "@1hook/use-geolocation": "workspace:*",
+    "@1hook/use-get-is-mounted": "workspace:*",
+    "@1hook/use-global-state": "workspace:*",
+    "@1hook/use-in-view": "workspace:*",
+    "@1hook/use-intersection-observer": "workspace:*",
+    "@1hook/use-interval": "workspace:*",
+    "@1hook/use-invariant-context": "workspace:*",
+    "@1hook/use-is-hydrated": "workspace:*",
+    "@1hook/use-is-online": "workspace:*",
+    "@1hook/use-latest-ref": "workspace:*",
+    "@1hook/use-lock-body-scroll": "workspace:*",
+    "@1hook/use-media-recorder": "workspace:*",
+    "@1hook/use-merge-refs": "workspace:*",
+    "@1hook/use-mount-effect": "workspace:*",
+    "@1hook/use-mutation-observer": "workspace:*",
+    "@1hook/use-navigator-permission": "workspace:*",
+    "@1hook/use-previous": "workspace:*",
+    "@1hook/use-rerender": "workspace:*",
+    "@1hook/use-resize-observer": "workspace:*",
+    "@1hook/use-size": "workspace:*",
+    "@1hook/use-speech-synthesis": "workspace:*",
+    "@1hook/use-storage": "workspace:*",
+    "@1hook/use-throttle-fn": "workspace:*",
+    "@1hook/use-timeout": "workspace:*",
+    "@1hook/use-unmount-effect": "workspace:*",
+    "@1hook/use-update-effect": "workspace:*",
+    "@1hook/use-user-media": "workspace:*",
+    "@1hook/use-window-size": "workspace:*"
+  },
+  "tag": "beta",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/L-Blondy/one-hook"
+  },
+  "homepage": "https://github.com/L-Blondy/one-hook",
+  "bugs": {
+    "url": "https://github.com/L-Blondy/one-hook/issues"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "@types/react-dom": {
+      "optional": true
+    }
+  }
+}

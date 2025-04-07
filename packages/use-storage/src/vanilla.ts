@@ -6,7 +6,7 @@ import {
 import { defaultDeserializer, defaultSerializer } from './serializers'
 import type { KeyOf } from '@1hook/utils/types'
 
-export type ServiceOptions = {
+export type StorageServiceOptions = {
   type: 'local' | 'session'
   serialize?: (value: unknown) => string
   deserialize?: (value: string) => any
@@ -16,7 +16,7 @@ export type StorageValidator<TOutput = unknown> = Validator<TOutput>
 
 export function createStorageService<
   TConfig extends Record<string, StorageValidator>,
->(config: TConfig, options: ServiceOptions) {
+>(config: TConfig, options: StorageServiceOptions) {
   type StorageKey = KeyOf<TConfig>
   type StorageValue<TKey extends StorageKey> = ValidatorOutput<TConfig[TKey]>
 

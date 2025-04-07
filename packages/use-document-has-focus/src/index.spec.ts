@@ -1,21 +1,21 @@
 import { act, renderHook } from '@testing-library/react'
 import { expect, test, vi } from 'vitest'
-import { useDocumentVisibility } from '.'
+import { useDocumentHasFocus } from '.'
 
 const triggerEvent = () => {
   act(() => {
-    document.dispatchEvent(new Event('visibilitychange'))
+    window.dispatchEvent(new Event('blur'))
   })
 }
 
 test('should be true initially', () => {
-  const { result } = renderHook(() => useDocumentVisibility())
-  expect(result.current).toBe(true)
+  const { result } = renderHook(() => useDocumentHasFocus())
+  expect(result.current).toBe(document.hasFocus())
 })
 
 test('should trigger onChange when visibility changes', () => {
   const spy = vi.fn()
-  renderHook(() => useDocumentVisibility({ onChange: spy }))
+  renderHook(() => useDocumentHasFocus({ onChange: spy }))
   triggerEvent()
   expect(spy).toHaveBeenCalledTimes(1)
 })

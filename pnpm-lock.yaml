@@ -137,9 +137,12 @@ importers:
       '@1hook/use-display-media':
         specifier: workspace:*
         version: link:../packages/use-display-media
+      '@1hook/use-document-has-focus':
+        specifier: workspace:*
+        version: link:../packages/use-document-has-focus
       '@1hook/use-document-visibility':
         specifier: workspace:*
-        version: link:../packages/use-document-visiblity
+        version: link:../packages/use-document-visibility
       '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../packages/use-event-handler
@@ -448,7 +451,28 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.1.0(react@19.1.0)
 
-  packages/use-document-visiblity:
+  packages/use-document-has-focus:
+    dependencies:
+      '@1hook/use-event-handler':
+        specifier: workspace:*
+        version: link:../use-event-handler
+      '@1hook/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@types/react':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.1.0
+      '@types/react-dom':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.1.1(@types/react@19.1.0)
+      react:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.1.0
+      react-dom:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.1.0(react@19.1.0)
+
+  packages/use-document-visibility:
     dependencies:
       '@1hook/use-event-handler':
         specifier: workspace:*

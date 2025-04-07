@@ -18,6 +18,7 @@
     "@1hook/use-debounce-fn": "workspace:*",
     "@1hook/use-debounce-value": "workspace:*",
     "@1hook/use-display-media": "workspace:*",
+    "@1hook/use-document-has-focus": "workspace:*",
     "@1hook/use-document-visibility": "workspace:*",
     "@1hook/use-event-handler": "workspace:*",
     "@1hook/use-event-listener": "workspace:*",

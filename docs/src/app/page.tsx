@@ -1,4 +1,3 @@
-'use client'
 import Link from 'fumadocs-core/link'
 
 export default function Homepage() {
@@ -9,6 +8,8 @@ export default function Homepage() {
         children="Get Started"
         href="/docs"
       />
+      <input type="text" className="rounded-md border-2 border-gray-300 p-2" />
+      <input type="text" className="rounded-md border-2 border-gray-300 p-2" />
     </div>
   )
 }

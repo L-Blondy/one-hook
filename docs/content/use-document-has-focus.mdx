@@ -1,0 +1,32 @@
+---
+title: useDocumentHasFocus
+description: Track the focus state of the document.
+---
+
+## Installation
+
+```package-install
+npm install @1hook/use-document-has-focus
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useDocumentHasFocus } from '@1hook/use-document-has-focus'
+```
+
+Track the document visibility:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const hasFocus = useDocumentHasFocus()
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseDocumentHasFocusOptions"
+  description="The options for the useDocumentHasFocus hook."
+  path="packages/use-document-has-focus/src/index.ts"
+/>

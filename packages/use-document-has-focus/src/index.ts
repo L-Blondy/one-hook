@@ -2,22 +2,22 @@ import React from 'react'
 import { useEventHandler } from '@1hook/use-event-handler'
 import { isServer } from '@1hook/utils/is-server'
 
-const listeners = new Set<(isVisible: boolean) => void>()
+const listeners = new Set<(hasFocus: boolean) => void>()
 
-const getState = () => !document.hidden
+const getState = () => document.hasFocus()
 
 const callAllListeners = () => listeners.forEach((l) => l(getState()))
 
-export type UseDocumentVisibilityOptions = {
+export type UseDocumentHasFocusOptions = {
   /**
    * Executes when the visibility changes.
    */
-  onChange?: (isVisible: boolean) => void
+  onChange?: (hasFocus: boolean) => void
 }
 
-export function useDocumentVisibility({
+export function useDocumentHasFocus({
   onChange,
-}: UseDocumentVisibilityOptions = {}): boolean {
+}: UseDocumentHasFocusOptions = {}): boolean {
   const handleChange = useEventHandler(onChange)
   const [state, setState] = React.useState<boolean>(
     isServer ? true : getState(),
@@ -25,14 +25,13 @@ export function useDocumentVisibility({
 
   React.useEffect(() => {
     if (listeners.size === 0) {
-      document.addEventListener('visibilitychange', callAllListeners, {
-        passive: true,
-      })
+      window.addEventListener('focus', callAllListeners, { passive: true })
+      window.addEventListener('blur', callAllListeners, { passive: true })
     }
 
-    function listener(isVisible: boolean) {
-      setState(isVisible)
-      handleChange(isVisible)
+    function listener(hasFocus: boolean) {
+      setState(hasFocus)
+      handleChange(hasFocus)
     }
 
     listeners.add(listener)
@@ -41,7 +40,8 @@ export function useDocumentVisibility({
       listeners.delete(listener)
 
       if (!listeners.size) {
-        document.removeEventListener('visibilitychange', callAllListeners)
+        window.removeEventListener('focus', callAllListeners)
+        window.removeEventListener('blur', callAllListeners)
       }
     }
   }, [setState, handleChange])

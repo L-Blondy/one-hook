@@ -17,22 +17,14 @@ npm install @1hook/use-window-size
 
 ## Usage
 
-<Steps>
-<Step>
-### Define the hook
-
-`defineUseWindowSize` accepts a `spa` option that enables Single Page Application optimizations.
-
 ```tsx twoslash include imports
 import { defineUseWindowSize } from '@1hook/use-window-size'
 
 export const useWindowSize = defineUseWindowSize({ spa: true })
 ```
 
-</Step>
-<Step>
-
-### Get the current window size:
+`defineUseWindowSize` accepts a `spa` option that enables Single Page Application optimizations. \
+When `spa: false` the width and height are initialized with `undefined`.
 
 ```tsx twoslash
 // @include: imports
@@ -40,8 +32,20 @@ export const useWindowSize = defineUseWindowSize({ spa: true })
 const { width, height } = useWindowSize()
 ```
 
-</Step>
-</Steps>
+Use `trackState: false` to disable state tracking, the `onChange` callback is executed whenever the window size changes.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+useWindowSize({
+  trackState: false,
+  onChange(size) {
+    if (size.width < 600) {
+      // do something
+    }
+  },
+})
+```
 
 ## API Reference
 

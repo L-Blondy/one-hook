@@ -24,7 +24,7 @@ export const useLockBodyScroll = function useLockBody() {
     }
     Object.assign(body.style, {
       overflow: 'hidden',
-      paddingRight: `${body.offsetWidth - body.clientWidth}px`,
+      paddingRight: `${window.innerWidth - body.clientWidth}px`,
     })
     if (isIosDevice()) {
       document.addEventListener('touchmove', preventTouchBodyScroll, {

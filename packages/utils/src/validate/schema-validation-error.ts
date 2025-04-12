@@ -1,17 +1,17 @@
-import type { StandardSchemaV1 } from "@standard-schema/spec";
+import type { StandardSchemaV1 } from '@standard-schema/spec'
 
 export class SchemaValidationError<TData = any> extends Error {
-  override name: "ValidationError";
-  issues: readonly StandardSchemaV1.Issue[];
-  data: TData;
+  override name: 'ValidationError'
+  issues: readonly StandardSchemaV1.Issue[]
+  data: TData
 
   constructor(result: StandardSchemaV1.FailureResult, data: TData) {
-    super("Validation error");
-    this.name = "ValidationError";
-    this.issues = result.issues;
-    this.data = data;
+    super(JSON.stringify(result.issues))
+    this.name = 'ValidationError'
+    this.issues = result.issues
+    this.data = data
   }
 }
 
 export let isValidationError = (error: any): error is SchemaValidationError =>
-  error instanceof SchemaValidationError;
+  error instanceof SchemaValidationError

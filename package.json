@@ -2,7 +2,7 @@
   "name": "one-hook",
   "private": true,
   "type": "module",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "scripts": {
     "align": "bun scripts/align-all-package-json.ts",
     "build": "pnpm run align && turbo --filter \"./packages/*\" build",
@@ -14,7 +14,7 @@
     "lint": "turbo lint",
     "lint:eslint": "turbo lint:eslint",
     "lint:typescript": "turbo lint:typescript",
-    "release": "pnpm align && git pull && pnpm bumpp && bun scripts/release-all.ts && git add . && git commit -a && git push"
+    "release": "pnpm align && git pull && pnpm bumpp && bun scripts/release-all.ts && git add . && git commit -a && git tag v$npm_package_version && git push --tags && git push"
   },
   "repository": {
     "type": "git",

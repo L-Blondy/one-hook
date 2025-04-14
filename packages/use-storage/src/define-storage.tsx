@@ -38,28 +38,30 @@ export function defineStorage<
     }
   })
 
-  function get<TKey extends StorageKey>(key: TKey): StorageValue<TKey> {
-    return store.get(key)!
-  }
-
-  function set<TKey extends StorageKey>(
-    key: TKey,
-    updater: React.SetStateAction<Store[TKey]>,
-  ) {
-    const value =
-      typeof updater === 'function' ? (updater as any)(store.get(key)) : updater
-    store.set(key, value)
-    service.set(key, value)
-    emitter.emit(key as any, value)
-  }
-
-  function clear(keys: StorageKey[] = keysOf(config)) {
-    keys.forEach((key) => {
-      service.remove(key)
-      const value = service.get(key)
+  const Storage = {
+    get<TKey extends StorageKey>(key: TKey): StorageValue<TKey> {
+      return store.get(key)!
+    },
+    set<TKey extends StorageKey>(
+      key: TKey,
+      updater: React.SetStateAction<Store[TKey]>,
+    ) {
+      const value =
+        typeof updater === 'function'
+          ? (updater as any)(store.get(key))
+          : updater
       store.set(key, value)
+      service.set(key, value)
       emitter.emit(key as any, value)
-    })
+    },
+    clear(keys: StorageKey[] = keysOf(config)) {
+      keys.forEach((key) => {
+        service.remove(key)
+        const value = service.get(key)
+        store.set(key, value)
+        emitter.emit(key as any, value)
+      })
+    },
   }
 
   function useStorage<TKey extends StorageKey>(key: TKey) {
@@ -71,10 +73,10 @@ export function defineStorage<
     }
 
     const [state, setState] = React.useState<State>(() => ({
-      value: get(key),
-      set: (updater) => set(key, updater),
-      clear: () => clear([key]),
-      get: () => get(key),
+      value: Storage.get(key),
+      set: (updater) => Storage.set(key, updater),
+      clear: () => Storage.clear([key]),
+      get: () => Storage.get(key),
     }))
 
     useIsomorphicLayoutEffect(
@@ -92,8 +94,6 @@ export function defineStorage<
 
     return state
   }
-
-  const Storage = { get, set, clear }
 
   return [useStorage, Storage] as const
 }

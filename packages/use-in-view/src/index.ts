@@ -1,5 +1,4 @@
 import React from 'react'
-import { usePrevious } from '@1hook/use-previous'
 import {
   useIntersectionObserver,
   type UseIntersectionObserverOptions,
@@ -37,11 +36,5 @@ export const useInView = (options: UseInViewOptions = {}): UseInViewReturn => {
     prevIntersecting.current = entry.isIntersecting
   }, options)
 
-  const prevTarget = usePrevious(observer.target)
-
-  return {
-    ...observer,
-    // set to false if the target unmounts
-    inView: prevTarget && !observer.target ? false : inView,
-  }
+  return { ...observer, inView }
 }

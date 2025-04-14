@@ -1,11 +1,5 @@
 import { expect, test, afterEach, vi } from 'vitest'
-import {
-  cleanup,
-  fireEvent,
-  render,
-  renderHook,
-  screen,
-} from '@testing-library/react'
+import { cleanup, render, renderHook, screen } from '@testing-library/react'
 import { useInView } from '.'
 import React from 'react'
 import { mockIntersectTargets } from '../../../test-utils/intersection-observer'
@@ -79,27 +73,6 @@ test('inView should never change if { trackState: false }', () => {
   function TestComponent() {
     const observer = useInView({ trackState: false })
     return <div ref={observer.ref}>{String(observer.inView ?? false)}</div>
-  }
-})
-
-test('inView should be false if the component unmounts', () => {
-  render(<TestComponent />)
-
-  mockIntersectTargets({ isIntersecting: true })
-  screen.getByText('true')
-  fireEvent.click(screen.getByText('unmount'))
-  screen.getByText('false')
-
-  function TestComponent() {
-    const [mounted, setMounted] = React.useState(true)
-    const observer = useInView()
-    return (
-      <>
-        <button onClick={() => setMounted(false)}>unmount</button>
-        {!!mounted && <div ref={observer.ref} data-testid="observed" />}
-        <div data-testid="inview">{String(observer.inView)}</div>
-      </>
-    )
   }
 })
 

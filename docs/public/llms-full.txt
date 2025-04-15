@@ -1,0 +1,3032 @@
+# Introduction
+
+one-hook is a carefully crafted collection of React hooks, where each hook does one thing and does it well. Following the Unix philosophy of modularity, each hook is independently packaged and can be installed separately, ensuring minimal bundle size and maximum flexibility.
+
+## Why one-hook?
+
+Many React hook libraries bundle everything together in a single package with barrel exports. While this might seem convenient at first, it comes with several drawbacks:
+
+- **Performance Issues**: Barrel exports slow down TypeScript and bundlers, especially as the library grows.
+- **Dependency Hell**: When some hooks don't fit your needs, you end up with multiple hook libraries, each with its own dependencies and potential breaking changes.
+- **Editor Bloat**: Autocomplete gets cluttered with duplicate exports from different libraries.
+- **Inconsistent Quality**: Bundled libraries often contain hooks of mixed quality - some well-maintained, others neglected.
+
+one-hook addresses these pain points by:
+
+- **Individual Packages**: Each hook is a separate package, improving TypeScript and bundler performance.
+- **Clean Autocomplete**: You only see what you've installed, keeping your editor suggestions clean and relevant.
+- **Seamless Integration**: Works well alongside other hook libraries without duplicate imports.
+- **Unified Versioning**: Update all one-hook packages with a single version change, making maintenance simple.
+- **Curated Quality**: Every hook is TypeScript-first and held to high quality standards.
+
+## Key Features
+
+- 🎯 **Single Responsibility**: Each hook does one thing exceptionally well.
+- 📦 **Tree-shakeable**: Import only what you need.
+- 💪 **TypeScript-first**: Built with TypeScript for excellent type safety and IntelliSense support.
+- 🧪 **Well-tested**: Comprehensive test coverage for reliability.
+- 📚 **Well-documented**: Clear, concise documentation with practical examples.
+- 🔄 **Unified Versioning**: All hooks share the same version number for easy updates and maintenance.
+
+---
+
+# useActions
+
+A simpler and typesafe alternative to useReducer.
+
+## Installation
+
+```package-install
+npm install @1hook/use-actions
+```
+
+## Quick Start
+
+Define how each action modifies the state:
+
+```tsx twoslash include use-counter
+import { defineActions } from '@1hook/use-actions'
+// ---cut---
+export const useCounter = defineActions((state: number) => ({
+  increment: (amount: number) => state + amount,
+  decrement: (amount: number) => state - amount,
+}))
+```
+
+Use the actions in your component:
+
+```tsx twoslash
+// @include: use-counter
+// ---cut---
+const [count, actions] = useCounter(0)
+
+actions.increment(1)
+actions.decrement(3)
+```
+
+## Build a generic hook
+
+We can leverage typescript generics to build reusable hooks.
+
+Let's build a custom `useArray` hook:
+
+```tsx title="use-array.ts"
+export const useArray = defineActions(<T>(items: Array<T>) => ({
+  push: (item: T) => [...items, item],
+  remove: (item: T) => items.filter((i) => i !== item),
+  clear: () => [],
+}))
+```
+
+We can now use the `useArray` hook in our components:
+
+```tsx twoslash
+import { defineActions } from '@1hook/use-actions'
+
+const useArray = defineActions((items: Array<number>) => ({
+  push: (item: number) => [...items, item],
+  remove: (item: number) => items.filter((i) => i !== item),
+  clear: () => [],
+}))
+// ---cut---
+const [items, actions] = useArray([1, 2, 3])
+
+actions.push(4)
+actions.remove(2)
+actions.clear()
+```
+
+---
+
+# useAudioAnalyser
+
+Real-time audio analysis based on the Web Audio API.
+
+## Installation
+
+```package-install
+npm install @1hook/use-audio-analyser
+```
+
+## Quick Start
+
+```tsx twoslash include import
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
+```
+
+Pass the `MediaStream` or `HTMLAudioElement` to analyze to `useAudioAnalyser`.
+
+```tsx twoslash
+const stream = new MediaStream()
+// @include: import
+// ---cut---
+useAudioAnalyser(stream, {
+  method: 'getByteFrequencyData',
+  onData: (data) => console.log(data),
+})
+```
+
+Check out the [API reference](#api-reference) to learn more about the available methods
+
+## Examples
+
+### 1. Visualize audio frequencies of a media element
+
+Visualize audio frequencies in real-time by analyzing data from an HTML audio element using the `useAudioAnalyser` hook.
+
+```tsx twoslash
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
+import { useRef, useState } from 'react'
+// ---cut---
+function AudioVisualizer() {
+  const [data, setData] = useState<number[]>([])
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
+
+  useAudioAnalyser(audio, {
+    method: 'getByteFrequencyData',
+    fftSize: 256, // the resolution of the frequency data
+    onData: setData,
+  })
+
+  return (
+    <div>
+      <audio ref={setAudio} src="/path/to/audio.mp3" controls />
+
+      <div className="flex h-64">
+        {data.map((value, i) => (
+          <div
+            key={i}
+            style={{
+              width: '4px',
+              height: '100%',
+              transform: `scaleY(${value / 255})`,
+              background: 'blue',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+### 2. Visualize audio frequencies from a microphone
+
+Combine the `useUserMedia` hook to capture microphone input with the `useAudioAnalyser` hook to process and visualize the audio frequency data in real-time.
+
+```tsx twoslash
+import { useUserMedia } from '@1hook/use-user-media'
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
+import { useState } from 'react'
+// ---cut---
+function AudioVisualizer() {
+  const [data, setData] = useState<number[]>([])
+  const media = useUserMedia({ audio: true })
+
+  useAudioAnalyser(media.stream, {
+    method: 'getByteFrequencyData',
+    fftSize: 256,
+    onData: setData,
+  })
+
+  return (
+    <div>
+      <div className="flex h-64">
+        {data.map((value, i) => (
+          <div
+            key={i}
+            style={{
+              width: '4px',
+              height: '100%',
+              transform: `scaleY(${value / 255})`,
+              background: 'blue',
+            }}
+          />
+        ))}
+      </div>
+
+      <button onClick={media.state === 'closed' ? media.open : media.close}>
+        {media.state === 'closed' ? 'Start' : 'Stop'} Visualizer
+      </button>
+    </div>
+  )
+}
+```
+
+### 3. Draw the frequency data on a canvas
+
+This example uses the `useAudioAnalyser` hook to analyze the audio frequency data from an audio element and draw the frequency data on a canvas.
+
+```tsx twoslash
+import { useAudioAnalyser } from '@1hook/use-audio-analyser'
+import { useRef } from 'react'
+// ---cut---
+function CanvasVisualizer() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  useAudioAnalyser(audioRef.current, {
+    method: 'getByteFrequencyData',
+    fftSize: 2048,
+    onData(data) {
+      const canvas = canvasRef.current
+      if (!canvas) return
+
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      // Draw frequency bars
+      const barWidth = canvas.width / data.length
+      ctx.fillStyle = '#4CAF50'
+
+      data.forEach((value, i) => {
+        const barHeight = (value / 255) * canvas.height
+        const x = i * barWidth
+        const y = canvas.height - barHeight
+
+        ctx.fillRect(x, y, barWidth - 1, barHeight)
+      })
+    },
+  })
+
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <canvas
+        ref={canvasRef}
+        width={800}
+        height={200}
+        className="border border-gray-300"
+      />
+      <audio ref={audioRef} src="/path/to/audio.mp3" controls />
+    </div>
+  )
+}
+```
+
+## API Reference
+
+### Parameters
+
+<TypeTable
+  type={{
+    source: {
+      description: (
+        <div>
+          The audio source to analyze. Pass <code>null</code> to disable.
+        </div>
+      ),
+      type: 'MediaStream | HTMLMediaElement | null',
+      required: true,
+    },
+    options: {
+      description: 'The options for the audio analyzer.',
+      type: 'AudioAnalyserOptions',
+    },
+  }}
+/>
+
+<AutoTypeTable
+  name="AudioAnalyserOptions"
+  description="The options for the audio analyzer."
+  path="packages/use-audio-analyser/src/index.ts"
+/>
+
+---
+
+# useContextualState
+
+useState with a context.
+
+## Installation
+
+```package-install
+npm install @1hook/use-contextual-state
+```
+
+## Quick Start
+
+<Steps>
+<Step>
+### Define the hook
+
+Pass the state **type** to `defineContextualState` to ensure type safety throughout your application.
+
+```tsx twoslash title="use-count.ts" include use-count
+import { defineContextualState } from '@1hook/use-contextual-state'
+
+export const [CountProvider, useCount] = defineContextualState<number>()
+```
+
+</Step>
+<Step>
+### Place the Provider
+
+Place the Provider in your component tree and initialize the state by passing `initialValues` to the provider.
+
+```tsx twoslash
+// @noErrors
+// @include: use-count
+// ---cut---
+'use client'
+import { CountProvider } from './use-count'
+
+function Providers(props: { children: ReactNode }) {
+  return <CountProvider initialState={0}>{props.children}</CountProvider>
+}
+```
+
+</Step>
+<Step>
+### Use like useState
+
+The state can be used like `useState` without initial state.
+
+```tsx twoslash
+// @include: use-count
+// ---cut---
+const [count, setCount] = useCount()
+```
+
+</Step>
+</Steps>
+
+## Prevent unnecessary rerenders
+
+To help prevent unnecessary rerenders, `defineContextualState` provides a `useSetState` hook. \
+It helps prevent unnecessary rerenders by not listening to the state.
+
+```tsx twoslash title="use-count.ts" include use-set-count
+import { defineContextualState } from '@1hook/use-contextual-state'
+// ---cut---
+export const [Provider, useCount, useSetCount] = defineContextualState<number>()
+```
+
+✅ No rerender when count changes:
+
+```tsx twoslash
+// @noErrors
+// @include: use-set-count
+// ---cut---
+import { useSetCount } from './use-count'
+
+function Increment1() {
+  const setCount = useSetCount()
+
+  return (
+    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
+  )
+}
+```
+
+❌ Rerenders when count changes:
+
+```tsx twoslash
+// @noErrors
+// @include: use-set-count
+// ---cut---
+import { useCount } from './use-count'
+
+function Increment1() {
+  const [count, setCount] = useCount()
+
+  return (
+    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
+  )
+}
+```
+
+---
+
+# useCookie (SSR only)
+
+A simple typesafe state manager using cookies.
+
+<Callout type="info">
+  This hook is designed for SSR frameworks like Next.js or Remix.
+  <br /> If you need a persistent state manager for Single Page Applications
+  (SPA), use [useStorage](/docs/hooks/use-storage) instead.
+</Callout>
+
+## Features
+
+- **Built-in Validation:** Validate with [zod](https://zod.dev/), [valibot](https://valibot.dev/), [arktype](https://arktype.dev/) or with a simple function.
+- **Tab Sync:** The cookie state is synced across multiple browser tabs.
+- **Component Sync:** The cookie state is synced across all components.
+- **Fullstack:** Includes server-side utilities for end-to-end type safety.
+
+## Installation
+
+```package-install
+npm install @1hook/use-cookie
+```
+
+## Quick Start
+
+<Steps>
+<Step>
+### Define the cookies
+
+Use defineCookies to configure validation rules and expiration settings for each cookie.
+
+```ts twoslash title="cookies.ts" include cookies
+'use client'
+import { z } from 'zod'
+import { defineCookies } from '@1hook/use-cookie'
+
+export const { CookieProvider, useCookie } = defineCookies({
+  // "search" cookie with a string value
+  search: {
+    validate: z.string().default(''),
+    expires: 365, // days from now
+  },
+  // "selected" cookie with an optional object value
+  selected: {
+    validate: z.object({ id: z.number(), name: z.string() }).optional(),
+    expires: new Date('2026-12-12'), // specific date
+    secure: true,
+    domain: 'example.com',
+    sameSite: 'lax',
+  },
+})
+```
+
+</Step>
+<Step>
+### Place the Provider in a Server Component.
+
+Place the `CookieProvider` in a [Server Component](https://react.dev/reference/rsc/server-components), preferably at the root of your application.
+
+```tsx twoslash title="providers.tsx"
+// @noErrors
+// @include: cookies
+// ---cut---
+import { headers } from 'next/headers'
+import { CookieProvider } from './cookies'
+
+export async function Providers(props: { children: ReactNode }) {
+  return (
+    <CookieProvider headers={await headers()}>{props.children}</CookieProvider>
+  )
+}
+```
+
+</Step>
+
+<Step>
+### Read and Write cookies.
+
+Call `useCookie` with the cookie name you want to use.
+
+Each cookie has 3 properties:
+
+- `value`: The current value of the cookie.
+- `set`: A function to update the cookie value.
+- `remove`: A function to remove the cookie.
+
+```tsx twoslash
+// @noErrors
+// @include: cookies
+// ---cut---
+import { useCookie } from './cookies'
+
+function Search() {
+  const search = useCookie('search')
+
+  return (
+    <form>
+      <input
+        onChange={(e) => search.set(e.target.value)}
+        value={search.value}
+      />
+      <button type="button" onClick={() => search.clear()}>
+        Clear search
+      </button>
+    </form>
+  )
+}
+```
+
+Changes to the cookie are synchronized across all instances of the hook and across browser tabs.
+
+</Step>
+</Steps>
+
+## Validation
+
+To ensure data integrity, cookies should be validated.
+
+### 👉 Functional validation
+
+For simple cases you can use a function to validate the cookie value.
+
+The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
+
+```ts twoslash
+import { defineCookies } from '@1hook/use-cookie'
+// ---cut---
+defineCookies({
+  search: {
+    validate: (value) => String(value ?? ''),
+  },
+})
+```
+
+### 👉 Schema validation
+
+For more complex cases you can use a schema to validate the cookie value.
+
+<Callout type="info">
+  Since we follow the [Standard
+  Schema](https://github.com/standard-schema/standard-schema) specification, you
+  can choose between [zod 3.24+](https://zod.dev/), [valibot
+  1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/) to
+  validate the cookies.
+</Callout>
+
+The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
+
+```ts twoslash
+import { defineCookies } from '@1hook/use-cookie'
+// ---cut---
+import { z } from 'zod'
+
+defineCookies({
+  search: {
+    validate: z.string().default(''),
+  },
+})
+```
+
+## Read, Write & Clear outside of React
+
+You can read and write cookies outside of React using the `Cookies` object.
+
+```ts twoslash include cookies-outside
+import { z } from 'zod'
+import { defineCookies } from '@1hook/use-cookie'
+// ---cut---
+export const { CookieProvider, useCookie, Cookies } = defineCookies({
+  accessToken: {
+    validate: z.string().optional(),
+    expires: 7, // days from now
+  },
+})
+```
+
+Using `Cookies` to set or clear cookies will still trigger a **React re-render**.
+
+```tsx twoslash
+// @noErrors
+// @include: cookies-outside
+// ---cut---
+import { Cookies } from './cookies'
+
+// Write a cookie
+Cookies.set('accessToken', '123')
+
+// Read a cookie
+const accessToken = Cookies.get('accessToken')
+
+// Clear specific cookies
+Cookies.clear(['accessToken'])
+
+// Clear all cookies
+Cookies.clear()
+```
+
+## Read cookies on the server
+
+To read cookies on the server, use `Cookies.fromHeaders`.
+
+```tsx twoslash
+// @noErrors
+// @include: cookies-outside
+// ---cut---
+import { headers } from 'next/headers'
+import { Cookies } from './cookies'
+
+const accessToken = Cookies.fromHeaders(await headers()).get('accessToken')
+```
+
+## Custom (de)serialization
+
+In some cases you might need to customize the serialization and deserialization of the cookie value.
+
+You can do this by using the `serialize` and `deserialize` options.
+
+```ts twoslash
+import { defineCookies } from '@1hook/use-cookie'
+// ---cut---
+defineCookies(
+  { search: { validate: (value) => String(value ?? '') } },
+  {
+    serialize: (value) => JSON.stringify(value), // Custom serialization
+    deserialize: (value) => JSON.parse(value), // Custom deserialization
+  },
+)
+```
+
+<hr />
+
+## API Reference
+
+### 👉 defineCookies
+
+Generate typesafe hooks and a Provider from a cookie configuration object.
+
+```ts
+function defineCookies(
+  config: Record<string, CookieConfig>,
+  options?: CookieServiceOptions,
+): {
+  CookieProvider
+  useCookie
+  Cookies
+}
+```
+
+<AutoTypeTable
+  name="CookieConfig"
+  description="The config of a single cookie."
+  path="packages/use-cookie/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="CookieServiceOptions"
+  description="The options of the cookie service."
+  path="packages/use-cookie/src/index.ts"
+/>
+
+### 👉 CookieProvider
+
+The CookieProvider component should be rendered at the highest possible level in your application's component tree, and must be used within a server component.
+
+```tsx
+function CookieProvider(props: CookieProviderProps): ReactNode
+```
+
+<AutoTypeTable
+  name="CookieProviderProps"
+  description="The props of the CookieProvider component."
+  path="packages/use-cookie/src/index.ts"
+/>
+
+### 👉 useCookie
+
+Manage cookie state providing the cookie name.
+
+```ts
+function useCookie(name: string): { value; set; clear; get }
+```
+
+`set`, `clear` and `get` are convenience wrappers around `Cookies` methods.
+
+### 👉 Cookies
+
+Read and write cookies outside of React.
+
+- `get`, `set`, `clear` are client only methods.
+- `set` and `clear` will trigger a **React re-render**
+- use `fromHeaders` to read cookies on the server.
+
+```ts
+const Cookies = { set; clear; get; fromHeaders }
+```
+
+---
+
+# useCountdown
+
+Countdown utility based on useInterval.
+
+## Installation
+
+```package-install
+npm install @1hook/use-countdown
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useCountdown } from '@1hook/use-countdown'
+```
+
+Get the remaining milliseconds:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const milliseconds = useCountdown({
+  to: '2026-01-01',
+})
+```
+
+Transform the remaining time in seconds:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const seconds = useCountdown({
+  to: '2026-01-01',
+  transform: (ms) => Math.ceil(ms / 1000),
+})
+```
+
+Use a custom interval between each tick:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const seconds = useCountdown({
+  to: '2026-01-01',
+  interval: 100,
+})
+```
+
+Prevent rerendering the component on every tick:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+useCountdown({
+  to: '2026-01-01',
+  trackState: false,
+  onTick: (ms) => console.log(ms),
+})
+```
+
+Synchronize all countdowns using the same interval:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const milliseconds = useCountdown({
+  to: '2026-01-01',
+  sync: true,
+})
+```
+
+Add more details on the current countdown state:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { seconds, state } = useCountdown({
+  to: '2026-01-01',
+  transform(ms, to) {
+    const seconds = Math.ceil(ms / 1000)
+    return {
+      state: to ? (seconds <= 0 ? 'expired' : 'ticking') : 'idle',
+      seconds,
+    }
+  },
+})
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseCountdownOptions"
+  path="packages/use-countdown/src/index.ts"
+  description="The options of the `useCountdown` hook."
+/>
+
+---
+
+# useDebounceFn
+
+A debounce function, reactified.
+
+Ensures that a function is only executed after a specified delay following the last invocation.
+
+## Installation
+
+```package-install
+npm install @1hook/use-debounce-fn
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useDebounceFn } from '@1hook/use-debounce-fn'
+```
+
+The `useDebounceFn` hook accepts a delay in milliseconds and returns a `debounce` function.
+
+All calls are delayed until 1000ms have passed since the last invocation,
+then only the final call executes.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { debounce } = useDebounceFn(1000)
+
+debounce(() => console.log('Skipped'))
+debounce(() => console.log('Executed after 1000ms'))
+```
+
+Override the default delay:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { debounce } = useDebounceFn(1000)
+
+debounce(() => console.log('Skipped'))
+debounce(() => console.log('Executed after 500ms'), 500)
+```
+
+Cancel pending execution:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { debounce, cancel, isPending } = useDebounceFn(1000)
+
+isPending && cancel()
+```
+
+When the component unmounts, pending executions are automatically canceled.
+
+## API Reference
+
+<AutoTypeTable
+  name="UseDebounceFnReturn"
+  description="What `useDebounceFn` returns"
+  path="packages/use-debounce-fn/src/index.ts"
+/>
+
+---
+
+# useDebounceValue
+
+Debounce a value.
+
+## Installation
+
+```package-install
+npm install @1hook/use-debounce-value
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useDebounceValue } from '@1hook/use-debounce-value'
+```
+
+Debounce a **state** or a **prop**:
+
+```tsx twoslash
+// @include: imports
+const value = 'Hello' as string
+// ---cut---
+const debounced = useDebounceValue(value, 500)
+
+// `debounced` will update 500ms after the last change of `value`
+```
+
+Pending indicator:
+
+```tsx twoslash
+// @include: imports
+const value = 'Hello' as string
+// ---cut---
+const debounced = useDebounceValue(value, 500)
+
+const pending = debounced !== value
+```
+
+---
+
+# useDisplayMedia
+
+React hook to access and manage screen sharing capabilities using the Screen Capture API.
+
+## Installation
+
+```package-install
+npm install @1hook/use-display-media
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useDisplayMedia } from '@1hook/use-display-media'
+```
+
+Pass the media constraints to the hook.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { stream, open, close, state, error } = useDisplayMedia({
+  video: true,
+})
+```
+
+The hook follows a simple state machine:
+
+- Initially starts in `"closed"` state with `stream: null`
+- Calling `open()` transitions to `"loading"` state while requesting screen sharing access
+- On successful access, transitions to `"open"` state with `stream: MediaStream`
+- If an error occurs during loading, transitions to `"error"` state with the error details
+- Calling `close()` returns to `"closed"` state, stops the stream, and sets `stream: null`
+
+This predictable state flow makes it easy to build UIs that respond appropriately to the screen sharing status.
+
+## Example
+
+Capture and display the device's screen:
+
+```tsx twoslash
+import { useEffect, useRef } from 'react'
+import { useDisplayMedia } from '@1hook/use-display-media'
+
+export default function ScreenShare() {
+  const { state, stream, error, open, close } = useDisplayMedia({
+    video: true,
+  })
+
+  const ref = useRef<HTMLVideoElement | null>(null)
+
+  // use the stream to reproduce the video
+  useEffect(() => {
+    if (!ref.current) return
+    ref.current.srcObject = stream
+  }, [stream])
+
+  return (
+    <div>
+      <video ref={ref} autoPlay />
+
+      <button onClick={state === 'closed' ? open : close}>
+        {state === 'open' ? 'Stop Sharing' : 'Share Screen'}
+      </button>
+    </div>
+  )
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseDisplayMediaOptions"
+  description={
+    <>
+      The options of the useDisplayMedia hook. See&nbsp;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia#options">
+        MDN docs
+      </a>
+      &nbsp; for more details.
+    </>
+  }
+  path="packages/use-display-media/src/index.ts"
+/>
+<AutoTypeTable
+  name="UseDisplayMediaReturn"
+  description="Return value of the useDisplayMedia hook."
+  path="packages/use-display-media/src/index.ts"
+/>
+
+---
+
+# useDocumentHasFocus
+
+Track the focus state of the document.
+
+## Installation
+
+```package-install
+npm install @1hook/use-document-has-focus
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useDocumentHasFocus } from '@1hook/use-document-has-focus'
+```
+
+Track the document visibility:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const hasFocus = useDocumentHasFocus()
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseDocumentHasFocusOptions"
+  description="The options for the useDocumentHasFocus hook."
+  path="packages/use-document-has-focus/src/index.ts"
+/>
+
+---
+
+# useDocumentVisibility
+
+Track the visibility of the document.
+
+## Installation
+
+```package-install
+npm install @1hook/use-document-visibility
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useDocumentVisibility } from '@1hook/use-document-visibility'
+```
+
+Track the document visibility:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const isVisible = useDocumentVisibility()
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseDocumentVisibilityOptions"
+  description="The options for the useDocumentVisibility hook."
+  path="packages/use-document-visibility/src/index.ts"
+/>
+
+---
+
+# useEventHandler
+
+Stabilize a function's reference across renders. The function is always up to date in effects and DOM events.
+
+## Installation
+
+```package-install
+npm install @1hook/use-event-handler
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useEventHandler } from '@1hook/use-event-handler'
+```
+
+Provide a function to `useEventHandler`:
+
+```tsx twoslash include onData
+// @include: imports
+const props = {
+  onData: (data: any) => {},
+}
+// ---cut---
+const onData = useEventHandler(props.onData)
+```
+
+`onData` now has a stable identity, making it safe to use in `useEffect`.
+
+```tsx twoslash
+import { useEffect } from 'react'
+// @include: onData
+// ---cut---
+useEffect(() => {
+  // only runs once
+}, [onData])
+```
+
+---
+
+# useEventListener
+
+React version of `addEventListener`, optimized for performance and memory usage.
+
+## Features
+
+- Reuses the same event listener instance for the same target, type, and options.
+- Automatically attaches and detaches the event listener when the component unmounts.
+- Provides methods to manually attach and detach the event listener.
+
+## Installation
+
+```package-install
+npm install @1hook/use-event-listener
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useEventListener } from '@1hook/use-event-listener'
+```
+
+Attach an event listener to the target.
+
+```tsx twoslash
+// @include: imports
+const target = document.getElementById('target')
+// ---cut---
+useEventListener(target, 'click', () => console.log('click'))
+```
+
+## Examples
+
+### 1. Listen to a Window event
+
+SPA example:
+
+```tsx twoslash
+// @include: imports
+const target = document.getElementById('target')
+// ---cut---
+useEventListener(window, 'click', (e) => console.log(e.target))
+```
+
+SSR example:
+
+```tsx twoslash
+// @include: imports
+const target = document.getElementById('target')
+// ---cut---
+import { isServer } from '@1hook/use-event-listener'
+
+useEventListener(!isServer && window, 'click', (e) => console.log(e.target))
+```
+
+`!isServer && window` ensures the code is runs the client before accessing the
+window object
+
+### 2. Targeting a DOM Element
+
+You can use `useEventListener` to attach event listeners to specific DOM elements.
+
+Using a ref:
+
+```tsx twoslash
+// @include: imports
+import { useRef } from 'react'
+// ---cut---
+function MyComponent() {
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  useEventListener(ref, 'scroll', (e) => console.log('scroll'))
+
+  return <div ref={ref} />
+}
+```
+
+Using a stateful element:
+
+```tsx twoslash
+// @include: imports
+import { useState } from 'react'
+// ---cut---
+function MyComponent() {
+  const [target, setTarget] = useState<HTMLDivElement | null>(null)
+
+  useEventListener(target, 'scroll', (e) => console.log('scroll'))
+
+  return <div ref={setTarget} />
+}
+```
+
+Using querySelector:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const target = document.querySelector('body > .scrollable')
+
+  useEventListener(target, 'scroll', (e) => console.log('scroll'))
+
+  return <div />
+}
+```
+
+### 3. Trigger the listener manually
+
+This example shows how to listen for the `'mousemove'` & `'mouseup'` global events only after the `'mousedown'` event has occurred.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+useEventListener(document.getElementById('target'), 'mousedown', (e) => {
+  // Activate mousemove and mouseup listeners after mousedown occurs
+  mousemoveListener.add()
+  mouseupListener.add()
+})
+
+const mousemoveListener = useEventListener(
+  document,
+  'mousemove',
+  (e) => console.log('Mouse Move'),
+  { manual: true }, // Do not attach the listener automatically
+)
+
+const mouseupListener = useEventListener(
+  document,
+  'mouseup',
+  (e) => {
+    // Remove both listeners after mouseup event
+    mousemoveListener.remove()
+    mouseupListener.remove()
+  },
+  { manual: true }, // Do not attach the listener automatically
+)
+```
+
+## API Reference
+
+<TableTitle value="Parameters" />
+
+<TableDescription
+  value={
+    <>
+      The <code>useEventListener</code> hook accepts four arguments:
+    </>
+  }
+/>
+
+| Argument                             | Description                                                                                                                                                                                                                                                                |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <pre>(1) <Code>target</Code></pre>   | The element to attach the listener to.                                                                                                                                                                                                                                     |
+| <pre>(2) <Code>type</Code></pre>     | See [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)                                                                                                                                                                   |
+| <pre>(3) <Code>listener</Code></pre> | See [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)                                                                                                                                                                   |
+| <pre>(4) <Code>options</Code></pre>  | Event listener options (see [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)) with the following differences:<br/>- `manual`: if `true` the listener is not attached automatically on mount.<br/>- `signal` is omitted |
+
+<AutoTypeTable
+  name="UseEventListenerReturn"
+  description="What `useEventListener` returns"
+  path="packages/use-event-listener/src/index.ts"
+/>
+
+---
+
+# useGeolocation
+
+Access and watch the browser's geolocation data.
+
+## Installation
+
+```package-install
+npm install @1hook/use-geolocation
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useGeolocation } from '@1hook/use-geolocation'
+```
+
+When mounted, this hook begins tracking the user's location. \
+If location permissions haven't been granted yet, the browser will request permission from the user.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function LocationDisplay() {
+  const { coords, state, error } = useGeolocation()
+
+  if (state === 'loading') {
+    return <div>Loading location...</div>
+  }
+
+  if (state === 'error') {
+    return <div>Error: {error.message}</div>
+  }
+
+  return (
+    <div>
+      <div>Latitude: {coords.latitude}</div>
+      <div>Longitude: {coords.longitude}</div>
+    </div>
+  )
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseGeolocationOptions"
+  description={
+    <>
+      Options for the <code>useGeolocation</code> hook. See&nbsp;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition#parameters">
+        MDN docs
+      </a>
+      &nbsp; for more details.
+    </>
+  }
+  path="packages/use-geolocation/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseGeolocationReturn"
+  description={
+    <>
+      The return value of the <code>useGeolocation</code> hook.
+    </>
+  }
+  path="packages/use-geolocation/src/index.ts"
+/>
+
+---
+
+# useGetIsMounted
+
+Check if a component is still mounted to avoid memory leaks.
+
+## Installation
+
+```package-install
+npm install @1hook/use-get-is-mounted
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useGetIsMounted } from '@1hook/use-get-is-mounted'
+```
+
+Get the mounted state of the component at any time
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const getIsMounted = useGetIsMounted()
+
+console.log(getIsMounted())
+```
+
+---
+
+# useGlobalState
+
+Minimalistic & Performant global state manager.
+
+## Installation
+
+```package-install
+npm install @1hook/use-global-state
+```
+
+## Quick Start
+
+<Steps>
+
+<Step>
+### Define the global state
+
+```tsx twoslash title="use-count.ts" include use-count
+import { defineGlobalState } from '@1hook/use-global-state'
+
+export const [useCount] = defineGlobalState({ initialState: 0 })
+```
+
+</Step>
+
+<Step>
+### Use like useState
+
+```tsx twoslash
+// @include: use-count
+// ---cut---
+const [count, setCount] = useCount()
+```
+
+</Step>
+</Steps>
+
+## Prevent unnecessary rerenders
+
+To help prevent unnecessary rerenders, `defineGlobalState` provides a standalone setter function. \
+It helps prevent unnecessary rerenders by not listening to the state.
+
+```tsx twoslash title="use-count.ts" include set-count
+import { defineGlobalState } from '@1hook/use-global-state'
+// ---cut---
+export const [useCount, setCount] = defineGlobalState({ initialState: 0 })
+```
+
+✅ No rerender when count changes:
+
+```tsx twoslash
+// @noErrors
+// @include: set-count
+// ---cut---
+import { setCount } from './use-count'
+
+function Increment1() {
+  return (
+    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
+  )
+}
+```
+
+❌ Rerenders when count changes:
+
+```tsx twoslash
+// @noErrors
+// @include: set-count
+// ---cut---
+import { useCount } from './use-count'
+
+function Increment1() {
+  const [count, setCount] = useCount()
+
+  return (
+    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
+  )
+}
+```
+
+---
+
+# useInView
+
+Track the visibility of an element.
+
+## Installation
+
+```package-install
+npm install @1hook/use-in-view
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useInView } from '@1hook/use-in-view'
+```
+
+Track the visibility of an element:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, inView } = useInView()
+
+  return <div ref={ref}>...</div>
+}
+```
+
+Set a default value until the target is observed:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, inView = true } = useInView()
+
+  return <div ref={ref}>...</div>
+}
+```
+
+Customize the intersection observer:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, inView } = useInView({
+    root: document.querySelector('#root'),
+    rootMargin: '10px',
+    threshold: 0.5,
+  })
+
+  return <div ref={ref}>...</div>
+}
+```
+
+Observe once:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, unobserve } = useInView({
+    onChange: (inView) => inView && unobserve(),
+  })
+
+  return <div ref={ref}>...</div>
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseInViewOptions"
+  description="Options for the useInView hook."
+  path="packages/use-in-view/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseInViewReturn"
+  description="Return value for the useInView hook."
+  path="packages/use-in-view/src/index.ts"
+/>
+
+---
+
+# useIntersectionObserver
+
+The IntersectionObserver API, reactified, simplified and optimized.
+
+## Features
+
+- **Instance Reuse:** Optimizes performance by reusing IntersectionObserver instances based on options.
+- **Convenient Unwrapping:** Automatically unwraps the entries parameter, allowing direct access to each entry in the callback.
+- **Manual Observation Control:** Allows manual control over observation using the `observe` and `unobserve` functions.
+
+## Installation
+
+```package-install
+npm install @1hook/use-intersection-observer
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useIntersectionObserver } from '@1hook/use-intersection-observer'
+```
+
+Observe an element's intersection with the viewport:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref } = useIntersectionObserver((entry) => {
+    console.log({ isIntersecting: entry.isIntersecting })
+  })
+
+  return <div ref={ref} />
+}
+```
+
+Customize the intersection observer:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref } = useIntersectionObserver(
+    (entry) => console.log({ isIntersecting: entry.isIntersecting }),
+    { rootMargin: '100px' },
+  )
+
+  return <div ref={ref} />
+}
+```
+
+Stop observing the target after the first intersection:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, unobserve } = useIntersectionObserver((entry) => {
+    if (!entry.isIntersecting) return
+    console.log('Intersected!')
+    unobserve()
+  })
+
+  return <div ref={ref} />
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseIntersectionObserverOptions"
+  description="Options for the useIntersectionObserver hook."
+  path="packages/use-intersection-observer/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseIntersectionObserverReturn"
+  description="Return value for the useIntersectionObserver hook."
+  path="packages/use-intersection-observer/src/index.ts"
+/>
+
+---
+
+# useInterval
+
+setInterval reactified, with synchronization support.
+
+## Installation
+
+```package-install
+npm install @1hook/use-interval
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useInterval } from '@1hook/use-interval'
+```
+
+Set an interval:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { cancel, reset, isPending } = useInterval(() => {
+  console.log('Hello')
+}, 1000)
+```
+
+Pause the interval by setting the delay to `null`:
+
+```ts twoslash
+// @include: imports
+// ---cut---
+useInterval(() => console.log('Hello'), null)
+```
+
+Execute immediately by setting the `leading` option to `true`:
+
+```ts twoslash
+// @include: imports
+// ---cut---
+useInterval(() => console.log('Hello'), 1000, { leading: true })
+```
+
+Synchronize all intervals that share the same delay using the `sync` option:
+
+```ts twoslash
+// @include: imports
+// ---cut---
+useInterval(() => console.log('Hello'), 1000, { sync: true })
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseIntervalOptions"
+  description="Options for the useInterval hook (3rd argument)."
+  path="packages/use-interval/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseIntervalReturn"
+  description="Return value of the useInterval hook."
+  path="packages/use-interval/src/index.ts"
+/>
+
+---
+
+# useInvariantContext
+
+useContext that throws if the provider is not found.
+
+## Installation
+
+```package-install
+npm install @1hook/use-invariant-context
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { createContext } from 'react'
+type Value = any[]
+const MyContext = React.createContext<Value | null>(null)
+// ---cut---
+import { useInvariantContext } from '@1hook/use-invariant-context'
+```
+
+An error is thrown if the context value is falsy.
+
+```tsx twoslash
+// @include: imports
+// @noErrors
+// ---cut---
+const ctx = useInvariantContext(MyContext)
+
+// optionally pass a custom error message
+
+const ctx = useInvariantContext(MyContext, 'Context not found')
+```
+
+## Example
+
+This example shows how to use `useInvariantContext` to avoid missing context provider.
+
+```tsx twoslash
+import { useInvariantContext } from '@1hook/use-invariant-context'
+import { createContext, ReactNode, useContext } from 'react'
+type Value = any[]
+// @noErrors
+// ---cut---
+const MyContext = createContext<Value | null>(null)
+
+type Props = { children: ReactNode; initialValue: Value }
+
+export function MyProvider({ children, initialValue }: Props) {
+  return (
+    <MyContext.Provider value={initialValue}>{children}</MyContext.Provider>
+  )
+}
+
+// ❌ returns `Value | null` since there is not garantee that the context provider is present
+export const useMyContext = () => useContext(MyContext)
+
+// ✅ returns `Value` or throws an error if the context provider is not found
+export const useMyContext = () => useInvariantContext(MyContext)
+```
+
+---
+
+# useIsHydrated
+
+Once `true`, no hydration error can occur.
+
+Prevent hydration mismatches by conditionally rendering content that depends on browser APIs.
+
+## Installation
+
+```package-install
+npm install @1hook/use-is-hydrated
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useIsHydrated } from '@1hook/use-is-hydrated'
+```
+
+Check if the component is hydrated:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const isHydrated = useIsHydrated()
+
+  if (!isHydrated) return null
+
+  return <div>{Date.now()}</div>
+}
+```
+
+---
+
+# useIsOnline
+
+Track the online state of the browser.
+
+## Installation
+
+```package-install
+npm install @1hook/use-is-online
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useIsOnline } from '@1hook/use-is-online'
+```
+
+Check if the browser is online:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const isOnline = useIsOnline()
+```
+
+---
+
+# useLatestRef
+
+Transform anything into a ref. The ref is always up to date in effects and DOM events.
+
+## Installation
+
+```package-install
+npm install @1hook/use-latest-ref
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useLatestRef } from '@1hook/use-latest-ref'
+```
+
+Transform any value into a ref:
+
+```tsx twoslash
+// @include: imports
+type Value = any[]
+const value: Value = []
+// ---cut---
+const ref = useLatestRef(value)
+```
+
+Use `ref.current` to read the latest `value` in effects, changes to `value` do not trigger the effect.
+
+```tsx twoslash
+// @include: imports
+import { useEffect } from 'react'
+type Value = any[]
+const value: Value = []
+const ref = useLatestRef(value)
+// ---cut---
+useEffect(() => {
+  // only runs once
+  console.log('value', ref.current)
+}, [ref])
+```
+
+---
+
+# useLockBodyScroll
+
+Lock and unlock the body scroll without layout shift.
+
+## Installation
+
+```package-install
+npm install @1hook/use-lock-body-scroll
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useLockBodyScroll } from '@1hook/use-lock-body-scroll'
+```
+
+The body scroll is automatically unlocked when the hook unmounts.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { lock, unlock, locked } = useLockBodyScroll()
+```
+
+Lock on mount:
+
+```tsx twoslash
+import { useEffect } from 'react'
+// @include: imports
+// ---cut---
+const { lock } = useLockBodyScroll()
+
+useEffect(lock, [lock])
+```
+
+---
+
+# useMediaRecorder
+
+Record media streams.
+
+## Installation
+
+```package-install
+npm install @1hook/use-media-recorder
+```
+
+## Usage
+
+```tsx twoslash include imports
+const stream = new MediaStream()
+//---cut---
+import { useMediaRecorder } from '@1hook/use-media-recorder'
+```
+
+The recording automatically starts when a media stream is provided and stops when the stream is nullish.
+
+```tsx twoslash
+// @include: imports
+import { useState } from 'react'
+const [recordingSrc, setRecordingSrc] = useState<string>()
+// ---cut---
+useMediaRecorder(stream, {
+  onComplete(chunks) {
+    const blob = new Blob(chunks, { type: 'video/webm' })
+    const url = URL.createObjectURL(blob)
+    setRecordingSrc(url)
+  },
+})
+```
+
+You can pause and resume the recording:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { pause, resume } = useMediaRecorder(stream, {
+  onComplete(chunks) {
+    // transform the chunks into a file or url
+  },
+})
+```
+
+Transform the recorded data into a File:
+
+```tsx twoslash
+// @include: imports
+import { useState } from 'react'
+const [file, setFile] = useState<File>()
+// ---cut---
+const { pause, resume } = useMediaRecorder(stream, {
+  onComplete(chunks) {
+    const type = 'video/webm'
+    const blob = new Blob(chunks, { type })
+    const file = new File([blob], 'recording.webm', { type })
+    setFile(file)
+  },
+})
+```
+
+## Example
+
+Record video from the device's camera:
+
+```tsx twoslash include imports
+import { useMediaRecorder } from '@1hook/use-media-recorder'
+import { useUserMedia } from '@1hook/use-user-media'
+import { useState } from 'react'
+
+export default function VideoRecorder() {
+  const [recordingSrc, setRecordingSrc] = useState<string>()
+
+  const media = useUserMedia({ video: true })
+
+  const recorder = useMediaRecorder(media.stream, {
+    onComplete(chunks) {
+      const blob = new Blob(chunks, { type: 'video/webm' })
+      const src = URL.createObjectURL(blob)
+      setRecordingSrc(src)
+    },
+  })
+
+  return (
+    <div>
+      {recordingSrc && <video src={recordingSrc} controls />}
+
+      {recorder.state === 'inactive' && (
+        <button onClick={media.open}>Start Recording</button>
+      )}
+      {recorder.state === 'recording' && (
+        <button onClick={media.close}>Stop Recording</button>
+      )}
+    </div>
+  )
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseMediaRecorderOptions"
+  description={
+    <>
+      The options of the useMediaRecorder hook. See&nbsp;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/MediaRecorder#options">
+        MDN docs
+      </a>
+      &nbsp; for more details.
+    </>
+  }
+  path="packages/use-media-recorder/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseMediaRecorderReturn"
+  description="The return value of the useMediaRecorder hook."
+  path="packages/use-media-recorder/src/index.ts"
+/>
+
+---
+
+# useMergeRefs
+
+Merge refs, returns a callback ref.
+
+## Installation
+
+```package-install
+npm install @1hook/use-merge-refs
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useMergeRefs } from '@1hook/use-merge-refs'
+```
+
+Merge refs:
+
+```tsx twoslash
+// @include: imports
+import { useRef } from 'react'
+const forwardedRef = useRef<HTMLDivElement | null>(null)
+const internalRef = useRef<HTMLDivElement | null>(null)
+// ---cut---
+const ref = useMergeRefs(forwardedRef, internalRef)
+```
+
+`ref` is a callback ref.
+
+---
+
+# useMountEffect
+
+Execute the callback when the component mounts (first effect).
+
+## Installation
+
+```package-install
+npm install @1hook/use-mount-effect
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useMountEffect } from '@1hook/use-mount-effect'
+```
+
+Execute a function on mount:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+useMountEffect(() => console.log('Mounted!'))
+```
+
+---
+
+# useMutationObserver
+
+The MutationObserver API, reactified and simplified
+
+## Installation
+
+```package-install
+npm install @1hook/use-mutation-observer
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useMutationObserver } from '@1hook/use-mutation-observer'
+```
+
+Observe an element’s child list mutation:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref } = useMutationObserver(
+    (entry) => console.log("The element's child list has changed!"),
+    { childList: true },
+  )
+
+  return <div ref={ref} />
+}
+```
+
+Manual observation control:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, observe, unobserve } = useMutationObserver(
+    (entry) => console.log("The element's child list has changed!"),
+    { childList: true, autoObserve: false }, // Disable automatic observation
+  )
+
+  return (
+    <div>
+      <div ref={ref} />
+
+      <button onClick={observe}>Start observing</button>
+
+      <button onClick={unobserve}>Stop observing</button>
+    </div>
+  )
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseMutationObserverOptions"
+  description={
+    <>
+      The options for the useMutationObserver hook. See&nbsp;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/observe#options">
+        MDN docs
+      </a>
+      &nbsp;for more details.
+    </>
+  }
+  path="packages/use-mutation-observer/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseMutationObserverReturn"
+  description="The return value of the useMutationObserver hook."
+  path="packages/use-mutation-observer/src/index.ts"
+/>
+
+---
+
+# useNavigatorPermission
+
+Query and track navigator permissions.
+
+## Installation
+
+```package-install
+npm install @1hook/use-navigator-permission
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useNavigatorPermission } from '@1hook/use-navigator-permission'
+```
+
+Query a permission state:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const permission = useNavigatorPermission({ name: 'geolocation' })
+
+console.log(permission.state)
+```
+
+The state will be updated in real-time as the user interacts with the browser.
+
+## API Reference
+
+<AutoTypeTable
+  name="UseNavigatorPermissionOptions"
+  description="The options for the useNavigatorPermission hook."
+  path="packages/use-navigator-permission/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseNavigatorPermissionReturn"
+  description="The return value of the useNavigatorPermission hook."
+  path="packages/use-navigator-permission/src/index.ts"
+/>
+
+---
+
+# usePrevious
+
+Returns the previous value.
+
+## Installation
+
+```package-install
+npm install @1hook/use-previous
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { usePrevious } from '@1hook/use-previous'
+```
+
+Get the previous value:
+
+```tsx twoslash
+// @include: imports
+const value: number = 0
+// ---cut---
+const previous = usePrevious(value)
+```
+
+Custom `isEqual` function to compare the previous and current values.
+
+```tsx
+import { isEqual } from 'lodash'
+
+const previous = usePrevious(value, { isEqual })
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UsePreviousOptions"
+  description="The options for the usePrevious hook."
+  path="packages/use-previous/src/index.ts"
+/>
+
+---
+
+# useRerender
+
+Trigger rerenders on-demand.
+
+## Installation
+
+```package-install
+npm install @1hook/use-rerender
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useRerender } from '@1hook/use-rerender'
+```
+
+Rerender a component:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const rerender = useRerender()
+
+rerender()
+```
+
+---
+
+# useResizeObserver
+
+The React version of the ResizeObserver API.
+
+## Installation
+
+```package-install
+npm install @1hook/use-resize-observer
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useResizeObserver } from '@1hook/use-resize-observer'
+```
+
+Observe an element:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref } = useResizeObserver((entry) => {
+    console.log('The target element has been resized!')
+  })
+
+  return <div ref={ref} />
+}
+```
+
+Manual observation control:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, observe, unobserve } = useResizeObserver(
+    (entry) => console.log('Resized!'),
+    { autoObserve: false }, // Disable automatic observation
+  )
+
+  return (
+    <div>
+      <div ref={ref} />
+
+      <button onClick={observe}>Start observing</button>
+
+      <button onClick={unobserve}>Stop observing</button>
+    </div>
+  )
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseResizeObserverOptions"
+  description={
+    <>
+      The options for the useResizeObserver hook. See&nbsp;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver/observe#options">
+        MDN docs
+      </a>
+      for more details.
+    </>
+  }
+  path="packages/use-resize-observer/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseResizeObserverReturn"
+  description="The return value of the useResizeObserver hook."
+  path="packages/use-resize-observer/src/index.ts"
+/>
+
+---
+
+# useSize
+
+Track the size of an element.
+
+## Installation
+
+```package-install
+npm install @1hook/use-size
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useSize } from '@1hook/use-size'
+```
+
+Observe an element:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+function MyComponent() {
+  const { ref, width, height } = useSize()
+
+  return <div ref={ref}>...</div>
+}
+```
+
+Provide default values:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { ref, width = 0, height = 0 } = useSize()
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseSizeOptions"
+  description="The options for the useSize hook."
+  path="packages/use-size/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseSizeReturn"
+  description="The return value of the useSize hook."
+  path="packages/use-size/src/index.ts"
+/>
+
+---
+
+# useSpeechSynthesis
+
+Web Speech API synthesis, reactified.
+
+## Installation
+
+```package-install
+npm install @1hook/use-speech-synthesis
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useSpeechSynthesis } from '@1hook/use-speech-synthesis'
+```
+
+Basic text-to-speech:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { speak } = useSpeechSynthesis()
+
+speak('Hello, world!')
+```
+
+Configure speech options:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { speak } = useSpeechSynthesis({
+  lang: 'fr-FR',
+  pitch: 1.5,
+  rate: 0.8,
+  volume: 0.7,
+})
+
+speak('Bonjour le monde!')
+```
+
+Cancel speaking and check the current state:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { speak, cancel, state } = useSpeechSynthesis()
+
+console.log(state) // state === 'idle'
+speak('Hello, world!')
+console.log(state) // state === 'speaking'
+cancel()
+console.log(state) // state === 'idle'
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseSpeechSynthesisOptions"
+  description={
+    <>
+      The options for the useSpeechSynthesis hook. See&nbsp;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance">
+        MDN docs
+      </a>
+      &nbsp;for more details.
+    </>
+  }
+  path="packages/use-speech-synthesis/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseSpeechSynthesisReturn"
+  description="The return value of the useSpeechSynthesis hook."
+  path="packages/use-speech-synthesis/src/index.ts"
+/>
+
+---
+
+# useStorage (SPA only)
+
+A simple typesafe state manager using localStorage or sessionStorage.
+
+<Callout type="info">
+  This hook is designed for Single Page Applications (SPA).
+  <br /> If you need a persistent state manager for an SSR framework, use
+  [useCookie](/docs/hooks/use-cookie) instead.
+</Callout>
+
+## Features
+
+- **Built-in Validation:** Validate with [zod](https://zod.dev/), [valibot](https://valibot.dev/), [arktype](https://arktype.dev/) or with a simple function.
+- **Tab Sync:** The state is synced across multiple browser tabs when using the `localStorage`.
+- **Component Sync:** The state is synced across all components.
+
+## Installation
+
+```package-install
+npm install @1hook/use-storage
+```
+
+## Quick Start
+
+<Steps>
+<Step>
+### Define your storage setup.
+
+Use `defineStorage` to configure validation rules for each key and specify the storage type (`'local'` or `'session'`).
+
+```tsx twoslash title='local-storage.ts' include use-local-storage
+'use client'
+import { z } from 'zod'
+import { defineStorage } from '@1hook/use-storage'
+
+export const [useLocalStorage, LocalStorage] = defineStorage(
+  {
+    // "search" storage key with a string value
+    search: z.string().default(''),
+    // "selected" storage key with an optional object value
+    selected: z.object({ id: z.number(), name: z.string() }).optional(),
+  },
+  { type: 'local' },
+)
+```
+
+</Step>
+
+<Step>
+### Read and Write to the storage.
+
+Instead of the initial state, pass the storage key you want to read / write from.
+
+```tsx twoslash
+// @noErrors
+// @include: use-local-storage
+// ---cut---
+import { useLocalStorage } from './local-storage'
+
+function Search() {
+  const search = useLocalStorage('search')
+
+  return (
+    <form>
+      <input
+        onChange={(e) => search.set(e.target.value)}
+        value={search.value}
+      />
+      <button type="button" onClick={() => search.clear()}>
+        Clear search
+      </button>
+    </form>
+  )
+}
+```
+
+Storage updates are automatically synchronized across all instances of the hook and across browser tabs.
+
+</Step>
+</Steps>
+
+## Validation
+
+To ensure data integrity, the storage values should be validated.
+
+### 👉 Functional validation
+
+For simple cases you can use a function to validate the storage.
+
+The following example ensures the search is a string & the count is a number,
+and adds a fallback value in case the value is `null | undefined`.
+
+```ts twoslash
+import { defineStorage } from '@1hook/use-storage'
+// ---cut---
+defineStorage(
+  {
+    search: (value) => String(value ?? ''),
+    count: (value) => Number(value ?? 0),
+  },
+  { type: 'local' },
+)
+```
+
+### 👉 Schema validation
+
+For more complex cases you can use a schema to validate the cookie value.
+
+<Callout type="info">
+  Since we follow the [Standard
+  Schema](https://github.com/standard-schema/standard-schema) specification, you
+  can choose between [zod 3.24+](https://zod.dev/), [valibot
+  1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/) to
+  validate the cookies.
+</Callout>
+
+The following example ensures the search is a string & the count is a number,
+and adds a fallback value in case the value is `null | undefined`.
+
+```ts twoslash
+import { defineStorage } from '@1hook/use-storage'
+// ---cut---
+import { z } from 'zod'
+
+defineStorage(
+  {
+    search: z.string().default(''),
+    count: z.number().default(0),
+  },
+  { type: 'local' },
+)
+```
+
+## Read, Write & Clear outside of React
+
+You can read and write storage outside of React by using the `Storage` object.
+
+```ts twoslash include clientstorage
+import { z } from 'zod'
+import { defineStorage } from '@1hook/use-storage'
+// ---cut---
+export const [useLocalStorage, LocalStorage] = defineStorage(
+  { accessToken: z.string().optional() },
+  { type: 'local' },
+)
+```
+
+Using the `Storage` to set or clear storage will still trigger a **React re-render**.
+
+```tsx twoslash
+// @noErrors
+// @include: clientstorage
+// ---cut---
+import { LocalStorage } from './storage'
+
+// Write
+LocalStorage.set('accessToken', '123')
+
+// Read
+const accessToken = LocalStorage.get('accessToken')
+
+// Clear specific key
+LocalStorage.clear(['accessToken'])
+
+// Clear all keys
+LocalStorage.clear()
+```
+
+## Custom (de)serialization
+
+In some cases you might need to customize the serialization and deserialization of the cookie value.
+
+You can do this by using the `serialize` and `deserialize` options.
+
+```ts twoslash
+import { defineStorage } from '@1hook/use-storage'
+// ---cut---
+defineStorage(
+  { search: (value) => String(value ?? '') },
+  {
+    type: 'local',
+    serialize: (value) => JSON.stringify(value), // Custom serialization
+    deserialize: (value) => JSON.parse(value), // Custom deserialization
+  },
+)
+```
+
+<hr />
+
+## API Reference
+
+### 👉 defineStorage
+
+Generate typesafe hooks and a Provider from a storage configuration object.
+
+```ts
+function defineStorage(
+  config: Record<string, StorageConfig>,
+  options?: StorageServiceOptions,
+): [useStorage, Storage]
+```
+
+<AutoTypeTable
+  name="StorageServiceOptions"
+  description="The options of the storage service."
+  path="packages/use-storage/src/index.ts"
+/>
+
+### 👉 useStorage
+
+Manage storage state providing the storage key.
+
+```ts
+function useStorage(key: string): { value; set; clear; get }
+```
+
+### 👉 Storage
+
+Read and write to the storage outside of React.
+
+```ts
+const Storage = { set; clear; get }
+```
+
+---
+
+# useThrottleFn
+
+A throttle function, reactified.
+
+Ensures that a function is only executed once in a specified time interval, no matter how many times it is invoked.
+
+## Installation
+
+```package-install
+npm install @1hook/use-throttle-fn
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useThrottleFn } from '@1hook/use-throttle-fn'
+```
+
+The `useThrottleFn` hook accepts an interval in milliseconds and returns a `throttle` function.
+
+The first call executes right away, while subsequent calls within interval are throttled. \
+The final call is scheduled to run after the interval expires.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { throttle } = useThrottleFn(1000)
+
+throttle(() => console.log('Executes immediately'))
+throttle(() => console.log('Skipped'))
+throttle(() => console.log('Scheduled to execute after 1000ms'))
+```
+
+Override the default interval:
+
+```diff lang='tsx'
+const { throttle } = useThrottleFn(1000)
+
+throttle(() => console.log('Executes immediately'))
+throttle(() => console.log('Scheduled to execute after 500ms'), 500)
+```
+
+Use `trailing: false` to avoid scheduling the last call:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { throttle } = useThrottleFn(1000, { trailing: false })
+
+throttle(() => console.log('Executes immediately'))
+throttle(() => console.log('Skipped'))
+```
+
+Cancel pending executions:
+
+```tsx
+const { throttle, cancel, isPending } = useThrottleFn(1000)
+
+isPending && cancel()
+```
+
+When the component unmounts, pending executions are automatically canceled.
+
+## API Reference
+
+<AutoTypeTable
+  name="UseThrottleFnOptions"
+  description="The options of the useThrottleFn hook."
+  path="packages/use-throttle-fn/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseThrottleFnReturn"
+  description="The return value of the useThrottleFn hook."
+  path="packages/use-throttle-fn/src/index.ts"
+/>
+
+---
+
+# useTimeout
+
+setTimeout, reactified.
+
+## Installation
+
+```package-install
+npm install @1hook/use-timeout
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useTimeout } from '@1hook/use-timeout'
+```
+
+Set a timeout:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { cancel, reset, isPending } = useTimeout(() => {
+  console.log('Hello')
+}, 1000)
+```
+
+Pause the timeout by setting the delay to `null`:
+
+```ts twoslash
+// @include: imports
+// ---cut---
+useTimeout(() => console.log('Hello'), null)
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="UseTimeoutReturn"
+  description="The return value of the useTimeout hook."
+  path="packages/use-timeout/src/index.ts"
+/>
+
+---
+
+# useUnmountEffect
+
+Execute the callback when the component unmounts (cleanup effect).
+
+## Installation
+
+```package-install
+npm install @1hook/use-unmount-effect
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useUnmountEffect } from '@1hook/use-unmount-effect'
+```
+
+Execute a function on unmount:
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+useUnmountEffect(() => console.log('Unmounted!'))
+```
+
+---
+
+# useUpdateEffect
+
+useEffect without the initial effect.
+
+## Installation
+
+```package-install
+npm install @1hook/use-update-effect
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useUpdateEffect } from '@1hook/use-update-effect'
+```
+
+Execute on dependency change:
+
+```tsx twoslash
+// @include: imports
+const state: string = ''
+// ---cut---
+useUpdateEffect(() => console.log('State has changed'), [state])
+```
+
+---
+
+# useUserMedia
+
+Access and manage media devices like camera and microphone.
+
+## Installation
+
+```package-install
+npm install @1hook/use-user-media
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { useUserMedia } from '@1hook/use-user-media'
+```
+
+Pass the media constraints to the hook.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { stream, open, close, state, error } = useUserMedia({
+  video: true,
+})
+```
+
+The hook follows a simple state machine:
+
+- Initially starts in `"closed"` state with `stream: null`
+- Calling `open()` transitions to `"loading"` state while requesting device access
+- On successful device access, transitions to `"open"` state with `stream: MediaStream`
+- If an error occurs during loading, transitions to `"error"` state with the error details
+- Calling `close()` returns to `"closed"` state, stops the stream, and sets `stream: null`
+
+This predictable state flow makes it easy to build UIs that respond appropriately to the media stream's status.
+
+## Example
+
+Capture and display video from the device's camera.
+
+```tsx twoslash
+import { useEffect, useRef } from 'react'
+import { useUserMedia } from '@1hook/use-user-media'
+
+export default function VideoCapture() {
+  const { state, stream, open, close } = useUserMedia({
+    video: true,
+  })
+
+  const ref = useRef<HTMLVideoElement | null>(null)
+
+  // use the stream to reproduce the video
+  useEffect(() => {
+    if (!ref.current) return
+    ref.current.srcObject = stream
+  }, [stream])
+
+  return (
+    <div>
+      <video ref={ref} autoPlay />
+
+      <button onClick={state === 'closed' ? open : close}>
+        {state === 'closed' ? 'Open' : 'Close'} Camera
+      </button>
+    </div>
+  )
+}
+```
+
+### Parameters
+
+<AutoTypeTable
+  name="UseUserMediaOptions"
+  description={
+    <>
+      The options of the useUserMedia hook. See&nbsp;
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamConstraints">
+        MDN docs
+      </a>
+      &nbsp; for more details.
+    </>
+  }
+  path="packages/use-user-media/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseUserMediaReturn"
+  description="The return value of the useUserMedia hook."
+  path="packages/use-user-media/src/index.ts"
+/>
+
+---
+
+# useWindowSize
+
+Track the dimensions of the window.
+
+## Features
+
+- **Optimized performance:** Leverages a shared listener pool to reduce event subscriptions.
+- **Custom state tracking:** disable internal state tracking with `trackState`.
+- **Event-driven updates:** Provides an `onChange` callback for reacting to dimension changes.
+
+## Installation
+
+```package-install
+npm install @1hook/use-window-size
+```
+
+## Usage
+
+```tsx twoslash include imports
+import { defineUseWindowSize } from '@1hook/use-window-size'
+
+export const useWindowSize = defineUseWindowSize({ spa: true })
+```
+
+`defineUseWindowSize` accepts a `spa` option that enables Single Page Application optimizations. \
+When `spa: false` the width and height are initialized with `undefined`.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { width, height } = useWindowSize()
+```
+
+Use `trackState: false` to disable state tracking, the `onChange` callback is executed whenever the window size changes.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+useWindowSize({
+  trackState: false,
+  onChange(size) {
+    if (size.width < 600) {
+      // do something
+    }
+  },
+})
+```
+
+## API Reference
+
+<AutoTypeTable
+  name="DefineUseWindowSizeOptions"
+  description="Options for the `defineUseWindowSize` hook."
+  path="packages/use-window-size/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseWindowSizeOptions"
+  description="Options for the `useWindowSize` hook."
+  path="packages/use-window-size/src/index.ts"
+/>
+
+<AutoTypeTable
+  name="UseWindowSizeReturn"
+  description="The return value of the `useWindowSize` hook."
+  path="packages/use-window-size/src/index.ts"
+/>
+
+---
+

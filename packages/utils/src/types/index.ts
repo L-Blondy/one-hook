@@ -35,3 +35,5 @@ export type Prettify<O> = O extends any
   : never
 
 export type MaybeRef<T> = T | React.MutableRefObject<T>
+
+export type Defined<T> = T extends undefined ? never : T

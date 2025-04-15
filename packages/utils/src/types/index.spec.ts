@@ -7,6 +7,7 @@ import type {
   KeysOf,
   EntriesOf,
   Prettify,
+  Defined,
 } from '.'
 
 test('KeyOf', () => {
@@ -106,4 +107,9 @@ test('Prettify', () => {
 
   const p6: Prettify<T1 | T2> = {} as any
   expectTypeOf(p6).toEqualTypeOf<T1 | T2>()
+})
+
+test('Defined', () => {
+  const d1: Defined<number | undefined | null> = {} as any
+  expectTypeOf(d1).toEqualTypeOf<number | null>()
 })

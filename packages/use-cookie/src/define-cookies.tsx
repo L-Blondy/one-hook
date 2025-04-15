@@ -4,7 +4,7 @@ import {
   type CookieServiceOptions,
   type CookieConfig,
 } from './vanilla'
-import type { KeyOf } from '@1hook/utils/types'
+import type { Defined, KeyOf } from '@1hook/utils/types'
 import { createEmitter } from '@1hook/utils/emitter'
 import { isServer } from '@1hook/utils/is-server'
 import { keysOf } from '@1hook/utils/keys-of'
@@ -59,7 +59,7 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
      */
     set<TName extends CookieName>(
       name: TName,
-      updater: React.SetStateAction<CookieValue<TName>>,
+      updater: React.SetStateAction<Defined<CookieValue<TName>>>,
     ) {
       clientOnly()
       const value =
@@ -131,7 +131,9 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
     useCookie<TName extends CookieName>(name: TName) {
       type State = {
         value: CookieValue<TName>
-        set: (updater: React.SetStateAction<CookieValue<TName>>) => void
+        set: (
+          updater: React.SetStateAction<Defined<CookieValue<TName>>>,
+        ) => void
         clear: () => void
         get: () => CookieValue<TName>
       }

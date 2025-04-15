@@ -45,7 +45,7 @@ test('type inferrence', () => {
     const state3 = useLocalStorage('object')
     expectTypeOf(state3.value).toEqualTypeOf<{ key: string } | undefined>()
     expectTypeOf(state3.set).toEqualTypeOf<
-      React.Dispatch<React.SetStateAction<{ key: string } | undefined>>
+      React.Dispatch<React.SetStateAction<{ key: string }>>
     >()
     expectTypeOf(LocalStorage.get('name1')).toEqualTypeOf<string>()
   })

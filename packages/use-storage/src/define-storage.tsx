@@ -4,7 +4,7 @@ import {
   type StorageServiceOptions,
   type StorageValidator,
 } from './vanilla'
-import type { KeyOf } from '@1hook/utils/types'
+import type { Defined, KeyOf } from '@1hook/utils/types'
 import { createEmitter } from '@1hook/utils/emitter'
 import { keysOf } from '@1hook/utils/keys-of'
 import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
@@ -44,7 +44,7 @@ export function defineStorage<
     },
     set<TKey extends StorageKey>(
       key: TKey,
-      updater: React.SetStateAction<Store[TKey]>,
+      updater: React.SetStateAction<Defined<Store[TKey]>>,
     ) {
       const value =
         typeof updater === 'function'
@@ -67,7 +67,7 @@ export function defineStorage<
   function useStorage<TKey extends StorageKey>(key: TKey) {
     type State = {
       value: StorageValue<TKey>
-      set: (updater: React.SetStateAction<StorageValue<TKey>>) => void
+      set: (updater: React.SetStateAction<Defined<StorageValue<TKey>>>) => void
       clear: () => void
       get: () => StorageValue<TKey>
     }

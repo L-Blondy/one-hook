@@ -14,7 +14,8 @@
     "lint": "turbo lint",
     "lint:eslint": "turbo lint:eslint",
     "lint:typescript": "turbo lint:typescript",
-    "release": "pnpm align && git pull && pnpm bumpp && bun scripts/release-all.ts && git add . && git commit -a && git tag v$npm_package_version && git push --tags && git push"
+    "release": "pnpm align && git pull && pnpm bumpp && bun scripts/release-all.ts && git add . && git commit -a  && git push && pnpm release:tag",
+    "release:tag": "git tag v$npm_package_version && git push --tags"
   },
   "repository": {
     "type": "git",

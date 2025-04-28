@@ -142,10 +142,12 @@ test('The callback should not execute after calling `remove`', () => {
   expect(spy).toHaveBeenCalledTimes(1)
 })
 
-test('{ manual: true } Should not listen by default', () => {
+test('{ autoListen: false } Should not listen by default', () => {
   const spy = vi.fn()
 
-  renderHook(() => useEventListener(window, 'click', spy, { manual: true }))
+  renderHook(() =>
+    useEventListener(window, 'click', spy, { autoListen: false }),
+  )
   fireEvent.click(window)
   expect(spy).toHaveBeenCalledTimes(0)
 })
@@ -154,7 +156,7 @@ test('Should listen after calling add()', () => {
   const spy = vi.fn()
 
   const { result } = renderHook(() =>
-    useEventListener(window, 'click', spy, { manual: true }),
+    useEventListener(window, 'click', spy, { autoListen: false }),
   )
   fireEvent.click(window)
   expect(spy).toHaveBeenCalledTimes(0)
@@ -167,7 +169,7 @@ test('Calling add() multiple times should change nothing', async () => {
   const spy = vi.fn()
 
   const { result } = renderHook(() =>
-    useEventListener(window, 'click', spy, { manual: true }),
+    useEventListener(window, 'click', spy, { autoListen: false }),
   )
   fireEvent.click(window)
   expect(spy).toHaveBeenCalledTimes(0)
@@ -186,7 +188,7 @@ test('Should stop listening after calling remove()', () => {
   const spy = vi.fn()
 
   const { result } = renderHook(() =>
-    useEventListener(window, 'click', spy, { manual: true }),
+    useEventListener(window, 'click', spy, { autoListen: false }),
   )
   fireEvent.click(window)
   expect(spy).toHaveBeenCalledTimes(0)
@@ -204,7 +206,7 @@ test('{ once: true } should trigger once for every listener', () => {
 
   renderHook(() => useEventListener(window, 'click', spy1, { once: true }))
   const { result: result2 } = renderHook(() =>
-    useEventListener(window, 'click', spy2, { once: true, manual: true }),
+    useEventListener(window, 'click', spy2, { once: true, autoListen: false }),
   )
   fireEvent.click(window)
   expect(spy1).toHaveBeenCalledTimes(1)

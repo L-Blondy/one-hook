@@ -22,7 +22,12 @@ export type UseEventListenerOptions = Omit<
   AddEventListenerOptions,
   'signal'
 > & {
-  manual?: boolean
+  /**
+   * Automatically attach the listener the target element.
+   *
+   * @default true
+   */
+  autoListen?: boolean
 }
 
 export type EventListenerService<

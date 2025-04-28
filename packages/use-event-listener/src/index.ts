@@ -30,7 +30,7 @@ export function useEventListener<
   target: MaybeRef<Target | null | undefined | false>,
   type: Type,
   listener: UseEventListenerCallback<Target, Type>,
-  { manual, capture, once, passive }: UseEventListenerOptions = {},
+  { autoListen = true, capture, once, passive }: UseEventListenerOptions = {},
 ): UseEventListenerReturn {
   // targets passed as `ref.current` do no work properly,
   // they are undefined in the first effect.
@@ -59,9 +59,9 @@ export function useEventListener<
       passive,
     })
     listenerServiceRef.current = _listenerService
-    !manual && add()
+    autoListen && add()
     return remove
-  }, [target, type, manual, add, remove, capture, once, passive])
+  }, [target, type, autoListen, add, remove, capture, once, passive])
 
   return { add, remove }
 }

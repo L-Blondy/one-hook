@@ -3,12 +3,12 @@ import { getClosestScrollable, isIosDevice } from './utils'
 
 export const useLockBodyScroll = function useLockBody() {
   const [locked, setLocked] = React.useState(false)
-  const initialBodyStyles = React.useRef<React.CSSProperties>({})
+  const originalBodyStyles = React.useRef<React.CSSProperties>({})
 
   const unlock = React.useCallback(() => {
     const { body } = document
     if (body.style.overflow !== 'hidden') return // already unlocked
-    Object.assign(body.style, initialBodyStyles.current)
+    Object.assign(body.style, originalBodyStyles.current)
     if (isIosDevice()) {
       document.removeEventListener('touchmove', preventTouchBodyScroll)
     }
@@ -17,14 +17,15 @@ export const useLockBodyScroll = function useLockBody() {
 
   const lock = React.useCallback(() => {
     const { body } = document
-    if (body.style.overflow === 'hidden') return // already locked
-    initialBodyStyles.current = {
+    const computedBodyStyles = getComputedStyle(body)
+    if (computedBodyStyles.overflow === 'hidden') return // already locked
+    originalBodyStyles.current = {
       overflow: body.style.overflow,
       paddingRight: body.style.paddingRight,
     }
     Object.assign(body.style, {
       overflow: 'hidden',
-      paddingRight: `${window.innerWidth - body.clientWidth}px`,
+      paddingRight: `calc(${window.innerWidth - body.clientWidth}px + ${computedBodyStyles.paddingRight})`,
     })
     if (isIosDevice()) {
       document.addEventListener('touchmove', preventTouchBodyScroll, {

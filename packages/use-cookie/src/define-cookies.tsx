@@ -31,6 +31,9 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
   type CookieValue<TName extends CookieName> = ValidatorOutput<
     TConfig[TName]['validate']
   >
+  type TUpdater<TName extends CookieName> =
+    | Defined<CookieValue<TName>>
+    | ((value: CookieValue<TName>) => Defined<CookieValue<TName>>)
 
   const store = new Map<CookieName, CookieValue<CookieName>>()
   const emitter = createEmitter()
@@ -57,10 +60,7 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
     /**
      * client only
      */
-    set<TName extends CookieName>(
-      name: TName,
-      updater: React.SetStateAction<Defined<CookieValue<TName>>>,
-    ) {
+    set<TName extends CookieName>(name: TName, updater: TUpdater<TName>) {
       clientOnly()
       const value =
         typeof updater === 'function'
@@ -131,9 +131,7 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
     useCookie<TName extends CookieName>(name: TName) {
       type State = {
         value: CookieValue<TName>
-        set: (
-          updater: React.SetStateAction<Defined<CookieValue<TName>>>,
-        ) => void
+        set: (updater: TUpdater<TName>) => void
         clear: () => void
         get: () => CookieValue<TName>
       }

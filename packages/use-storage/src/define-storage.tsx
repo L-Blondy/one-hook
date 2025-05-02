@@ -16,9 +16,9 @@ export function defineStorage<
 >(config: TConfig, options: TServiceOptions) {
   type StorageKey = KeyOf<TConfig>
   type StorageValue<TKey extends StorageKey> = ValidatorOutput<TConfig[TKey]>
-  type Store = {
-    [Key in StorageKey]: StorageValue<Key>
-  }
+  type TUpdater<TKey extends StorageKey> =
+    | Defined<StorageValue<TKey>>
+    | ((value: StorageValue<TKey>) => Defined<StorageValue<TKey>>)
 
   const service = createStorageService(config, options)
   const emitter = createEmitter()
@@ -42,10 +42,7 @@ export function defineStorage<
     get<TKey extends StorageKey>(key: TKey): StorageValue<TKey> {
       return store.get(key)!
     },
-    set<TKey extends StorageKey>(
-      key: TKey,
-      updater: React.SetStateAction<Defined<Store[TKey]>>,
-    ) {
+    set<TKey extends StorageKey>(key: TKey, updater: TUpdater<TKey>) {
       const value =
         typeof updater === 'function'
           ? (updater as any)(store.get(key))
@@ -67,7 +64,7 @@ export function defineStorage<
   function useStorage<TKey extends StorageKey>(key: TKey) {
     type State = {
       value: StorageValue<TKey>
-      set: (updater: React.SetStateAction<Defined<StorageValue<TKey>>>) => void
+      set: (updater: TUpdater<TKey>) => void
       clear: () => void
       get: () => StorageValue<TKey>
     }

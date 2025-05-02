@@ -50,10 +50,9 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
 
   const Cookies = {
     /**
-     * client only
+     * use within "use client"
      */
     get<TName extends CookieName>(name: TName): CookieValue<TName> {
-      clientOnly()
       return store.get(name)!
     },
 
@@ -96,12 +95,13 @@ export function defineCookies<TConfig extends Record<string, CookieConfig>>(
     Cookies,
 
     CookieProvider(props: CookieProviderProps) {
-      const serverCookieString: string = props.headers.get('Cookie') ?? ''
+      const headers = new Headers(props.headers)
+      const serverCookieString: string = headers.get('Cookie') ?? ''
       const prevServerCookieString = React.useRef(serverCookieString)
 
       React.useState(() => {
         keysOf(config as Record<CookieName, any>).forEach((name) => {
-          store.set(name, Cookies.fromHeaders(props.headers).get(name))
+          store.set(name, Cookies.fromHeaders(headers).get(name))
         })
       })
 

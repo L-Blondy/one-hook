@@ -31,11 +31,11 @@ export type UseIntersectionObserverReturn = {
    *
    * @remarks `Function`
    */
-  ref: React.Dispatch<React.SetStateAction<Element | null>>
+  ref: React.Dispatch<React.SetStateAction<HTMLElement | null>>
   /**
    * The observed element.
    */
-  target: Element | null
+  target: HTMLElement | null
 }
 
 export const useIntersectionObserver = (
@@ -49,7 +49,7 @@ export const useIntersectionObserver = (
 ) => {
   const instanceRef = React.useRef<IntersectionObserverInstance | null>(null)
   const stableCallback = useEventHandler(callback)
-  const [target, ref] = React.useState<Element | null>(null)
+  const [target, ref] = React.useState<HTMLElement | null>(null)
 
   const observe = React.useCallback(() => {
     target && instanceRef.current?.observe(target, stableCallback)

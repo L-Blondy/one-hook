@@ -26,11 +26,11 @@ export type UseResizeObserverReturn = {
    *
    * @remarks `Function`
    */
-  ref: React.Dispatch<React.SetStateAction<Element | null>>
+  ref: React.Dispatch<React.SetStateAction<HTMLElement | null>>
   /**
    * The observed element.
    */
-  target: Element | null
+  target: HTMLElement | null
 }
 
 export type UseResizeObserverCallback = (
@@ -43,7 +43,7 @@ export const useResizeObserver = (
   { autoObserve = true, box }: UseResizeObserverOptions = {},
 ): UseResizeObserverReturn => {
   const stableCallback = useEventHandler(callback)
-  const [target, ref] = React.useState<Element | null>(null)
+  const [target, ref] = React.useState<HTMLElement | null>(null)
   // since observing instantly triggers the observer callback
   // we want to prevent observing if the target is already observed
   const isObservingRef = React.useRef(false)

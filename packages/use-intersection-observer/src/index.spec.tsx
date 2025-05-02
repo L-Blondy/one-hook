@@ -207,7 +207,7 @@ test('The callback should be executed only for the intersecting targets', async 
   const callbackSpy1 = vi.fn()
   const callbackSpy2 = vi.fn()
 
-  let target: Element | null = null
+  let target: HTMLElement | null = null
 
   render(<TestComponent />)
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -225,7 +225,7 @@ test('The callback should be executed only for the intersecting targets', async 
       <div>
         <div
           ref={React.useCallback(
-            (el: any) => {
+            (el: HTMLElement | null) => {
               ref(el)
               if (!target && el) {
                 target = el

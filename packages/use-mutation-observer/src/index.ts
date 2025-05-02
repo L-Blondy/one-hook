@@ -30,11 +30,11 @@ export type UseMutationObserverReturn = {
    *
    * @remarks `Function`
    */
-  ref: React.Dispatch<React.SetStateAction<Element | null>>
+  ref: React.Dispatch<React.SetStateAction<HTMLElement | null>>
   /**
    * The observed element.
    */
-  target: Element | null
+  target: HTMLElement | null
 }
 
 export const useMutationObserver = (
@@ -43,7 +43,7 @@ export const useMutationObserver = (
 ) => {
   const stableOptions = useStableOptions(options)
   const stableCallback = useEventHandler(callback)
-  const [target, ref] = React.useState<Element | null>(null)
+  const [target, ref] = React.useState<HTMLElement | null>(null)
 
   // never changes
   const observer = React.useMemo(

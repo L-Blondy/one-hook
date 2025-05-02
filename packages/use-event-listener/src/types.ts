@@ -2,7 +2,7 @@ import type { createInstance } from './vanilla'
 
 type StringOnly<T> = T extends string ? T : never
 
-export type UseEventListenerTarget = Element | Document | Window
+export type UseEventListenerTarget = HTMLElement | Document | Window
 
 type EventMap<Target extends UseEventListenerTarget> = Target extends Window
   ? WindowEventMap

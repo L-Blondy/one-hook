@@ -32,18 +32,18 @@ export type UseSizeReturn = Size & {
    *
    * @remarks `Function`
    */
-  ref: React.Dispatch<React.SetStateAction<Element | null>>
+  ref: React.Dispatch<React.SetStateAction<HTMLElement | null>>
   /**
    * The observed element.
    */
-  target: Element | null
+  target: HTMLElement | null
 }
 
 export function useSize({
   trackState = true,
   onChange,
 }: UseSizeOptions = {}): UseSizeReturn {
-  const [target, ref] = React.useState<Element | null>(null)
+  const [target, ref] = React.useState<HTMLElement | null>(null)
   const [size, setSize] = React.useState<Size>({})
   const handleChange = useEventHandler(onChange)
 

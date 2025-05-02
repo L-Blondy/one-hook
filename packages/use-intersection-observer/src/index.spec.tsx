@@ -234,7 +234,7 @@ test('The callback should be executed only for the intersecting targets', async 
             [ref],
           )}
         />
-        <div ref={observer2.ref} />
+        <svg ref={observer2.ref} />
       </div>
     )
   }

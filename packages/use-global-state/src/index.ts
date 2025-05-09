@@ -19,17 +19,19 @@ export function defineGlobalState<State>(
     emitter.emit('', next)
   }
 
-  return [
-    () => {
-      const [state, setState] = React.useState<State>(store.v)
+  function useGlobalState() {
+    const [state, setState] = React.useState<State>(store.v)
 
-      useIsomorphicLayoutEffect(
-        () => emitter.on((_, updater) => setState(updater)),
-        [],
-      )
+    useIsomorphicLayoutEffect(
+      () => emitter.on((_, updater) => setState(updater)),
+      [],
+    )
 
-      return [state, set] as const
-    },
-    set,
-  ] as const
+    return [state, set] as const
+  }
+
+  return [useGlobalState, set] as [
+    useGlobalState: typeof useGlobalState,
+    set: typeof set,
+  ]
 }

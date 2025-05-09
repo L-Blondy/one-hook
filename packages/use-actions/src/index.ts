@@ -33,6 +33,6 @@ export function defineActions<
       ),
     )
 
-    return [state, actions] as const
+    return [state, actions] as [state: typeof state, actions: typeof actions]
   }
 }

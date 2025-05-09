@@ -7,22 +7,32 @@ export function defineContextualState<State>() {
     React.SetStateAction<State>
   >>(null)
 
-  return [
-    (props: {
-      children: React.ReactNode
-      initialState: State | (() => State)
-    }) => {
-      const [state, setState] = React.useState(props.initialState)
-      return (
-        <SetStateCtx.Provider value={setState}>
-          <StateCtx.Provider value={state}>{props.children}</StateCtx.Provider>
-        </SetStateCtx.Provider>
-      )
-    },
+  function Provider(props: {
+    children: React.ReactNode
+    initialState: State | (() => State)
+  }) {
+    const [state, setState] = React.useState(props.initialState)
+    return (
+      <SetStateCtx.Provider value={setState}>
+        <StateCtx.Provider value={state}>{props.children}</StateCtx.Provider>
+      </SetStateCtx.Provider>
+    )
+  }
 
-    () =>
-      [React.useContext(StateCtx), useInvariantContext(SetStateCtx)] as const,
+  function useState() {
+    return [
+      React.useContext(StateCtx),
+      useInvariantContext(SetStateCtx),
+    ] as const
+  }
 
-    () => useInvariantContext(SetStateCtx),
-  ] as const
+  function useSetState() {
+    return useInvariantContext(SetStateCtx)
+  }
+
+  return [Provider, useState, useSetState] as [
+    Provider: typeof Provider,
+    useState: typeof useState,
+    useSetState: typeof useSetState,
+  ]
 }

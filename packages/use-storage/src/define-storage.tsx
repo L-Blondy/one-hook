@@ -92,5 +92,8 @@ export function defineStorage<
     return state
   }
 
-  return [useStorage, Storage] as const
+  return [useStorage, Storage] as [
+    useStorage: typeof useStorage,
+    Storage: typeof Storage,
+  ]
 }

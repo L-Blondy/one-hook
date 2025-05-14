@@ -69,7 +69,6 @@
     "@1hook/use-user-media": "workspace:*",
     "@1hook/use-window-size": "workspace:*"
   },
-  "tag": "beta",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/L-Blondy/one-hook"

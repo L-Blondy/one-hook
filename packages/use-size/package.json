@@ -31,7 +31,6 @@
     "@1hook/use-event-handler": "workspace:*",
     "@1hook/use-isomorphic-layout-effect": "workspace:*"
   },
-  "tag": "beta",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/L-Blondy/one-hook"

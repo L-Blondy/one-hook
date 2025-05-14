@@ -35,7 +35,6 @@
     "@1hook/use-intersection-observer": "workspace:*",
     "@1hook/use-previous": "workspace:*"
   },
-  "tag": "beta",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/L-Blondy/one-hook"

@@ -35,7 +35,6 @@
   "devDependencies": {
     "@1hook/use-merge-refs": "workspace:*"
   },
-  "tag": "beta",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/L-Blondy/one-hook"

@@ -72,7 +72,6 @@
   "dependencies": {
     "@standard-schema/spec": "^1.0.0"
   },
-  "tag": "beta",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/L-Blondy/one-hook"

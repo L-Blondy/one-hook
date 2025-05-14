@@ -31,7 +31,6 @@
     "@1hook/use-latest-ref": "workspace:*",
     "@1hook/utils": "workspace:*"
   },
-  "tag": "beta",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/L-Blondy/one-hook"

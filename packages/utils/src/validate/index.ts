@@ -9,7 +9,7 @@ export type Validator<TInput = any, TOutput = TInput> =
   | ValidationFunction<TInput, TOutput>
   | StandardSchemaV1<TInput, TOutput>
 
-export function validateSchemaSync<TSchema extends StandardSchemaV1>(
+function validateSchemaSync<TSchema extends StandardSchemaV1>(
   schema: TSchema,
   data: StandardSchemaV1.InferInput<TSchema>,
 ): StandardSchemaV1.InferOutput<TSchema> {

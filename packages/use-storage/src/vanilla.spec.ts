@@ -2,12 +2,14 @@ import { afterEach, describe, expect, expectTypeOf, test } from 'vitest'
 import { createStorageService } from './vanilla'
 import { cleanup } from '@testing-library/react'
 import * as v from 'valibot'
+import { z } from 'zod/v4'
 
 const local_storage = createStorageService(
   {
     name1: (value) => Number(value ?? 0),
     name2: (data) => String(data ?? ''),
     object: v.optional(v.object({ key: v.string() })),
+    zod: z.object({ key: z.string() }).optional(),
     anyValue: (v) => v,
   },
   { type: 'local' },
@@ -29,6 +31,9 @@ test('type inferrence', () => {
   const value1 = local_storage.get('name1')
   expectTypeOf(value1).toEqualTypeOf<number>()
   local_storage.set('name1', 1)
+  const value3 = local_storage.get('zod')
+  expectTypeOf(value3).toEqualTypeOf<{ key: string } | undefined>()
+  local_storage.set('zod', { key: 'value' })
   // session
   const value2 = session_storage.get('name1')
   expectTypeOf(value2).toEqualTypeOf<number>()
@@ -44,6 +49,11 @@ describe('parse', () => {
   test('object', () => {
     local_storage.set('object', { key: 'value' })
     expect(local_storage.get('object')).toEqual({ key: 'value' })
+  })
+
+  test('zod', () => {
+    local_storage.set('zod', { key: 'value' })
+    expect(local_storage.get('zod')).toEqual({ key: 'value' })
   })
 })
 

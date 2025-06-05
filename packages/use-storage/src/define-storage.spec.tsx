@@ -10,12 +10,14 @@ import {
 } from '@testing-library/react'
 import React from 'react'
 import * as v from 'valibot'
+import { z } from 'zod/v4'
 
 const [useLocalStorage, LocalStorage] = defineStorage(
   {
     name1: (data) => String(data ?? ''),
     name2: v.fallback(v.number(), 0),
     object: v.optional(v.object({ key: v.string() })),
+    zod: z.object({ key: z.string() }).optional(),
     anyCookie: (v) => {
       expectTypeOf(v).toEqualTypeOf<unknown>()
       return v
@@ -53,6 +55,13 @@ test('type inferrence', () => {
     >()
     expectTypeOf(LocalStorage.get('name1')).toEqualTypeOf<string>()
   })
+})
+
+test('zod v4', () => {
+  const zod = LocalStorage.get('zod')
+  expectTypeOf(zod).toEqualTypeOf<{ key: string } | undefined>()
+  // does not warn
+  LocalStorage.set('zod', { key: 'value' })
 })
 
 test('should behave like useState with shared state between hooks', () => {

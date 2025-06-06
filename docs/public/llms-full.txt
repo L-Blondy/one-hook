@@ -1224,7 +1224,7 @@ const mousemoveListener = useEventListener(
   document,
   'mousemove',
   (e) => console.log('Mouse Move'),
-  { manual: true }, // Do not attach the listener automatically
+  { autoListen: false }, // Do not attach the listener automatically
 )
 
 const mouseupListener = useEventListener(
@@ -1235,7 +1235,7 @@ const mouseupListener = useEventListener(
     mousemoveListener.remove()
     mouseupListener.remove()
   },
-  { manual: true }, // Do not attach the listener automatically
+  { autoListen: false }, // Do not attach the listener automatically
 )
 ```
 
@@ -1251,12 +1251,12 @@ const mouseupListener = useEventListener(
   }
 />
 
-| Argument                             | Description                                                                                                                                                                                                                                                                |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <pre>(1) <Code>target</Code></pre>   | The element to attach the listener to.                                                                                                                                                                                                                                     |
-| <pre>(2) <Code>type</Code></pre>     | See [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)                                                                                                                                                                   |
-| <pre>(3) <Code>listener</Code></pre> | See [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)                                                                                                                                                                   |
-| <pre>(4) <Code>options</Code></pre>  | Event listener options (see [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)) with the following differences:<br/>- `manual`: if `true` the listener is not attached automatically on mount.<br/>- `signal` is omitted |
+| Argument                             | Description                                                                                                                                                                                                                                                                     |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <pre>(1) <Code>target</Code></pre>   | The element to attach the listener to.                                                                                                                                                                                                                                          |
+| <pre>(2) <Code>type</Code></pre>     | See [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)                                                                                                                                                                        |
+| <pre>(3) <Code>listener</Code></pre> | See [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)                                                                                                                                                                        |
+| <pre>(4) <Code>options</Code></pre>  | Event listener options (see [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#parameters)) with the following differences:<br/>- `autoListen`: if `false` the listener is not attached automatically on mount.<br/>- `signal` is omitted |
 
 <AutoTypeTable
   name="UseEventListenerReturn"

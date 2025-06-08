@@ -51,6 +51,10 @@ export function session<TValidator extends Validator<unknown>>({
       let parsed = value === undefined ? value : deserialize(value)
       return validateSync(validate, parsed)
     },
+    remove(): void {
+      sessionStorage.removeItem(key)
+      emitter.emit('', storage.get())
+    },
     subscribe: (listener: (state: State) => void) =>
       emitter.on((_, state) => listener(state)),
   }

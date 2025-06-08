@@ -23,7 +23,6 @@ describe('type inference', () => {
   })
 
   test('store', () => {
-    // store.get can be called outside of the Provider. In that case the state is undefined
     expectTypeOf(store.get()).toEqualTypeOf<State>()
     expectTypeOf(store.set).toEqualTypeOf<
       React.Dispatch<React.SetStateAction<State>>

@@ -6,19 +6,19 @@ import {
   type ValidatorOutput,
 } from '@1hook/utils/validate'
 
-export type LocalStorageOptions<TValidator extends Validator<unknown>> = {
+export type SessionStorageOptions<TValidator extends Validator<unknown>> = {
   key: string
   validate: TValidator
   serialize?: (value: unknown) => string
   deserialize?: (value: string) => any
 }
 
-export function local<TValidator extends Validator<unknown>>({
+export function session<TValidator extends Validator<unknown>>({
   key,
   validate,
   serialize = defaultSerializer,
   deserialize = defaultDeserializer,
-}: LocalStorageOptions<TValidator>) {
+}: SessionStorageOptions<TValidator>) {
   const emitter = createEmitter()
   type State = ValidatorOutput<TValidator>
 
@@ -28,11 +28,11 @@ export function local<TValidator extends Validator<unknown>>({
         typeof updater === 'function'
           ? (updater as any)(storage.get())
           : updater
-      localStorage.setItem(key, serialize(next))
+      sessionStorage.setItem(key, serialize(next))
       emitter.emit('', next)
     },
     get(): State {
-      let value = localStorage.getItem(key) ?? undefined
+      let value = sessionStorage.getItem(key) ?? undefined
       let parsed = value === undefined ? value : deserialize(value)
       return validateSync(validate, parsed)
     },

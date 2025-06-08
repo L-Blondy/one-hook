@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, expectTypeOf, test } from 'vitest'
-import { defineStore } from './define-store'
+import { defineStore } from '../define-store'
 import {
   cleanup,
   fireEvent,
@@ -8,7 +8,7 @@ import {
   screen,
 } from '@testing-library/react'
 import type React from 'react'
-import { memory } from './storage/memory'
+import { memory } from './memory'
 
 afterEach(() => cleanup())
 

@@ -1,10 +1,9 @@
-import React, { useContext, useLayoutEffect } from 'react'
-import { memoryStorage } from './storage/memory'
+import React, { useLayoutEffect } from 'react'
 
 type Unsubscribe = () => void
 
 export type Storage<T> = {
-  get: () => T | undefined
+  get: () => T
   set(updater: React.SetStateAction<T>): void
   subscribe: (listener: (state: T) => void) => Unsubscribe
 }
@@ -15,46 +14,25 @@ export type StoreProviderProps<State> = {
 }
 
 export type DefineStoreOptions<State> = {
-  storage?: Storage<State>
+  storage: Storage<State>
 }
 
+export type DefineStoreReturn<State> = [
+  useStore: () => readonly [
+    State,
+    (updater: React.SetStateAction<State>) => void,
+  ],
+  store: Storage<State>,
+]
+
 export function defineStore<State>({
-  storage = memoryStorage<State>(),
-}: DefineStoreOptions<State>) {
-  const noContext: any = Symbol()
-  const InitialStateCtx = React.createContext<State>(noContext)
-
-  function Provider(props: StoreProviderProps<State>): React.ReactNode {
-    return (
-      <InitialStateCtx.Provider value={props.initialState}>
-        {props.children}
-      </InitialStateCtx.Provider>
-    )
-  }
-
+  storage,
+}: DefineStoreOptions<State>): DefineStoreReturn<State> {
   function useStore() {
-    const initialState = useContext(InitialStateCtx)
-    if (initialState === noContext) {
-      throw new Error('Store Provider not found')
-    }
-    const [state, setState] = React.useState<State>(() => {
-      const storeValue = storage.get()
-      if (storeValue === undefined) {
-        storage.set(initialState)
-        return initialState
-      }
-
-      return storeValue
-    })
-
+    const [state, setState] = React.useState<State>(storage.get)
     useLayoutEffect(() => storage.subscribe(setState), [])
-
     return [state, storage.set] as const
   }
 
-  return [useStore, Provider, storage] as [
-    useStore: typeof useStore,
-    Provider: typeof Provider,
-    store: NonNullable<typeof storage>,
-  ]
+  return [useStore, storage]
 }

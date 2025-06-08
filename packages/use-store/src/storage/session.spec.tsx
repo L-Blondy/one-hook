@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, expectTypeOf, test } from 'vitest'
-import { defineStore } from './define-store'
+import { defineStore } from '../define-store'
 import {
   cleanup,
   fireEvent,
@@ -8,14 +8,21 @@ import {
   screen,
 } from '@testing-library/react'
 import type React from 'react'
-import { memory } from './storage/memory'
+import { session } from './session'
+import { z } from 'zod/v4'
 
-afterEach(() => cleanup())
+afterEach(() => {
+  cleanup()
+  sessionStorage.clear()
+})
 
 describe('type inference', () => {
   type State = { count: number }
   const [useStore, store] = defineStore({
-    storage: memory({ initialState: { count: 0 } }),
+    storage: session({
+      validate: z.object({ count: z.number() }).default({ count: 0 }),
+      key: 'test',
+    }),
   })
 
   test('useStore', () => {
@@ -39,7 +46,10 @@ describe('type inference', () => {
 
 test('setStore from useStore should update all useStore hooks', () => {
   const [useStore] = defineStore({
-    storage: memory({ initialState: '' }),
+    storage: session({
+      validate: z.string().default(''),
+      key: 'test',
+    }),
   })
 
   function App() {
@@ -74,7 +84,10 @@ test('setStore from useStore should update all useStore hooks', () => {
 
 test('setStore from store.set should update all useStore hooks', () => {
   const [useStore, store] = defineStore({
-    storage: memory({ initialState: '' }),
+    storage: session({
+      validate: z.string().default(''),
+      key: 'test',
+    }),
   })
 
   function App() {
@@ -109,14 +122,20 @@ test('setStore from store.set should update all useStore hooks', () => {
 
 test('store.get should return the initialState initially', () => {
   const [, store] = defineStore({
-    storage: memory({ initialState: '' }),
+    storage: session({
+      validate: z.string().default(''),
+      key: 'test',
+    }),
   })
   expect(store.get()).toBe('')
 })
 
 test('store.get should return the latest value', () => {
   const [useStore, store] = defineStore({
-    storage: memory({ initialState: '' }),
+    storage: session({
+      validate: z.string().default(''),
+      key: 'test',
+    }),
   })
 
   function App() {
@@ -147,7 +166,10 @@ test('store.get should return the latest value', () => {
 
 test('store.set and setStore should support function updater', () => {
   const [useStore, store] = defineStore({
-    storage: memory({ initialState: 0 }),
+    storage: session({
+      validate: z.number().default(0),
+      key: 'test',
+    }),
   })
 
   function App() {

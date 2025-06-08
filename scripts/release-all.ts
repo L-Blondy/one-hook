@@ -23,6 +23,7 @@ await Promise.all(
       consola.success(`RELEASED: v${packageJson.version} ${tag} - ${shortName}`)
     } catch (_) {
       consola.fail(`FAILED  : v${packageJson.version} ${tag} - ${shortName}`)
+      process.exit(1)
     }
   }),
 )

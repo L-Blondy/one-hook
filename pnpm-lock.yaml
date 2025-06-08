@@ -411,6 +411,9 @@ importers:
       '@1hook/use-storage':
         specifier: workspace:*
         version: link:../use-storage
+      '@1hook/use-store':
+        specifier: workspace:*
+        version: link:../use-store
       '@1hook/use-throttle-fn':
         specifier: workspace:*
         version: link:../use-throttle-fn
@@ -1126,9 +1129,6 @@ importers:
 
   packages/use-store:
     dependencies:
-      '@1hook/use-invariant-context':
-        specifier: workspace:*
-        version: link:../use-invariant-context
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils

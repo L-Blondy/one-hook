@@ -1124,6 +1124,27 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.1.0(react@19.1.0)
 
+  packages/use-store:
+    dependencies:
+      '@1hook/use-invariant-context':
+        specifier: workspace:*
+        version: link:../use-invariant-context
+      '@1hook/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@types/react':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.1.0
+      '@types/react-dom':
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.1.1(@types/react@19.1.0)
+      react:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.1.0
+      react-dom:
+        specifier: '>=18.0.0 || >=19.0.0'
+        version: 19.1.0(react@19.1.0)
+
   packages/use-throttle-fn:
     dependencies:
       '@types/react':

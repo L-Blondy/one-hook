@@ -106,14 +106,15 @@ export function cookie<TValidator extends Validator<unknown>>({
         typeof updater === 'function'
           ? (updater as any)(storage.get())
           : updater
-      setCookie(next, {
-        ...cookieOptions,
-        expires: next === undefined ? -1 : cookieOptions.expires,
-      })
+      setCookie(next, cookieOptions)
       emitter.emit('', next)
     },
-    get(allCookies = document.cookie) {
+    get(allCookies = document.cookie): State {
       return parseCookieString(getCookieString(allCookies))
+    },
+    remove(): void {
+      setCookie('' as any, { ...cookieOptions, expires: -1 })
+      emitter.emit('', storage.get())
     },
     subscribe: (listener: (state: State) => void) =>
       emitter.on((_, state) => listener(state)),

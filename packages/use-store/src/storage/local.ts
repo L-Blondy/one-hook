@@ -53,6 +53,10 @@ export function local<TValidator extends Validator<unknown>>({
       let parsed = value === undefined ? value : deserialize(value)
       return validateSync(validate, parsed)
     },
+    remove(): void {
+      localStorage.removeItem(key)
+      emitter.emit('', storage.get())
+    },
     subscribe: (listener: (state: State) => void) =>
       emitter.on((_, state) => listener(state)),
   }

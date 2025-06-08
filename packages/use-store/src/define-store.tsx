@@ -8,31 +8,22 @@ export type Storage<T> = {
   subscribe: (listener: (state: T) => void) => Unsubscribe
 }
 
-export type StoreProviderProps<State> = {
-  children: React.ReactNode
-  initialState: State
+export type DefineStoreOptions<TStorage extends Storage<any>> = {
+  storage: TStorage
 }
 
-export type DefineStoreOptions<State> = {
-  storage: Storage<State>
-}
-
-export type DefineStoreReturn<State> = [
-  useStore: () => readonly [
-    State,
-    (updater: React.SetStateAction<State>) => void,
-  ],
-  store: Storage<State>,
-]
-
-export function defineStore<State>({
+export function defineStore<TStorage extends Storage<any>>({
   storage,
-}: DefineStoreOptions<State>): DefineStoreReturn<State> {
+}: DefineStoreOptions<TStorage>) {
   function useStore() {
+    type State = TStorage extends Storage<infer T> ? T : never
     const [state, setState] = React.useState<State>(storage.get)
     useLayoutEffect(() => storage.subscribe(setState), [])
-    return [state, storage.set] as const
+    return [state, storage.set] as [
+      State,
+      React.Dispatch<React.SetStateAction<State>>,
+    ]
   }
 
-  return [useStore, storage]
+  return [useStore, storage] as const
 }

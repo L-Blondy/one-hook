@@ -41,6 +41,7 @@ describe('type inference', () => {
     expectTypeOf(store.set).toEqualTypeOf<
       React.Dispatch<React.SetStateAction<State>>
     >()
+    expectTypeOf(store.remove).toEqualTypeOf<() => void>()
   })
 })
 

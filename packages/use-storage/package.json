@@ -1,6 +1,6 @@
 {
   "name": "@1hook/use-storage",
-  "version": "0.0.17",
+  "version": "0.0.18-beta.1",
   "files": [
     "dist",
     "README.md"

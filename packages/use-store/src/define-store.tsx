@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react'
+import React from 'react'
 
 type Unsubscribe = () => void
 
@@ -18,7 +18,7 @@ export function defineStore<TStorage extends Storage<any>>({
   function useStore() {
     type State = TStorage extends Storage<infer T> ? T : never
     const [state, setState] = React.useState<State>(storage.get)
-    useLayoutEffect(() => storage.subscribe(setState), [])
+    React.useLayoutEffect(() => storage.subscribe(setState), [])
     return [state, storage.set] as [
       State,
       React.Dispatch<React.SetStateAction<State>>,

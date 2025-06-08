@@ -5,11 +5,26 @@ import {
   type Validator,
   type ValidatorOutput,
 } from '@1hook/utils/validate'
+import { defaultDeserializer, defaultSerializer } from 'src/serialize'
 
 export type SessionStorageOptions<TValidator extends Validator<unknown>> = {
+  /**
+   * The key of the session storage.
+   */
   key: string
+  /**
+   * The validator for the value, can be:
+   * - a function that returns a the value or throws an error
+   * - a `StandardSchema` (e.g. a zod, valibot or arktype schema)
+   */
   validate: TValidator
+  /**
+   * Custom serializer for the session storage.
+   */
   serialize?: (value: unknown) => string
+  /**
+   * Custom deserializer for the session storage.
+   */
   deserialize?: (value: string) => any
 }
 
@@ -50,17 +65,3 @@ export function session<TValidator extends Validator<unknown>>({
 
   return storage
 }
-
-// Main caveats:
-// - `NaN` becomes `null`
-// - `undefined` becomes `null` in arrays
-// - Dates are transformed toISOString
-// - BigInt throw
-
-/**
- * strings are not modified, everything else is transformed into a stringified object
- */
-const defaultSerializer = (v: unknown) =>
-  typeof v === 'string' ? v : JSON.stringify({ $v: v })
-const defaultDeserializer = (v: string) =>
-  v.startsWith('{') ? JSON.parse(v).$v : v

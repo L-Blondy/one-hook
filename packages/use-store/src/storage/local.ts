@@ -5,11 +5,26 @@ import {
   type Validator,
   type ValidatorOutput,
 } from '@1hook/utils/validate'
+import { defaultDeserializer, defaultSerializer } from 'src/serialize'
 
 export type LocalStorageOptions<TValidator extends Validator<unknown>> = {
+  /**
+   * The key of the local storage.
+   */
   key: string
+  /**
+   * The validator for the value, can be:
+   * - a function that returns a the value or throws an error
+   * - a `StandardSchema` (e.g. a zod, valibot or arktype schema)
+   */
   validate: TValidator
+  /**
+   * Custom serializer for the cookie.
+   */
   serialize?: (value: unknown) => string
+  /**
+   * Custom deserializer for the cookie.
+   */
   deserialize?: (value: string) => any
 }
 
@@ -28,7 +43,9 @@ export function local<TValidator extends Validator<unknown>>({
         typeof updater === 'function'
           ? (updater as any)(storage.get())
           : updater
-      localStorage.setItem(key, serialize(next))
+      next === undefined
+        ? localStorage.removeItem(key)
+        : localStorage.setItem(key, serialize(next))
       emitter.emit('', next)
     },
     get(): State {
@@ -50,17 +67,3 @@ export function local<TValidator extends Validator<unknown>>({
 
   return storage
 }
-
-// Main caveats:
-// - `NaN` becomes `null`
-// - `undefined` becomes `null` in arrays
-// - Dates are transformed toISOString
-// - BigInt throw
-
-/**
- * strings are not modified, everything else is transformed into a stringified object
- */
-const defaultSerializer = (v: unknown) =>
-  typeof v === 'string' ? v : JSON.stringify({ $v: v })
-const defaultDeserializer = (v: string) =>
-  v.startsWith('{') ? JSON.parse(v).$v : v

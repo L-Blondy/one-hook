@@ -19,7 +19,7 @@ function main() {
     : `use-${packageName}`
 
   try {
-    const command = `pnpm run align && turbo --filter "./packages/${fullPackageName}" dev`
+    const command = `pnpm run align && cd ./packages/${fullPackageName} && pnpm dev`
     consola.info(`Running: ${command}`)
     execSync(command, { stdio: 'inherit' })
   } catch (error) {

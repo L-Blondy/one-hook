@@ -8,7 +8,7 @@
     "build": "pnpm run align && turbo --filter \"./packages/*\" build",
     "bumpp": "bumpp --recursive --no-commit --no-push --no-tag",
     "clean": "rm -rf node_modules packages/*/node_modules docs/*/node_modules",
-    "dev:storage": "pnpm run align && turbo --filter \"./packages/use-storage\" dev",
+    "dev": "bun scripts/dev.ts",
     "dev:docs": "cd docs && pnpm run docs",
     "dev:hooks": "pnpm run align && turbo --concurrency 50 --filter \"./packages/*\" dev",
     "test": "turbo test",

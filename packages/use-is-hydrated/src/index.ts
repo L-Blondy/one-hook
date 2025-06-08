@@ -1,8 +1,11 @@
-import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
-import React from 'react'
+import { useSyncExternalStore } from 'react'
 
-export const useIsHydrated = () => {
-  const [isHydrated, setIsHydrated] = React.useState(false)
-  useIsomorphicLayoutEffect(() => setIsHydrated(true), [])
-  return isHydrated
+const nosub = () => () => {}
+
+export function useIsHydrated() {
+  return useSyncExternalStore(
+    nosub,
+    () => true,
+    () => false,
+  )
 }

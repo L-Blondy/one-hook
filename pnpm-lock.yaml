@@ -215,6 +215,9 @@ importers:
       '@1hook/use-storage':
         specifier: workspace:*
         version: link:../packages/use-storage
+      '@1hook/use-store':
+        specifier: workspace:*
+        version: link:../packages/use-store
       '@1hook/use-throttle-fn':
         specifier: workspace:*
         version: link:../packages/use-throttle-fn

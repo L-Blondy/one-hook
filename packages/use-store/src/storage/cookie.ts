@@ -1,12 +1,11 @@
+import React from 'react'
 import {
   validateSync,
   type Validator,
   type ValidatorOutput,
 } from '@1hook/utils/validate'
 import { createEmitter } from '@1hook/utils/emitter'
-import type React from 'react'
 import { defaultDeserializer, defaultSerializer } from 'src/serialize'
-import { isServer } from '@1hook/utils/is-server'
 
 export type CookieStorageOptions<TValidator extends Validator<unknown>> = {
   /**
@@ -56,76 +55,72 @@ export type CookieStorageOptions<TValidator extends Validator<unknown>> = {
   deserialize?: (value: string) => any
 }
 
-export const cookie = Object.assign(
-  <TValidator extends Validator<unknown>>({
-    name,
-    validate,
-    disableEncoding,
-    serialize = defaultSerializer,
-    deserialize = defaultDeserializer,
-    ...cookieOptions
-  }: CookieStorageOptions<TValidator>) => {
-    const emitter = createEmitter()
-    type State = ValidatorOutput<TValidator>
+export const cookie = <TValidator extends Validator<unknown>>({
+  name,
+  validate,
+  disableEncoding,
+  serialize = defaultSerializer,
+  deserialize = defaultDeserializer,
+  ...cookieOptions
+}: CookieStorageOptions<TValidator>) => {
+  const emitter = createEmitter()
+  type State = ValidatorOutput<TValidator>
 
-    const encode = disableEncoding ? (str: string) => str : encodeURIComponent
-    const decode = disableEncoding ? (str: string) => str : decodeURIComponent
+  const encode = disableEncoding ? (str: string) => str : encodeURIComponent
+  const decode = disableEncoding ? (str: string) => str : decodeURIComponent
 
-    function setCookie(
-      value: State,
-      cookieConfig: Pick<
-        CookieStorageOptions<TValidator>,
-        'domain' | 'expires' | 'sameSite' | 'secure'
-      >,
-    ) {
-      let stringified = encode(serialize(value))
-      let cookie = `${name}=${stringified}; Path=/`
-      if (cookieConfig.sameSite) cookie += `; SameSite=${cookieConfig.sameSite}`
-      if (cookieConfig.expires)
-        cookie += `; Expires=${toUTCString(cookieConfig.expires)}`
-      if (cookieConfig.secure) cookie += `; Secure`
-      if (cookieConfig.domain) cookie += `; Domain=${cookieConfig.domain}`
-      document.cookie = cookie
-      return stringified
+  function setCookie(
+    value: State,
+    cookieConfig: Pick<
+      CookieStorageOptions<TValidator>,
+      'domain' | 'expires' | 'sameSite' | 'secure'
+    >,
+  ) {
+    let stringified = encode(serialize(value))
+    let cookie = `${name}=${stringified}; Path=/`
+    if (cookieConfig.sameSite) cookie += `; SameSite=${cookieConfig.sameSite}`
+    if (cookieConfig.expires)
+      cookie += `; Expires=${toUTCString(cookieConfig.expires)}`
+    if (cookieConfig.secure) cookie += `; Secure`
+    if (cookieConfig.domain) cookie += `; Domain=${cookieConfig.domain}`
+    document.cookie = cookie
+    return stringified
+  }
+
+  function getCookieString(allCookies: string): string | undefined {
+    for (let cookie of allCookies.split(';')) {
+      cookie = cookie.trim()
+      const exists = cookie.startsWith(`${name}=`)
+      if (exists) return decode(cookie.replace(`${name}=`, ''))
     }
+  }
 
-    function getCookieString(allCookies: string): string | undefined {
-      for (let cookie of allCookies.split(';')) {
-        cookie = cookie.trim()
-        const exists = cookie.startsWith(`${name}=`)
-        if (exists) return decode(cookie.replace(`${name}=`, ''))
-      }
-    }
+  function parseCookieString(value: string | undefined): State {
+    const parsed = value === undefined ? undefined : deserialize(value)
+    return validateSync(validate, parsed)
+  }
 
-    function parseCookieString(value: string | undefined): State {
-      const parsed = value === undefined ? undefined : deserialize(value)
-      return validateSync(validate, parsed)
-    }
-
-    const storage = {
-      set(updater: React.SetStateAction<State>): void {
-        const next: State =
-          typeof updater === 'function'
-            ? (updater as any)(storage.get())
-            : updater
-        setCookie(next, cookieOptions)
-        emitter.emit('', next)
-      },
-      get(): State {
-        const allCookies = isServer ? cookie.getServerCookie() : document.cookie
-        return parseCookieString(getCookieString(allCookies))
-      },
-      remove(): void {
-        setCookie('' as any, { ...cookieOptions, expires: -1 })
-        emitter.emit('', storage.get())
-      },
-      subscribe: (listener: (state: State) => void) =>
-        emitter.on((_, state) => listener(state)),
-    }
-    return storage
-  },
-  { getServerCookie: () => '' },
-)
+  const storage = {
+    set(updater: React.SetStateAction<State>): void {
+      const next: State =
+        typeof updater === 'function'
+          ? (updater as any)(storage.get())
+          : updater
+      setCookie(next, cookieOptions)
+      emitter.emit('', next)
+    },
+    get(): State {
+      return parseCookieString(getCookieString(document.cookie))
+    },
+    remove(): void {
+      setCookie('' as any, { ...cookieOptions, expires: -1 })
+      emitter.emit('', storage.get())
+    },
+    subscribe: (listener: (state: State) => void) =>
+      emitter.on((_, state) => listener(state)),
+  }
+  return storage
+}
 
 function toUTCString(expires: number | Date) {
   return (

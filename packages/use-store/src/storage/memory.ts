@@ -1,8 +1,8 @@
 import type React from 'react'
-import type { Store } from './define-store'
+import type { Storage } from '../define-store'
 import { createEmitter } from '@1hook/utils/emitter'
 
-export function createInMemoryStore<T>(): Store<T> {
+export function memoryStorage<T>(): Storage<T> {
   const emitter = createEmitter()
   const map = new Map<'', T>()
   const store = {

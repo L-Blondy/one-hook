@@ -1,5 +1,5 @@
 export {
   defineStore,
   type StoreProviderProps,
-  type Store,
+  type Storage as Store,
 } from './define-store'

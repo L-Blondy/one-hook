@@ -45,6 +45,7 @@ export type DefineStorageReturn<TValidator extends Validator<unknown>> = [
     set(updater: React.SetStateAction<ValidatorOutput<TValidator>>): void
     get(): ValidatorOutput<TValidator>
     remove(): void
+    key: string
     subscribe: (
       listener: (state: ValidatorOutput<TValidator>) => void,
     ) => Unsubscribe
@@ -89,6 +90,7 @@ export function defineStorage<TValidator extends Validator<unknown>>({
       emitter.emit(service.get())
     },
     subscribe: (listener: (state: State) => void) => emitter.on(listener),
+    key,
   }
 
   // cross-tab sync

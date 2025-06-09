@@ -71,6 +71,7 @@ export type DefineCookieReturn<TValidator extends Validator<unknown>> = [
     set(updater: React.SetStateAction<ValidatorOutput<TValidator>>): void
     get(allCookies?: string): ValidatorOutput<TValidator>
     remove(): void
+    name: string
     subscribe: (
       listener: (state: ValidatorOutput<TValidator>) => void,
     ) => Unsubscribe
@@ -151,6 +152,7 @@ export function defineCookie<TValidator extends Validator<unknown>>({
       notifyOtherTabs()
     },
     subscribe: (listener: (state: State) => void) => emitter.on(listener),
+    name,
   }
 
   function useCookie() {

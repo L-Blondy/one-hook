@@ -126,7 +126,7 @@ export function defineCookie<TValidator extends Validator<unknown>>({
       return parseCookieString(getCookieString(allCookies))
     },
     remove(): void {
-      setCookie('' as any, { ...cookieOptions, expires: -1 })
+      setCookie('' as State, { ...cookieOptions, expires: -1 })
       emitter.emit(cookie.get())
       notifyOtherTabs()
     },

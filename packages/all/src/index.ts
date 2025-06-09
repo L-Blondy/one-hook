@@ -1,6 +1,5 @@
 export * from '@1hook/use-actions'
 export * from '@1hook/use-audio-analyser'
-export * from '@1hook/use-contextual-state'
 export * from '@1hook/use-cookie'
 export * from '@1hook/use-countdown'
 export * from '@1hook/use-debounce-fn'

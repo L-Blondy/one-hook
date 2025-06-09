@@ -1,6 +1,6 @@
 {
   "name": "@1hook/all",
-  "version": "0.0.18-beta.2",
+  "version": "0.0.18",
   "files": [
     "dist",
     "README.md"
@@ -30,7 +30,6 @@
   "dependencies": {
     "@1hook/use-actions": "workspace:*",
     "@1hook/use-audio-analyser": "workspace:*",
-    "@1hook/use-contextual-state": "workspace:*",
     "@1hook/use-cookie": "workspace:*",
     "@1hook/use-countdown": "workspace:*",
     "@1hook/use-debounce-fn": "workspace:*",

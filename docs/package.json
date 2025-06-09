@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "0.0.18-beta.2",
+  "version": "0.0.18",
   "private": true,
   "scripts": {
     "build": "next build",
@@ -12,7 +12,6 @@
   "dependencies": {
     "@1hook/use-actions": "workspace:*",
     "@1hook/use-audio-analyser": "workspace:*",
-    "@1hook/use-contextual-state": "workspace:*",
     "@1hook/use-cookie": "workspace:*",
     "@1hook/use-countdown": "workspace:*",
     "@1hook/use-debounce-fn": "workspace:*",

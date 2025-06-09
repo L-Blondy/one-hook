@@ -1,6 +1,6 @@
 {
   "name": "@1hook/use-mutation-observer",
-  "version": "0.0.18-beta.2",
+  "version": "0.0.18",
   "files": [
     "dist",
     "README.md"

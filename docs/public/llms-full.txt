@@ -296,122 +296,13 @@ function CanvasVisualizer() {
 
 ---
 
-# useContextualState
-
-useState with a context.
-
-## Installation
-
-```package-install
-npm install @1hook/use-contextual-state
-```
-
-## Quick Start
-
-<Steps>
-<Step>
-### Define the hook
-
-Pass the state **type** to `defineContextualState` to ensure type safety throughout your application.
-
-```tsx twoslash title="use-count.ts" include use-count
-import { defineContextualState } from '@1hook/use-contextual-state'
-
-export const [CountProvider, useCount] = defineContextualState<number>()
-```
-
-</Step>
-<Step>
-### Place the Provider
-
-Place the Provider in your component tree and initialize the state by passing `initialValues` to the provider.
-
-```tsx twoslash
-// @noErrors
-// @include: use-count
-// ---cut---
-'use client'
-import { CountProvider } from './use-count'
-
-function Providers(props: { children: ReactNode }) {
-  return <CountProvider initialState={0}>{props.children}</CountProvider>
-}
-```
-
-</Step>
-<Step>
-### Use like useState
-
-The state can be used like `useState` without initial state.
-
-```tsx twoslash
-// @include: use-count
-// ---cut---
-const [count, setCount] = useCount()
-```
-
-</Step>
-</Steps>
-
-## Prevent unnecessary rerenders
-
-To help prevent unnecessary rerenders, `defineContextualState` provides a `useSetState` hook. \
-It helps prevent unnecessary rerenders by not listening to the state.
-
-```tsx twoslash title="use-count.ts" include use-set-count
-import { defineContextualState } from '@1hook/use-contextual-state'
-// ---cut---
-export const [Provider, useCount, useSetCount] = defineContextualState<number>()
-```
-
-✅ No rerender when count changes:
-
-```tsx twoslash
-// @noErrors
-// @include: use-set-count
-// ---cut---
-import { useSetCount } from './use-count'
-
-function Increment1() {
-  const setCount = useSetCount()
-
-  return (
-    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
-  )
-}
-```
-
-❌ Rerenders when count changes:
-
-```tsx twoslash
-// @noErrors
-// @include: use-set-count
-// ---cut---
-import { useCount } from './use-count'
-
-function Increment1() {
-  const [count, setCount] = useCount()
-
-  return (
-    <button onClick={() => setCount((count) => count + 1)}>Increment</button>
-  )
-}
-```
-
----
-
-# useCookie (SSR only)
+# useCookie
 
 A simple typesafe state manager using cookies.
 
-<Callout type="info">
-  This hook is designed for SSR frameworks like Next.js or Remix.
-  <br /> If you need a persistent state manager for Single Page Applications
-  (SPA), use [useStorage](/docs/hooks/use-storage) instead.
-</Callout>
-
 ## Features
 
+- **Avoid Layout Shifts:** The state is known by both the client and the server.
 - **Built-in Validation:** Validate with [zod](https://zod.dev/), [valibot](https://valibot.dev/), [arktype](https://arktype.dev/) or with a simple function.
 - **Tab Sync:** The cookie state is synced across multiple browser tabs.
 - **Component Sync:** The cookie state is synced across all components.
@@ -426,92 +317,81 @@ npm install @1hook/use-cookie
 ## Quick Start
 
 <Steps>
+
 <Step>
-### Define the cookies
+### Place the Provider (once per App)
 
-Use defineCookies to configure validation rules and expiration settings for each cookie.
+Put a `"use client"` directive on the Provider:
 
-```ts twoslash title="cookies.ts" include cookies
+```tsx twoslash title="cookie-provider.tsx"
 'use client'
-import { z } from 'zod'
-import { defineCookies } from '@1hook/use-cookie'
+export { ServerCookieProvider } from '@1hook/use-cookie'
+```
 
-export const { CookieProvider, useCookie } = defineCookies({
-  // "search" cookie with a string value
-  search: {
-    validate: z.string().default(''),
-    expires: 365, // days from now
-  },
-  // "selected" cookie with an optional object value
-  selected: {
-    validate: z.object({ id: z.number(), name: z.string() }).optional(),
-    expires: new Date('2026-12-12'), // specific date
-    secure: true,
-    domain: 'example.com',
-    sameSite: 'lax',
-  },
+Place it at the root of your application, in a [Server Component](https://react.dev/reference/rsc/server-components)
+
+```tsx twoslash title="providers.tsx"
+// @noErrors
+import { headers } from 'next/headers'
+import { ServerCookieProvider } from './cookie-provider'
+
+export async function Providers(props: { children: ReactNode }) {
+  return (
+    <ServerCookieProvider value={(await headers()).get('cookie')}>
+      {props.children}
+    </ServerCookieProvider>
+  )
+}
+```
+
+</Step>
+
+<Step>
+### Setup a cookie
+
+Use defineCookie to configure validation rules and expiration settings for the cookie.
+
+```ts twoslash title="sidebar-width.ts" include cookies
+import { z } from 'zod'
+import { defineCookie } from '@1hook/use-cookie'
+
+export const [useSidebarWidth] = defineCookie({
+  name: 'sidebar-width',
+  validate: z.number().default(200),
+  expires: 365, // days from now
+  sameSite: 'lax',
 })
 ```
 
 </Step>
-<Step>
-### Place the Provider in a Server Component.
-
-Place the `CookieProvider` in a [Server Component](https://react.dev/reference/rsc/server-components), preferably at the root of your application.
-
-```tsx twoslash title="providers.tsx"
-// @noErrors
-// @include: cookies
-// ---cut---
-import { headers } from 'next/headers'
-import { CookieProvider } from './cookies'
-
-export async function Providers(props: { children: ReactNode }) {
-  return (
-    <CookieProvider headers={await headers()}>{props.children}</CookieProvider>
-  )
-}
-```
-
-</Step>
 
 <Step>
-### Read and Write cookies.
-
-Call `useCookie` with the cookie name you want to use.
-
-Each cookie has 3 properties:
-
-- `value`: The current value of the cookie.
-- `set`: A function to update the cookie value.
-- `remove`: A function to remove the cookie.
-
-```tsx twoslash
-// @noErrors
-// @include: cookies
-// ---cut---
-import { useCookie } from './cookies'
-
-function Search() {
-  const search = useCookie('search')
-
-  return (
-    <form>
-      <input
-        onChange={(e) => search.set(e.target.value)}
-        value={search.value}
-      />
-      <button type="button" onClick={() => search.clear()}>
-        Clear search
-      </button>
-    </form>
-  )
-}
-```
+### Read and Write.
 
 Changes to the cookie are synchronized across all instances of the hook and across browser tabs.
 
+```tsx twoslash title="layout.tsx"
+function Sidebar(props: { width: number; onResize: (width: number) => void }) {
+  return <div />
+}
+
+// @noErrors
+// @include: cookies
+// ---cut---
+function Layout() {
+  const [width, setWidth] = useSidebarWidth()
+
+  return (
+    <div>
+      <Sidebar width={width} onResize={setWidth} />
+      <main>...</main>
+    </div>
+  )
+}
+```
+
 </Step>
+
 </Steps>
 
 ## Validation
@@ -522,111 +402,78 @@ To ensure data integrity, cookies should be validated.
 
 For simple cases you can use a function to validate the cookie value.
 
-The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
-
 ```ts twoslash
-import { defineCookies } from '@1hook/use-cookie'
+import { defineCookie } from '@1hook/use-cookie'
 // ---cut---
-defineCookies({
-  search: {
-    validate: (value) => String(value ?? ''),
-  },
+defineCookie({
+  name: 'search',
+  validate: (value) => String(value ?? ''),
 })
 ```
 
 ### 👉 Schema validation
 
-For more complex cases you can use a schema to validate the cookie value.
-
-<Callout type="info">
-  Since we follow the [Standard
-  Schema](https://github.com/standard-schema/standard-schema) specification, you
-  can choose between [zod 3.24+](https://zod.dev/), [valibot
-  1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/) to
-  validate the cookies.
-</Callout>
-
-The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
+For more complex cases you can use a schema to validate the cookie value. Compatible validation libraries include [zod 3.24+](https://zod.dev/), [valibot
+1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/). Check out [Standard
+Schema](https://github.com/standard-schema/standard-schema) for more info.
 
 ```ts twoslash
-import { defineCookies } from '@1hook/use-cookie'
+import { defineCookie } from '@1hook/use-cookie'
 // ---cut---
 import { z } from 'zod'
 
-defineCookies({
-  search: {
-    validate: z.string().default(''),
-  },
+defineCookie({
+  name: 'search',
+  validate: z.string().default(''),
 })
 ```
 
-## Read, Write & Clear outside of React
+## Outside of React
 
-You can read and write cookies outside of React using the `Cookies` object.
+`defineCookie` returns a standalone utility object that provides methods to `get`, `set` or `clear` the cookie outside of React components.
 
 ```ts twoslash include cookies-outside
 import { z } from 'zod'
-import { defineCookies } from '@1hook/use-cookie'
+import { defineCookie } from '@1hook/use-cookie'
 // ---cut---
-export const { CookieProvider, useCookie, Cookies } = defineCookies({
-  accessToken: {
-    validate: z.string().optional(),
-    expires: 7, // days from now
-  },
+export const [useCookie, Cookie] = defineCookie({
+  name: 'my-cookie',
+  validate: z.string().optional(),
+  expires: 7,
 })
 ```
 
-Using `Cookies` to set or clear cookies will still trigger a **React re-render**.
+Using it still triggers a **React re-render**.
 
 ```tsx twoslash
 // @noErrors
 // @include: cookies-outside
 // ---cut---
-import { Cookies } from './cookies'
+import { Cookie } from './cookie'
 
-// Write a cookie
-Cookies.set('accessToken', '123')
+// Write
+Cookie.set('new-value')
 
-// Read a cookie
-const accessToken = Cookies.get('accessToken')
+// Read
+Cookie.get()
 
-// Clear specific cookies
-Cookies.clear(['accessToken'])
-
-// Clear all cookies
-Cookies.clear()
+// Clear
+Cookie.clear()
 ```
 
-## Read cookies on the server
+## On the server
 
-To read cookies on the server, use `Cookies.fromHeaders`.
+The Cookie utility can read cookies from the cookie header.
 
 ```tsx twoslash
 // @noErrors
 // @include: cookies-outside
-// ---cut---
 import { headers } from 'next/headers'
-import { Cookies } from './cookies'
-
-const accessToken = Cookies.fromHeaders(await headers()).get('accessToken')
-```
-
-## Custom (de)serialization
-
-In some cases you might need to customize the serialization and deserialization of the cookie value.
-
-You can do this by using the `serialize` and `deserialize` options.
-
-```ts twoslash
-import { defineCookies } from '@1hook/use-cookie'
+import { Cookie } from './cookie'
 // ---cut---
-defineCookies(
-  { search: { validate: (value) => String(value ?? '') } },
-  {
-    serialize: (value) => JSON.stringify(value), // Custom serialization
-    deserialize: (value) => JSON.parse(value), // Custom deserialization
-  },
-)
+const cookieHeader = (await headers()).get('cookie')
+
+const token = Cookies.get(cookieHeader)
 ```
 
 <hr />
@@ -635,66 +482,44 @@ defineCookies(
 
 ### 👉 defineCookies
 
-Generate typesafe hooks and a Provider from a cookie configuration object.
-
 ```ts
-function defineCookies(
-  config: Record<string, CookieConfig>,
-  options?: CookieServiceOptions,
-): {
-  CookieProvider
-  useCookie
-  Cookies
-}
+function defineCookie(options: DefineCookieOptions): [useCookie, Cookie]
 ```
 
 <AutoTypeTable
-  name="CookieConfig"
-  description="The config of a single cookie."
+  name="DefineCookieOptions"
+  description="The options of the cookie."
   path="packages/use-cookie/src/index.ts"
 />
 
-<AutoTypeTable
-  name="CookieServiceOptions"
-  description="The options of the cookie service."
-  path="packages/use-cookie/src/index.ts"
-/>
+### 👉 ServerCookieProvider
 
-### 👉 CookieProvider
+You can skip this component when building Single Page Applications (SPA).
 
-The CookieProvider component should be rendered at the highest possible level in your application's component tree, and must be used within a server component.
+In SSR frameworks it should be rendered at the top of the component tree, and must be used within a server component.
 
 ```tsx
-function CookieProvider(props: CookieProviderProps): ReactNode
+function CookieProvider(props: Props): ReactNode
 ```
 
 <AutoTypeTable
-  name="CookieProviderProps"
-  description="The props of the CookieProvider component."
-  path="packages/use-cookie/src/index.ts"
+  title="Props"
+  name="ServerCookieProviderProps"
+  description="The props of the ServerCookieProvider component."
+  path="packages/use-cookie/src/define-cookie.tsx"
 />
 
 ### 👉 useCookie
 
-Manage cookie state providing the cookie name.
+Manage cookie state like with useState.
 
 ```ts
-function useCookie(name: string): { value; set; clear; get }
+function useCookie(): [state, setState]
 ```
 
-`set`, `clear` and `get` are convenience wrappers around `Cookies` methods.
+### 👉 Cookie
 
-### 👉 Cookies
-
-Read and write cookies outside of React.
-
-- `get`, `set`, `clear` are client only methods.
-- `set` and `clear` will trigger a **React re-render**
-- use `fromHeaders` to read cookies on the server.
-
-```ts
-const Cookies = { set; clear; get; fromHeaders }
-```
+Read and write the cookie outside of React.
 
 ---
 
@@ -2465,15 +2290,9 @@ console.log(state) // state === 'idle'
 
 ---
 
-# useStorage (SPA only)
+# useStorage
 
 A simple typesafe state manager using localStorage or sessionStorage.
-
-<Callout type="info">
-  This hook is designed for Single Page Applications (SPA).
-  <br /> If you need a persistent state manager for an SSR framework, use
-  [useCookie](/docs/hooks/use-cookie) instead.
-</Callout>
 
 ## Features
 
@@ -2491,52 +2310,40 @@ npm install @1hook/use-storage
 
 <Steps>
 <Step>
-### Define your storage setup.
+### Setup the State
 
-Use `defineStorage` to configure validation rules for each key and specify the storage type (`'local'` or `'session'`).
+Use defineCookie to configure validation rules and the type of storage.
 
-```tsx twoslash title='local-storage.ts' include use-local-storage
-'use client'
+```tsx twoslash title="sidebar-width.ts" include sidebar-width
 import { z } from 'zod'
 import { defineStorage } from '@1hook/use-storage'
 
-export const [useLocalStorage, LocalStorage] = defineStorage(
-  {
-    // "search" storage key with a string value
-    search: z.string().default(''),
-    // "selected" storage key with an optional object value
-    selected: z.object({ id: z.number(), name: z.string() }).optional(),
-  },
-  { type: 'local' },
-)
+export const [useSidebarWidth] = defineStorage({
+  key: 'sidebar-width',
+  validate: z.number().default(200),
+  type: 'local',
+})
 ```
 
 </Step>
 
 <Step>
-### Read and Write to the storage.
+### Read and Write.
 
-Instead of the initial state, pass the storage key you want to read / write from.
+Changes to the state are synchronized across all instances of the hook and across browser tabs.
 
-```tsx twoslash
+```tsx twoslash title="layout.tsx"
 // @noErrors
-// @include: use-local-storage
+// @include: sidebar-width
 // ---cut---
-import { useLocalStorage } from './local-storage'
-
-function Search() {
-  const search = useLocalStorage('search')
+function Layout() {
+  const [width, setWidth] = useSidebarWidth()
 
   return (
-    <form>
-      <input
-        onChange={(e) => search.set(e.target.value)}
-        value={search.value}
-      />
-      <button type="button" onClick={() => search.clear()}>
-        Clear search
-      </button>
-    </form>
+    <div>
+      <Sidebar width={width} onResize={setWidth} />
+      <main>...</main>
+    </div>
   )
 }
 ```
@@ -2548,108 +2355,71 @@ Storage updates are automatically synchronized across all instances of the hook 
 
 ## Validation
 
-To ensure data integrity, the storage values should be validated.
+To ensure data integrity, the storage should be validated.
 
 ### 👉 Functional validation
 
 For simple cases you can use a function to validate the storage.
 
-The following example ensures the search is a string & the count is a number,
-and adds a fallback value in case the value is `null | undefined`.
-
 ```ts twoslash
 import { defineStorage } from '@1hook/use-storage'
 // ---cut---
-defineStorage(
-  {
-    search: (value) => String(value ?? ''),
-    count: (value) => Number(value ?? 0),
-  },
-  { type: 'local' },
-)
+defineStorage({
+  key: 'search',
+  validate: (value) => String(value ?? ''),
+  type: 'local',
+})
 ```
 
 ### 👉 Schema validation
 
-For more complex cases you can use a schema to validate the cookie value.
-
-<Callout type="info">
-  Since we follow the [Standard
-  Schema](https://github.com/standard-schema/standard-schema) specification, you
-  can choose between [zod 3.24+](https://zod.dev/), [valibot
-  1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/) to
-  validate the cookies.
-</Callout>
-
-The following example ensures the search is a string & the count is a number,
-and adds a fallback value in case the value is `null | undefined`.
+For more complex cases you can use a schema to validate the storage. Compatible validation libraries include [zod 3.24+](https://zod.dev/), [valibot
+1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/). Check out [Standard
+Schema](https://github.com/standard-schema/standard-schema) for more info.
 
 ```ts twoslash
 import { defineStorage } from '@1hook/use-storage'
 // ---cut---
 import { z } from 'zod'
 
-defineStorage(
-  {
-    search: z.string().default(''),
-    count: z.number().default(0),
-  },
-  { type: 'local' },
-)
+defineStorage({
+  key: 'search',
+  validate: z.string().default(''),
+  type: 'local',
+})
 ```
 
-## Read, Write & Clear outside of React
+## Outside of React
 
-You can read and write storage outside of React by using the `Storage` object.
+`defineStorage` returns a standalone utility object that provides methods to `get`, `set` or `clear` the value outside of React components.
 
-```ts twoslash include clientstorage
+```ts twoslash include storage-outside
 import { z } from 'zod'
 import { defineStorage } from '@1hook/use-storage'
 // ---cut---
-export const [useLocalStorage, LocalStorage] = defineStorage(
-  { accessToken: z.string().optional() },
-  { type: 'local' },
-)
+export const [useStorage, Storage] = defineStorage({
+  key: 'my-storage',
+  validate: z.string().optional(),
+  type: 'local',
+})
 ```
 
-Using the `Storage` to set or clear storage will still trigger a **React re-render**.
+Using it still triggers a **React re-render**.
 
 ```tsx twoslash
 // @noErrors
-// @include: clientstorage
+// @include: storage-outside
 // ---cut---
-import { LocalStorage } from './storage'
+import { Storage } from './storage'
 
 // Write
-LocalStorage.set('accessToken', '123')
+Storage.set('new-value')
 
 // Read
-const accessToken = LocalStorage.get('accessToken')
+Storage.get()
 
-// Clear specific key
-LocalStorage.clear(['accessToken'])
-
-// Clear all keys
-LocalStorage.clear()
-```
-
-## Custom (de)serialization
-
-In some cases you might need to customize the serialization and deserialization of the cookie value.
-
-You can do this by using the `serialize` and `deserialize` options.
-
-```ts twoslash
-import { defineStorage } from '@1hook/use-storage'
-// ---cut---
-defineStorage(
-  { search: (value) => String(value ?? '') },
-  {
-    type: 'local',
-    serialize: (value) => JSON.stringify(value), // Custom serialization
-    deserialize: (value) => JSON.parse(value), // Custom deserialization
-  },
-)
+// Clear
+Storage.clear()
 ```
 
 <hr />
@@ -2658,36 +2428,27 @@ defineStorage(
 
 ### 👉 defineStorage
 
-Generate typesafe hooks and a Provider from a storage configuration object.
-
 ```ts
-function defineStorage(
-  config: Record<string, StorageConfig>,
-  options?: StorageServiceOptions,
-): [useStorage, Storage]
+function defineStorage(options?: DefineStorageOptions): [useStorage, Storage]
 ```
 
 <AutoTypeTable
-  name="StorageServiceOptions"
+  name="DefineStorageOptions"
   description="The options of the storage service."
   path="packages/use-storage/src/index.ts"
 />
 
 ### 👉 useStorage
 
-Manage storage state providing the storage key.
+Manage storage state like with useState.
 
 ```ts
-function useStorage(key: string): { value; set; clear; get }
+function useStorage(): [state, setState]
 ```
 
 ### 👉 Storage
 
 Read and write to the storage outside of React.
-
-```ts
-const Storage = { set; clear; get }
-```
 
 ---
 

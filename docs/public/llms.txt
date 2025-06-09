@@ -5,8 +5,7 @@
 - [Introduction](https://one-hook.vercel.app/): one-hook is a carefully crafted collection of React hooks, where each hook does one thing and does it well. Following the Unix philosophy of modularity, each hook is independently packaged and can be installed separately, ensuring minimal bundle size and maximum flexibility.
 - [useActions](https://one-hook.vercel.app/docs/use-actions): A simpler and typesafe alternative to useReducer.
 - [useAudioAnalyser](https://one-hook.vercel.app/docs/use-audio-analyser): Real-time audio analysis based on the Web Audio API.
-- [useContextualState](https://one-hook.vercel.app/docs/use-contextual-state): useState with a context.
-- [useCookie (SSR only)](https://one-hook.vercel.app/docs/use-cookie): A simple typesafe state manager using cookies.
+- [useCookie](https://one-hook.vercel.app/docs/use-cookie): A simple typesafe state manager using cookies.
 - [useCountdown](https://one-hook.vercel.app/docs/use-countdown): Countdown utility based on useInterval.
 - [useDebounceFn](https://one-hook.vercel.app/docs/use-debounce-fn): A debounce function, reactified.
 - [useDebounceValue](https://one-hook.vercel.app/docs/use-debounce-value): Debounce a value.
@@ -36,7 +35,7 @@
 - [useResizeObserver](https://one-hook.vercel.app/docs/use-resize-observer): The React version of the ResizeObserver API.
 - [useSize](https://one-hook.vercel.app/docs/use-size): Track the size of an element.
 - [useSpeechSynthesis](https://one-hook.vercel.app/docs/use-speech-synthesis): Web Speech API synthesis, reactified.
-- [useStorage (SPA only)](https://one-hook.vercel.app/docs/use-storage): A simple typesafe state manager using localStorage or sessionStorage.
+- [useStorage](https://one-hook.vercel.app/docs/use-storage): A simple typesafe state manager using localStorage or sessionStorage.
 - [useThrottleFn](https://one-hook.vercel.app/docs/use-throttle-fn): A throttle function, reactified.
 - [useTimeout](https://one-hook.vercel.app/docs/use-timeout): setTimeout, reactified.
 - [useUnmountEffect](https://one-hook.vercel.app/docs/use-unmount-effect): Execute the callback when the component unmounts (cleanup effect).

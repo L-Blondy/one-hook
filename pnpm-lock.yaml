@@ -1087,9 +1087,9 @@ importers:
 
   packages/use-storage:
     dependencies:
-      '@1hook/use-isomorphic-layout-effect':
+      '@1hook/use-is-hydrated':
         specifier: workspace:*
-        version: link:../use-isomorphic-layout-effect
+        version: link:../use-is-hydrated
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils

@@ -19,6 +19,10 @@ export type LocalStorageOptions<TValidator extends Validator<unknown>> = {
    */
   validate: TValidator
   /**
+   * The type of the storage.
+   */
+  type: 'local' | 'session'
+  /**
    * Custom serializer for the cookie.
    */
   serialize?: (value: unknown) => string
@@ -28,20 +32,22 @@ export type LocalStorageOptions<TValidator extends Validator<unknown>> = {
   deserialize?: (value: string) => any
 }
 
-export function local<TValidator extends Validator<unknown>>({
+export function defineStorage<TValidator extends Validator<unknown>>({
   key,
   validate,
+  type,
   serialize = defaultSerializer,
   deserialize = defaultDeserializer,
 }: LocalStorageOptions<TValidator>) {
   type State = ValidatorOutput<TValidator>
   const emitter = createEmitter<State>()
+  // const storage = type === 'local' ? localStorage : sessionStorage
 
-  const storage = {
+  const service = {
     set(updater: React.SetStateAction<State>): void {
       const next: State =
         typeof updater === 'function'
-          ? (updater as any)(storage.get())
+          ? (updater as any)(service.get())
           : updater
       next === undefined
         ? localStorage.removeItem(key)
@@ -55,7 +61,7 @@ export function local<TValidator extends Validator<unknown>>({
     },
     remove(): void {
       localStorage.removeItem(key)
-      emitter.emit(storage.get())
+      emitter.emit(service.get())
     },
     subscribe: (listener: (state: State) => void) => emitter.on(listener),
   }
@@ -63,10 +69,10 @@ export function local<TValidator extends Validator<unknown>>({
   // cross-tab sync
   window.addEventListener('storage', (e) => {
     if (e.key === key) {
-      const value = storage.get()
+      const value = service.get()
       emitter.emit(value)
     }
   })
 
-  return storage
+  return service
 }

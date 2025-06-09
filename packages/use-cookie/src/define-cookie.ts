@@ -60,6 +60,23 @@ export type DefineCookieOptions<TValidator extends Validator<unknown>> = {
   deserialize?: (value: string) => any
 }
 
+type Unsubscribe = () => void
+
+export type DefineCookieReturn<TValidator extends Validator<unknown>> = [
+  useCookie: () => [
+    ValidatorOutput<TValidator>,
+    React.Dispatch<React.SetStateAction<ValidatorOutput<TValidator>>>,
+  ],
+  cookie: {
+    set(updater: React.SetStateAction<ValidatorOutput<TValidator>>): void
+    get(allCookies?: string): ValidatorOutput<TValidator>
+    remove(): void
+    subscribe: (
+      listener: (state: ValidatorOutput<TValidator>) => void,
+    ) => Unsubscribe
+  },
+]
+
 export function defineCookie<TValidator extends Validator<unknown>>({
   name,
   validate,
@@ -67,7 +84,7 @@ export function defineCookie<TValidator extends Validator<unknown>>({
   serialize = defaultSerializer,
   deserialize = defaultDeserializer,
   ...cookieOptions
-}: DefineCookieOptions<TValidator>) {
+}: DefineCookieOptions<TValidator>): DefineCookieReturn<TValidator> {
   type State = ValidatorOutput<TValidator>
   const emitter = createEmitter<State>()
 
@@ -107,17 +124,20 @@ export function defineCookie<TValidator extends Validator<unknown>>({
   }
 
   // listen to the change in localStorage coming from other tabs
-  !isServer &&
+  if (!isServer) {
     window.addEventListener('storage', (e) => {
       if (e.key === crossTabKey) {
-        emitter.emit(cookie.get())
+        emitter.emit(service.get())
       }
     })
+  }
 
-  const cookie = {
+  const service = {
     set(updater: React.SetStateAction<State>): void {
       const next: State =
-        typeof updater === 'function' ? (updater as any)(cookie.get()) : updater
+        typeof updater === 'function'
+          ? (updater as any)(service.get())
+          : updater
       setCookie(next, cookieOptions)
       emitter.emit(next)
       notifyOtherTabs()
@@ -127,7 +147,7 @@ export function defineCookie<TValidator extends Validator<unknown>>({
     },
     remove(): void {
       setCookie('' as State, { ...cookieOptions, expires: -1 })
-      emitter.emit(cookie.get())
+      emitter.emit(service.get())
       notifyOtherTabs()
     },
     subscribe: (listener: (state: State) => void) => emitter.on(listener),
@@ -137,14 +157,14 @@ export function defineCookie<TValidator extends Validator<unknown>>({
     const isHydrated = useIsHydrated()
     const serverCookie = React.useContext(ServerCookie)
     const [state, setState] = React.useState<State>(() =>
-      isHydrated ? cookie.get() : cookie.get(serverCookie),
+      isHydrated ? service.get() : service.get(serverCookie),
     )
-    React.useLayoutEffect(() => cookie.subscribe(setState), [])
-    return [state, cookie.set] as [
+    React.useLayoutEffect(() => service.subscribe(setState), [])
+    return [state, service.set] as [
       State,
       React.Dispatch<React.SetStateAction<State>>,
     ]
   }
 
-  return [useCookie, cookie] as const
+  return [useCookie, service] as const
 }

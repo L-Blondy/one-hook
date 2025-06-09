@@ -61,7 +61,6 @@
     "@1hook/use-size": "workspace:*",
     "@1hook/use-speech-synthesis": "workspace:*",
     "@1hook/use-storage": "workspace:*",
-    "@1hook/use-store": "workspace:*",
     "@1hook/use-throttle-fn": "workspace:*",
     "@1hook/use-timeout": "workspace:*",
     "@1hook/use-unmount-effect": "workspace:*",

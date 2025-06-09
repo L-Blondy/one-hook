@@ -1,13 +1,7 @@
 ---
-title: useStorage (SPA only)
+title: useStorage
 description: A simple typesafe state manager using localStorage or sessionStorage.
 ---
-
-<Callout type="info">
-  This hook is designed for Single Page Applications (SPA).
-  <br /> If you need a persistent state manager for an SSR framework, use
-  [useCookie](/docs/hooks/use-cookie) instead.
-</Callout>
 
 ## Features
 
@@ -25,52 +19,40 @@ npm install @1hook/use-storage
 
 <Steps>
 <Step>
-### Define your storage setup.
+### Setup the State
 
-Use `defineStorage` to configure validation rules for each key and specify the storage type (`'local'` or `'session'`).
+Use defineCookie to configure validation rules and the type of storage.
 
-```tsx title='local-storage.ts' include use-local-storage
-'use client'
+```tsx twoslash title="sidebar-width.ts" include sidebar-width
 import { z } from 'zod'
 import { defineStorage } from '@1hook/use-storage'
 
-export const [useLocalStorage, LocalStorage] = defineStorage(
-  {
-    // "search" storage key with a string value
-    search: z.string().default(''),
-    // "selected" storage key with an optional object value
-    selected: z.object({ id: z.number(), name: z.string() }).optional(),
-  },
-  { type: 'local' },
-)
+export const [useSidebarWidth] = defineStorage({
+  key: 'sidebar-width',
+  validate: z.number().default(200),
+  type: 'local',
+})
 ```
 
 </Step>
 
 <Step>
-### Read and Write to the storage.
+### Read and Write.
 
-Instead of the initial state, pass the storage key you want to read / write from.
+Changes to the state are synchronized across all instances of the hook and across browser tabs.
 
-```tsx
+```tsx twoslash title="layout.tsx"
 // @noErrors
-// @include: use-local-storage
+// @include: sidebar-width
 // ---cut---
-import { useLocalStorage } from './local-storage'
-
-function Search() {
-  const search = useLocalStorage('search')
+function Layout() {
+  const [width, setWidth] = useSidebarWidth()
 
   return (
-    <form>
-      <input
-        onChange={(e) => search.set(e.target.value)}
-        value={search.value}
-      />
-      <button type="button" onClick={() => search.clear()}>
-        Clear search
-      </button>
-    </form>
+    <div>
+      <Sidebar width={width} onResize={setWidth} />
+      <main>...</main>
+    </div>
   )
 }
 ```
@@ -82,108 +64,71 @@ Storage updates are automatically synchronized across all instances of the hook 
 
 ## Validation
 
-To ensure data integrity, the storage values should be validated.
+To ensure data integrity, the storage should be validated.
 
 ### 👉 Functional validation
 
 For simple cases you can use a function to validate the storage.
 
-The following example ensures the search is a string & the count is a number,
-and adds a fallback value in case the value is `null | undefined`.
-
-```ts
+```ts twoslash
 import { defineStorage } from '@1hook/use-storage'
 // ---cut---
-defineStorage(
-  {
-    search: (value) => String(value ?? ''),
-    count: (value) => Number(value ?? 0),
-  },
-  { type: 'local' },
-)
+defineStorage({
+  key: 'search',
+  validate: (value) => String(value ?? ''),
+  type: 'local',
+})
 ```
 
 ### 👉 Schema validation
 
-For more complex cases you can use a schema to validate the cookie value.
+For more complex cases you can use a schema to validate the storage. Compatible validation libraries include [zod 3.24+](https://zod.dev/), [valibot
+1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/). Check out [Standard
+Schema](https://github.com/standard-schema/standard-schema) for more info.
 
-<Callout type="info">
-  Since we follow the [Standard
-  Schema](https://github.com/standard-schema/standard-schema) specification, you
-  can choose between [zod 3.24+](https://zod.dev/), [valibot
-  1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/) to
-  validate the cookies.
-</Callout>
-
-The following example ensures the search is a string & the count is a number,
-and adds a fallback value in case the value is `null | undefined`.
-
-```ts
+```ts twoslash
 import { defineStorage } from '@1hook/use-storage'
 // ---cut---
 import { z } from 'zod'
 
-defineStorage(
-  {
-    search: z.string().default(''),
-    count: z.number().default(0),
-  },
-  { type: 'local' },
-)
+defineStorage({
+  key: 'search',
+  validate: z.string().default(''),
+  type: 'local',
+})
 ```
 
-## Read, Write & Clear outside of React
+## Outside of React
 
-You can read and write storage outside of React by using the `Storage` object.
+`defineStorage` returns a standalone utility object that provides methods to `get`, `set` or `clear` the value outside of React components.
 
-```ts include clientstorage
+```ts twoslash include storage-outside
 import { z } from 'zod'
 import { defineStorage } from '@1hook/use-storage'
 // ---cut---
-export const [useLocalStorage, LocalStorage] = defineStorage(
-  { accessToken: z.string().optional() },
-  { type: 'local' },
-)
+export const [useStorage, Storage] = defineStorage({
+  key: 'my-storage',
+  validate: z.string().optional(),
+  type: 'local',
+})
 ```
 
-Using the `Storage` to set or clear storage will still trigger a **React re-render**.
+Using it still triggers a **React re-render**.
 
-```tsx
+```tsx twoslash
 // @noErrors
-// @include: clientstorage
+// @include: storage-outside
 // ---cut---
-import { LocalStorage } from './storage'
+import { Storage } from './storage'
 
 // Write
-LocalStorage.set('accessToken', '123')
+Storage.set('new-value')
 
 // Read
-const accessToken = LocalStorage.get('accessToken')
+Storage.get()
 
-// Clear specific key
-LocalStorage.clear(['accessToken'])
-
-// Clear all keys
-LocalStorage.clear()
-```
-
-## Custom (de)serialization
-
-In some cases you might need to customize the serialization and deserialization of the cookie value.
-
-You can do this by using the `serialize` and `deserialize` options.
-
-```ts
-import { defineStorage } from '@1hook/use-storage'
-// ---cut---
-defineStorage(
-  { search: (value) => String(value ?? '') },
-  {
-    type: 'local',
-    serialize: (value) => JSON.stringify(value), // Custom serialization
-    deserialize: (value) => JSON.parse(value), // Custom deserialization
-  },
-)
+// Clear
+Storage.clear()
 ```
 
 <hr />
@@ -192,33 +137,24 @@ defineStorage(
 
 ### 👉 defineStorage
 
-Generate typesafe hooks and a Provider from a storage configuration object.
-
 ```ts
-function defineStorage(
-  config: Record<string, StorageConfig>,
-  options?: StorageServiceOptions,
-): [useStorage, Storage]
+function defineStorage(options?: DefineStorageOptions): [useStorage, Storage]
 ```
 
 <AutoTypeTable
-  name="StorageServiceOptions"
+  name="DefineStorageOptions"
   description="The options of the storage service."
   path="packages/use-storage/src/index.ts"
 />
 
 ### 👉 useStorage
 
-Manage storage state providing the storage key.
+Manage storage state like with useState.
 
 ```ts
-function useStorage(key: string): { value; set; clear; get }
+function useStorage(): [state, setState]
 ```
 
 ### 👉 Storage
 
 Read and write to the storage outside of React.
-
-```ts
-const Storage = { set; clear; get }
-```

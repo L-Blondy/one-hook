@@ -1,1 +1,5 @@
-export { defineStorage, type DefineStorageReturn } from './define-storage'
+export {
+  defineStorage,
+  type DefineStorageOptions,
+  type DefineStorageReturn,
+} from './define-storage'

@@ -73,7 +73,7 @@ export const [useSidebarWidth] = defineCookie({
 
 Changes to the cookie are synchronized across all instances of the hook and across browser tabs.
 
-```tsx twoslash title="sidebar.tsx"
+```tsx twoslash title="layout.tsx"
 function Sidebar(props: { width: number; onResize: (width: number) => void }) {
   return <div />
 }
@@ -155,7 +155,7 @@ Using it still triggers a **React re-render**.
 import { Cookie } from './cookie'
 
 // Write
-Cookie.set('new-token')
+Cookie.set('new-value')
 
 // Read
 Cookie.get()
@@ -164,18 +164,18 @@ Cookie.get()
 Cookie.clear()
 ```
 
-## Read on the server
+## On the server
 
 The Cookie utility can read cookies from the cookie header.
 
 ```tsx twoslash
 // @noErrors
 // @include: cookies-outside
-// ---cut---
 import { headers } from 'next/headers'
 import { Cookie } from './cookie'
-
+// ---cut---
 const cookieHeader = (await headers()).get('cookie')
+
 const token = Cookies.get(cookieHeader)
 ```
 
@@ -184,8 +184,6 @@ const token = Cookies.get(cookieHeader)
 ## API Reference
 
 ### 👉 defineCookies
-
-Generate typesafe hooks and a Provider from a cookie configuration object.
 
 ```ts
 function defineCookie(options: DefineCookieOptions): [useCookie, Cookie]
@@ -219,20 +217,9 @@ function CookieProvider(props: Props): ReactNode
 Manage cookie state like with useState.
 
 ```ts
-function useCookie(name: string): [state, setState]
+function useCookie(): [state, setState]
 ```
 
 ### 👉 Cookie
 
 Read and write the cookie outside of React.
-
-```ts
-// read the cookie on the client
-Cookie.get()
-
-// read the cookie on the server
-Cookie.get((await headers()).get('cookie'))
-
-// set the cookie on the client
-Cookie.set('Hello World!')
-```

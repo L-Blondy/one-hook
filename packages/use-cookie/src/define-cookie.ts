@@ -10,7 +10,7 @@ import { createEmitter } from '@1hook/utils/emitter'
 import { isServer } from '@1hook/utils/is-server'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
 
-export const ServerCookie = React.createContext<string>('')
+export const ServerCookie = React.createContext<string | null | undefined>('')
 
 export type DefineCookieOptions<TValidator extends Validator<unknown>> = {
   /**
@@ -157,7 +157,7 @@ export function defineCookie<TValidator extends Validator<unknown>>({
 
   function useCookie() {
     const isHydrated = useIsHydrated()
-    const serverCookie = React.useContext(ServerCookie)
+    const serverCookie = React.useContext(ServerCookie) ?? ''
     const [state, setState] = React.useState<State>(() =>
       isHydrated ? service.get() : service.get(serverCookie),
     )

@@ -1,6 +1,6 @@
 {
   "name": "@1hook/use-document-has-focus",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "files": [
     "dist",
     "README.md"

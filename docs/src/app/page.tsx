@@ -1,9 +1,9 @@
 'use client'
-import Link from 'fumadocs-core/link'
 import { defineCookie } from '@1hook/use-cookie'
+import Link from 'fumadocs-core/link'
 import { z } from 'zod'
 
-const [useCount] = defineCookie({
+export const [useCount] = defineCookie({
   name: 'count',
   validate: z.number().default(0),
 })

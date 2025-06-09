@@ -14,8 +14,10 @@ export default async function Layout({
 }: {
   children: React.ReactNode
 }) {
+  const serverCookies = (await headers()).get('cookie')
+
   return (
-    <Providers serverCookies={(await headers()).get('cookie') ?? ''}>
+    <Providers serverCookies={serverCookies}>
       <html lang="en" className={inter.className} suppressHydrationWarning>
         <body className="flex min-h-screen flex-col">
           <RootProvider>{children}</RootProvider>

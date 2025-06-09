@@ -10,7 +10,25 @@ import { createEmitter } from '@1hook/utils/emitter'
 import { isServer } from '@1hook/utils/is-server'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
 
-export const ServerCookie = React.createContext<string | null | undefined>('')
+/**
+ * To avoid issues with React.createContext being called
+ * at module scope in Next.js + Server Components, we
+ * lazily initialize the context through a getter function
+ */
+let ctx: React.Context<string | null | undefined>
+
+function getServerCookieCtx() {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  ctx ??= React.createContext<string | null | undefined>('')
+  return ctx
+}
+
+export function ServerCookieProvider(
+  props: React.ComponentProps<typeof ctx.Provider>,
+) {
+  const Ctx = getServerCookieCtx()
+  return <Ctx.Provider {...props} />
+}
 
 export type DefineCookieOptions<TValidator extends Validator<unknown>> = {
   /**
@@ -157,7 +175,7 @@ export function defineCookie<TValidator extends Validator<unknown>>({
 
   function useCookie() {
     const isHydrated = useIsHydrated()
-    const serverCookie = React.useContext(ServerCookie)
+    const serverCookie = React.useContext(getServerCookieCtx())
     const [state, setState] = React.useState<State>(() =>
       isHydrated ? service.get() : service.get(serverCookie),
     )

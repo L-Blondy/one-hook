@@ -1,6 +1,6 @@
 export {
   defineCookie,
-  ServerCookie,
+  ServerCookieProvider,
   type DefineCookieOptions,
   type DefineCookieReturn,
 } from './define-cookie'

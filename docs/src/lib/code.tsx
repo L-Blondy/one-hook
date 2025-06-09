@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
+import React from 'react'
 
-type Props = { children: ReactNode }
+type Props = { children: React.ReactNode }
 
 export function Code(props: Props) {
   return (

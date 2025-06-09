@@ -14,9 +14,12 @@ function main() {
   }
 
   // Ensure package name starts with "use-" if it doesn't already
-  const fullPackageName = packageName.startsWith('use-')
-    ? packageName
-    : `use-${packageName}`
+  const fullPackageName =
+    packageName === 'utils'
+      ? 'utils'
+      : packageName.startsWith('use-')
+        ? packageName
+        : `use-${packageName}`
 
   try {
     const command = `pnpm run align && cd ./packages/${fullPackageName} && pnpm dev`

@@ -5,7 +5,7 @@ import {
   type StorageValidator,
 } from './vanilla'
 import type { Defined, KeyOf } from '@1hook/utils/types'
-import { createEmitter } from '@1hook/utils/emitter'
+import { createEmitter } from './emitter'
 import { keysOf } from '@1hook/utils/keys-of'
 import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 import type { ValidatorOutput } from '@1hook/utils/validate'

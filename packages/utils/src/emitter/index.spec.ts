@@ -1,66 +1,43 @@
-import { expect, expectTypeOf, test } from "vitest";
-import { createEmitter } from ".";
-import { noop } from "src/noop";
+import { expect, expectTypeOf, test } from 'vitest'
+import { createEmitter } from '.'
+import { noop } from 'src/noop'
 
-test("type inferrence", () => {
-  const emitter = createEmitter<{ ch1: "x"; ch2: "y" }>();
-  emitter.on((channel, message) => {
-    if (channel === "ch1") {
-      expectTypeOf(message).toEqualTypeOf<"x">();
-    }
-    if (channel === "ch2") {
-      expectTypeOf(message).toEqualTypeOf<"y">();
-    }
-  });
-  emitter.emit("ch1", "x");
-  emitter.emit("ch2", "y");
+test('type inferrence', () => {
+  const emitter = createEmitter<'x'>()
+  emitter.on((message) => {
+    expectTypeOf(message).toEqualTypeOf<'x'>()
+  })
+  emitter.emit('x')
   // @ts-expect-error
-  emitter.emit("ch1", "xy");
-  // @ts-expect-error
-  emitter.emit("ch2", "yx");
-  // @ts-expect-error
-  emitter.emit("a", "x");
-  // @ts-expect-error
-  emitter.emit("b", "y");
-});
+  emitter.emit('y')
+})
 
-test("Emit / receive", () => {
-  const emitter = createEmitter<{ ch1: "x"; ch2: "y" }>();
-  let ch1Messages = "";
-  let ch2Messages = "";
-  emitter.on((channel, message) => {
-    if (channel !== "ch1") return;
-    ch1Messages += message;
-  });
-  emitter.on((channel, message) => {
-    if (channel !== "ch2") return;
-    ch2Messages += message;
-  });
-  emitter.on((channel, message) => {
-    if (channel !== "ch2") return;
-    ch2Messages += message;
-  });
-  emitter.emit("ch1", "x");
-  emitter.emit("ch2", "y");
-  expect(ch1Messages).toBe("x");
-  expect(ch2Messages).toBe("yy");
-});
+test('Emit / receive', () => {
+  const emitter = createEmitter<string>()
+  let messages = ''
+  emitter.on((message) => {
+    messages += message
+  })
+  emitter.emit('x')
+  emitter.emit('y')
+  expect(messages).toBe('xy')
+})
 
-test("Should remove listeners properly", () => {
-  const emitter = createEmitter<{ ch1: "x"; ch2: "y" }>();
+test('Should remove listeners properly', () => {
+  const emitter = createEmitter<string>()
   // all listeners have the same ref
-  const remove_1 = emitter.on(noop);
-  const remove_2 = emitter.on(noop);
-  const remove_3 = emitter.on(noop);
+  const remove_1 = emitter.on(noop)
+  const remove_2 = emitter.on(noop)
+  const remove_3 = emitter.on(noop)
   // listeners should be removed 1 by one, even if they have the same ref
-  expect(emitter.__l.size).toBe(3);
-  remove_1();
-  expect(emitter.__l.size).toBe(2);
-  remove_2();
-  expect(emitter.__l.size).toBe(1);
-  remove_3();
-  expect(emitter.__l.size).toBe(0);
+  expect(emitter.__l.size).toBe(3)
+  remove_1()
+  expect(emitter.__l.size).toBe(2)
+  remove_2()
+  expect(emitter.__l.size).toBe(1)
+  remove_3()
+  expect(emitter.__l.size).toBe(0)
   // Extra remove should produce no error
-  remove_3();
-  expect(emitter.__l.size).toBe(0);
-});
+  remove_3()
+  expect(emitter.__l.size).toBe(0)
+})

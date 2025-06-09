@@ -1,10 +1,15 @@
+import type { EntryOf } from '@1hook/utils/types'
+
 export type Emitter<
   TChannelToMessage extends Record<string, any> = Record<string, any>,
 > = ReturnType<typeof createEmitter<TChannelToMessage>>
 
-export function createEmitter<T>() {
+export function createEmitter<
+  const TChannelToMessage extends Record<string, any> = Record<string, any>,
+>() {
   type Id = number
-  type Listener = (message: T) => any
+  type ListenerEntry = EntryOf<TChannelToMessage>
+  type Listener = (...[channel, message]: ListenerEntry) => any
   // Map instead of Set allows multiple listeners with the same pure function
   const __l = new Map<Id, Listener>()
   let count = 0
@@ -18,9 +23,9 @@ export function createEmitter<T>() {
         __l.delete(id)
       }
     },
-    emit(message: T) {
+    emit(...[channel, message]: ListenerEntry) {
       __l.forEach((listener) => {
-        listener(message)
+        listener(channel, message)
       })
     },
   }

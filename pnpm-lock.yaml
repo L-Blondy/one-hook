@@ -119,9 +119,6 @@ importers:
       '@1hook/use-audio-analyser':
         specifier: workspace:*
         version: link:../packages/use-audio-analyser
-      '@1hook/use-contextual-state':
-        specifier: workspace:*
-        version: link:../packages/use-contextual-state
       '@1hook/use-cookie':
         specifier: workspace:*
         version: link:../packages/use-cookie
@@ -318,9 +315,6 @@ importers:
       '@1hook/use-audio-analyser':
         specifier: workspace:*
         version: link:../use-audio-analyser
-      '@1hook/use-contextual-state':
-        specifier: workspace:*
-        version: link:../use-contextual-state
       '@1hook/use-cookie':
         specifier: workspace:*
         version: link:../use-cookie
@@ -487,29 +481,11 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.1.0(react@19.1.0)
 
-  packages/use-contextual-state:
-    dependencies:
-      '@1hook/use-invariant-context':
-        specifier: workspace:*
-        version: link:../use-invariant-context
-      '@types/react':
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.1.0
-      '@types/react-dom':
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.1.1(@types/react@19.1.0)
-      react:
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.1.0
-      react-dom:
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.1.0(react@19.1.0)
-
   packages/use-cookie:
     dependencies:
-      '@1hook/use-isomorphic-layout-effect':
+      '@1hook/use-is-hydrated':
         specifier: workspace:*
-        version: link:../use-isomorphic-layout-effect
+        version: link:../use-is-hydrated
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils

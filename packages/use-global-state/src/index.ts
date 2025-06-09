@@ -10,22 +10,19 @@ export function defineGlobalState<State>(
   config: DefineGlobalStateConfig<State>,
 ) {
   let store = { v: config.initialState }
-  const emitter = createEmitter<{ '': React.SetStateAction<State> }>()
+  const emitter = createEmitter<React.SetStateAction<State>>()
 
   function set(updater: React.SetStateAction<State>) {
     const next =
       typeof updater === 'function' ? (updater as any)(store.v) : updater
     store.v = next
-    emitter.emit('', next)
+    emitter.emit(next)
   }
 
   function useGlobalState() {
     const [state, setState] = React.useState<State>(store.v)
 
-    useIsomorphicLayoutEffect(
-      () => emitter.on((_, updater) => setState(updater)),
-      [],
-    )
+    useIsomorphicLayoutEffect(() => emitter.on(setState), [])
 
     return [state, set] as const
   }

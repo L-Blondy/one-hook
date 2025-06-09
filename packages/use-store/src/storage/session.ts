@@ -34,8 +34,8 @@ export function session<TValidator extends Validator<unknown>>({
   serialize = defaultSerializer,
   deserialize = defaultDeserializer,
 }: SessionStorageOptions<TValidator>) {
-  const emitter = createEmitter()
   type State = ValidatorOutput<TValidator>
+  const emitter = createEmitter<State>()
 
   const storage = {
     set(updater: React.SetStateAction<State>): void {
@@ -44,7 +44,7 @@ export function session<TValidator extends Validator<unknown>>({
           ? (updater as any)(storage.get())
           : updater
       sessionStorage.setItem(key, serialize(next))
-      emitter.emit('', next)
+      emitter.emit(next)
     },
     get(): State {
       let value = sessionStorage.getItem(key) ?? undefined
@@ -53,17 +53,16 @@ export function session<TValidator extends Validator<unknown>>({
     },
     remove(): void {
       sessionStorage.removeItem(key)
-      emitter.emit('', storage.get())
+      emitter.emit(storage.get())
     },
-    subscribe: (listener: (state: State) => void) =>
-      emitter.on((_, state) => listener(state)),
+    subscribe: (listener: (state: State) => void) => emitter.on(listener),
   }
 
   // cross-tab sync
   window.addEventListener('storage', (e) => {
     if (e.key === key) {
       const value = storage.get()
-      emitter.emit('', value)
+      emitter.emit(value)
     }
   })
 

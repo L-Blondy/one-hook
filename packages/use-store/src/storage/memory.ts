@@ -7,7 +7,7 @@ export type MemoryOptions<T> = {
 }
 
 export function memory<T>({ initialState }: MemoryOptions<T>): Storage<T> {
-  const emitter = createEmitter()
+  const emitter = createEmitter<T>()
   const map = new Map<'', T>([['', initialState]])
   const storage = {
     get: () => map.get('')!,
@@ -17,10 +17,9 @@ export function memory<T>({ initialState }: MemoryOptions<T>): Storage<T> {
           ? (updater as any)(storage.get())
           : updater
       map.set('', next)
-      emitter.emit('', next)
+      emitter.emit(next)
     },
-    subscribe: (listener: (state: T) => void) =>
-      emitter.on((_, state) => listener(state)),
+    subscribe: (listener: (state: T) => void) => emitter.on(listener),
   }
   return storage
 }

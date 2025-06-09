@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
+import React from 'react'
 
-type Props = { value: ReactNode }
+type Props = { value: React.ReactNode }
 
 export function TableDescription(props: Props) {
   if (!props.value) return null

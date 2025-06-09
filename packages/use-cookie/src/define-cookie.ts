@@ -1,13 +1,18 @@
-import React from 'react'
 import {
   validateSync,
   type Validator,
   type ValidatorOutput,
 } from '@1hook/utils/validate'
+import React from 'react'
+import { defaultDeserializer, defaultSerializer } from './serializer'
+import { toUTCString } from './utils'
 import { createEmitter } from '@1hook/utils/emitter'
-import { defaultDeserializer, defaultSerializer } from 'src/serialize'
+import { isServer } from '@1hook/utils/is-server'
+import { useIsHydrated } from '@1hook/use-is-hydrated'
 
-export type CookieStorageOptions<TValidator extends Validator<unknown>> = {
+export const ServerCookie = React.createContext<string>('')
+
+export type DefineCookieOptions<TValidator extends Validator<unknown>> = {
   /**
    * The name of the cookie.
    */
@@ -55,34 +60,27 @@ export type CookieStorageOptions<TValidator extends Validator<unknown>> = {
   deserialize?: (value: string) => any
 }
 
-export const cookie = <TValidator extends Validator<unknown>>({
+export function defineCookie<TValidator extends Validator<unknown>>({
   name,
   validate,
   disableEncoding,
   serialize = defaultSerializer,
   deserialize = defaultDeserializer,
   ...cookieOptions
-}: CookieStorageOptions<TValidator>) => {
+}: DefineCookieOptions<TValidator>) {
   type State = ValidatorOutput<TValidator>
   const emitter = createEmitter<State>()
 
   const encode = disableEncoding ? (str: string) => str : encodeURIComponent
   const decode = disableEncoding ? (str: string) => str : decodeURIComponent
 
-  function setCookie(
-    value: State,
-    cookieConfig: Pick<
-      CookieStorageOptions<TValidator>,
-      'domain' | 'expires' | 'sameSite' | 'secure'
-    >,
-  ) {
+  function setCookie(value: State, options: typeof cookieOptions) {
     let stringified = encode(serialize(value))
     let cookie = `${name}=${stringified}; Path=/`
-    if (cookieConfig.sameSite) cookie += `; SameSite=${cookieConfig.sameSite}`
-    if (cookieConfig.expires)
-      cookie += `; Expires=${toUTCString(cookieConfig.expires)}`
-    if (cookieConfig.secure) cookie += `; Secure`
-    if (cookieConfig.domain) cookie += `; Domain=${cookieConfig.domain}`
+    if (options.sameSite) cookie += `; SameSite=${options.sameSite}`
+    if (options.expires) cookie += `; Expires=${toUTCString(options.expires)}`
+    if (options.secure) cookie += `; Secure`
+    if (options.domain) cookie += `; Domain=${options.domain}`
     document.cookie = cookie
     return stringified
   }
@@ -100,31 +98,53 @@ export const cookie = <TValidator extends Validator<unknown>>({
     return validateSync(validate, parsed)
   }
 
-  const storage = {
+  let crossTabMessageId = 0
+  const crossTabKey = `_cookie_sync_${name}`
+
+  // trigger a change in the localStorage
+  function notifyOtherTabs() {
+    localStorage.setItem(crossTabKey, String(++crossTabMessageId))
+  }
+
+  // listen to the change in localStorage coming from other tabs
+  !isServer &&
+    window.addEventListener('storage', (e) => {
+      if (e.key === crossTabKey) {
+        emitter.emit(cookie.get())
+      }
+    })
+
+  const cookie = {
     set(updater: React.SetStateAction<State>): void {
       const next: State =
-        typeof updater === 'function'
-          ? (updater as any)(storage.get())
-          : updater
+        typeof updater === 'function' ? (updater as any)(cookie.get()) : updater
       setCookie(next, cookieOptions)
       emitter.emit(next)
+      notifyOtherTabs()
     },
-    get(): State {
-      return parseCookieString(getCookieString(document.cookie))
+    get(allCookies = document.cookie): State {
+      return parseCookieString(getCookieString(allCookies))
     },
     remove(): void {
       setCookie('' as any, { ...cookieOptions, expires: -1 })
-      emitter.emit(storage.get())
+      emitter.emit(cookie.get())
+      notifyOtherTabs()
     },
     subscribe: (listener: (state: State) => void) => emitter.on(listener),
   }
-  return storage
-}
 
-function toUTCString(expires: number | Date) {
-  return (
-    typeof expires === 'number'
-      ? new Date(Date.now() + expires * 864e5) // 864e5 are the ms of one day
-      : expires
-  ).toUTCString()
+  function useCookie() {
+    const isHydrated = useIsHydrated()
+    const serverCookie = React.useContext(ServerCookie)
+    const [state, setState] = React.useState<State>(() =>
+      isHydrated ? cookie.get() : cookie.get(serverCookie),
+    )
+    React.useLayoutEffect(() => cookie.subscribe(setState), [])
+    return [state, cookie.set] as [
+      State,
+      React.Dispatch<React.SetStateAction<State>>,
+    ]
+  }
+
+  return [useCookie, cookie] as const
 }

@@ -1,13 +1,11 @@
 'use client'
 import Link from 'fumadocs-core/link'
-import { defineStore, cookie } from '@1hook/use-store'
+import { defineCookie } from '@1hook/use-cookie'
 import { z } from 'zod'
 
-const [useCount] = defineStore({
-  storage: cookie({
-    name: 'count',
-    validate: z.number().default(0),
-  }),
+const [useCount] = defineCookie({
+  name: 'count',
+  validate: z.number().default(0),
 })
 
 export default function Homepage() {

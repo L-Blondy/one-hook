@@ -1,9 +1,9 @@
-import { useSyncExternalStore } from 'react'
+import React from 'react'
 
 const nosub = () => () => {}
 
 export function useIsHydrated() {
-  return useSyncExternalStore(
+  return React.useSyncExternalStore(
     nosub,
     () => true,
     () => false,

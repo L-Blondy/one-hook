@@ -34,8 +34,8 @@ export function local<TValidator extends Validator<unknown>>({
   serialize = defaultSerializer,
   deserialize = defaultDeserializer,
 }: LocalStorageOptions<TValidator>) {
-  const emitter = createEmitter()
   type State = ValidatorOutput<TValidator>
+  const emitter = createEmitter<State>()
 
   const storage = {
     set(updater: React.SetStateAction<State>): void {
@@ -46,7 +46,7 @@ export function local<TValidator extends Validator<unknown>>({
       next === undefined
         ? localStorage.removeItem(key)
         : localStorage.setItem(key, serialize(next))
-      emitter.emit('', next)
+      emitter.emit(next)
     },
     get(): State {
       let value = localStorage.getItem(key) ?? undefined
@@ -55,17 +55,16 @@ export function local<TValidator extends Validator<unknown>>({
     },
     remove(): void {
       localStorage.removeItem(key)
-      emitter.emit('', storage.get())
+      emitter.emit(storage.get())
     },
-    subscribe: (listener: (state: State) => void) =>
-      emitter.on((_, state) => listener(state)),
+    subscribe: (listener: (state: State) => void) => emitter.on(listener),
   }
 
   // cross-tab sync
   window.addEventListener('storage', (e) => {
     if (e.key === key) {
       const value = storage.get()
-      emitter.emit('', value)
+      emitter.emit(value)
     }
   })
 

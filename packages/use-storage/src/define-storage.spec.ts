@@ -11,7 +11,7 @@ afterEach(() => {
     key: 'test',
     type: 'local',
   })
-  storage.remove()
+  storage.clear()
 })
 
 describe('type inference', () => {
@@ -129,6 +129,6 @@ test('after calling remove, the validator default value should be used', () => {
   const hook = renderHook(() => useStorage())
   act(() => hook.result.current[1]('val'))
   expect(hook.result.current[0]).toBe('val')
-  act(() => storage.remove())
+  act(() => storage.clear())
   expect(hook.result.current[0]).toBe('')
 })

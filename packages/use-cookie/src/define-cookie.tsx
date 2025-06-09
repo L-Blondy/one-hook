@@ -15,17 +15,31 @@ import { useIsHydrated } from '@1hook/use-is-hydrated'
  * at module scope in Next.js + Server Components, we
  * lazily initialize the context through a getter function
  */
-let ctx: React.Context<string | null | undefined>
+type ServerCookieCtxValue = string | null | undefined
+let ctx: React.Context<ServerCookieCtxValue>
 
 function getServerCookieCtx() {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  ctx ??= React.createContext<string | null | undefined>('')
+  ctx ??= React.createContext<ServerCookieCtxValue>('')
   return ctx
 }
 
-export function ServerCookieProvider(
-  props: React.ComponentProps<typeof ctx.Provider>,
-) {
+export type ServerCookieProviderProps = {
+  /**
+   * The cookie header value.
+   *
+   * @example
+   * ```tsx
+   * <ServerCookieProvider value={(await headers()).get('cookie')}>
+   *   <App />
+   * </ServerCookieProvider>
+   * ```
+   */
+  value: ServerCookieCtxValue
+  children: React.ReactNode
+}
+
+export function ServerCookieProvider(props: ServerCookieProviderProps) {
   const Ctx = getServerCookieCtx()
   return <Ctx.Provider {...props} />
 }
@@ -85,10 +99,10 @@ export type DefineCookieReturn<TValidator extends Validator<unknown>> = [
     ValidatorOutput<TValidator>,
     React.Dispatch<React.SetStateAction<ValidatorOutput<TValidator>>>,
   ],
-  cookie: {
+  Cookie: {
     set(updater: React.SetStateAction<ValidatorOutput<TValidator>>): void
     get(allCookies?: string | null): ValidatorOutput<TValidator>
-    remove(): void
+    clear(): void
     name: string
     subscribe: (
       listener: (state: ValidatorOutput<TValidator>) => void,
@@ -164,7 +178,7 @@ export function defineCookie<TValidator extends Validator<unknown>>({
     get(allCookies: string | null = document.cookie): State {
       return parseCookieString(getCookieString(allCookies ?? ''))
     },
-    remove(): void {
+    clear(): void {
       setCookie('' as State, { ...cookieOptions, expires: -1 })
       emitter.emit(service.get())
       notifyOtherTabs()

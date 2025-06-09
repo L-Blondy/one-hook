@@ -10,7 +10,7 @@ afterEach(() => {
     validate: z.object({ count: z.number() }).default({ count: 0 }),
     name: 'test',
   })
-  cookie.remove()
+  cookie.clear()
 })
 
 describe('type inference', () => {
@@ -121,6 +121,6 @@ test('after calling remove, the validator default value should be used', () => {
   const hook = renderHook(() => useCookie())
   act(() => hook.result.current[1]('val'))
   expect(hook.result.current[0]).toBe('val')
-  act(() => cookie.remove())
+  act(() => cookie.clear())
   expect(hook.result.current[0]).toBe('')
 })

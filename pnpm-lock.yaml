@@ -212,9 +212,6 @@ importers:
       '@1hook/use-storage':
         specifier: workspace:*
         version: link:../packages/use-storage
-      '@1hook/use-store':
-        specifier: workspace:*
-        version: link:../packages/use-store
       '@1hook/use-throttle-fn':
         specifier: workspace:*
         version: link:../packages/use-throttle-fn
@@ -408,9 +405,6 @@ importers:
       '@1hook/use-storage':
         specifier: workspace:*
         version: link:../use-storage
-      '@1hook/use-store':
-        specifier: workspace:*
-        version: link:../use-store
       '@1hook/use-throttle-fn':
         specifier: workspace:*
         version: link:../use-throttle-fn
@@ -1090,24 +1084,6 @@ importers:
       '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../use-is-hydrated
-      '@1hook/utils':
-        specifier: workspace:*
-        version: link:../utils
-      '@types/react':
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.1.0
-      '@types/react-dom':
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.1.1(@types/react@19.1.0)
-      react:
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.1.0
-      react-dom:
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.1.0(react@19.1.0)
-
-  packages/use-store:
-    dependencies:
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils

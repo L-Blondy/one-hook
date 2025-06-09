@@ -1,16 +1,11 @@
 ---
-title: useCookie (SSR only)
+title: useCookie
 description: A simple typesafe state manager using cookies.
 ---
 
-<Callout type="info">
-  This hook is designed for SSR frameworks like Next.js or Remix.
-  <br /> If you need a persistent state manager for Single Page Applications
-  (SPA), use [useStorage](/docs/hooks/use-storage) instead.
-</Callout>
-
 ## Features
 
+- **Avoid Layout Shifts:** The state is known by both the client and the server.
 - **Built-in Validation:** Validate with [zod](https://zod.dev/), [valibot](https://valibot.dev/), [arktype](https://arktype.dev/) or with a simple function.
 - **Tab Sync:** The cookie state is synced across multiple browser tabs.
 - **Component Sync:** The cookie state is synced across all components.
@@ -25,92 +20,81 @@ npm install @1hook/use-cookie
 ## Quick Start
 
 <Steps>
+
 <Step>
-### Define the cookies
+### Place the Provider (once per App)
 
-Use defineCookies to configure validation rules and expiration settings for each cookie.
+Put a `"use client"` directive on the Provider:
 
-```ts twoslash title="cookies.ts" include cookies
+```tsx twoslash title="cookie-provider.tsx"
 'use client'
-import { z } from 'zod'
-import { defineCookies } from '@1hook/use-cookie'
+export { ServerCookieProvider } from '@1hook/use-cookie'
+```
 
-export const { CookieProvider, useCookie } = defineCookies({
-  // "search" cookie with a string value
-  search: {
-    validate: z.string().default(''),
-    expires: 365, // days from now
-  },
-  // "selected" cookie with an optional object value
-  selected: {
-    validate: z.object({ id: z.number(), name: z.string() }).optional(),
-    expires: new Date('2026-12-12'), // specific date
-    secure: true,
-    domain: 'example.com',
-    sameSite: 'lax',
-  },
+Place it at the root of your application, in a [Server Component](https://react.dev/reference/rsc/server-components)
+
+```tsx twoslash title="providers.tsx"
+// @noErrors
+import { headers } from 'next/headers'
+import { ServerCookieProvider } from './cookie-provider'
+
+export async function Providers(props: { children: ReactNode }) {
+  return (
+    <ServerCookieProvider value={(await headers()).get('cookie')}>
+      {props.children}
+    </ServerCookieProvider>
+  )
+}
+```
+
+</Step>
+
+<Step>
+### Setup a cookie
+
+Use defineCookie to configure validation rules and expiration settings for the cookie.
+
+```ts twoslash title="sidebar-width.ts" include cookies
+import { z } from 'zod'
+import { defineCookie } from '@1hook/use-cookie'
+
+export const [useSidebarWidth] = defineCookie({
+  name: 'sidebar-width',
+  validate: z.number().default(200),
+  expires: 365, // days from now
+  sameSite: 'lax',
 })
 ```
 
 </Step>
-<Step>
-### Place the Provider in a Server Component.
-
-Place the `CookieProvider` in a [Server Component](https://react.dev/reference/rsc/server-components), preferably at the root of your application.
-
-```tsx twoslash title="providers.tsx"
-// @noErrors
-// @include: cookies
-// ---cut---
-import { headers } from 'next/headers'
-import { CookieProvider } from './cookies'
-
-export async function Providers(props: { children: ReactNode }) {
-  return (
-    <CookieProvider headers={await headers()}>{props.children}</CookieProvider>
-  )
-}
-```
-
-</Step>
 
 <Step>
-### Read and Write cookies.
-
-Call `useCookie` with the cookie name you want to use.
-
-Each cookie has 3 properties:
-
-- `value`: The current value of the cookie.
-- `set`: A function to update the cookie value.
-- `remove`: A function to remove the cookie.
-
-```tsx twoslash
-// @noErrors
-// @include: cookies
-// ---cut---
-import { useCookie } from './cookies'
-
-function Search() {
-  const search = useCookie('search')
-
-  return (
-    <form>
-      <input
-        onChange={(e) => search.set(e.target.value)}
-        value={search.value}
-      />
-      <button type="button" onClick={() => search.clear()}>
-        Clear search
-      </button>
-    </form>
-  )
-}
-```
+### Read and Write.
 
 Changes to the cookie are synchronized across all instances of the hook and across browser tabs.
 
+```tsx twoslash title="sidebar.tsx"
+function Sidebar(props: { width: number; onResize: (width: number) => void }) {
+  return <div />
+}
+
+// @noErrors
+// @include: cookies
+// ---cut---
+function Layout() {
+  const [width, setWidth] = useSidebarWidth()
+
+  return (
+    <div>
+      <Sidebar width={width} onResize={setWidth} />
+      <main>...</main>
+    </div>
+  )
+}
+```
+
 </Step>
+
 </Steps>
 
 ## Validation
@@ -121,111 +105,78 @@ To ensure data integrity, cookies should be validated.
 
 For simple cases you can use a function to validate the cookie value.
 
-The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
-
 ```ts twoslash
-import { defineCookies } from '@1hook/use-cookie'
+import { defineCookie } from '@1hook/use-cookie'
 // ---cut---
-defineCookies({
-  search: {
-    validate: (value) => String(value ?? ''),
-  },
+defineCookie({
+  name: 'search',
+  validate: (value) => String(value ?? ''),
 })
 ```
 
 ### 👉 Schema validation
 
-For more complex cases you can use a schema to validate the cookie value.
-
-<Callout type="info">
-  Since we follow the [Standard
-  Schema](https://github.com/standard-schema/standard-schema) specification, you
-  can choose between [zod 3.24+](https://zod.dev/), [valibot
-  1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/) to
-  validate the cookies.
-</Callout>
-
-The following example ensures the value is a string and adds a fallback value of `''` in case the cookie is `undefined`.
+For more complex cases you can use a schema to validate the cookie value. Compatible validation libraries include [zod 3.24+](https://zod.dev/), [valibot
+1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/). Check out [Standard
+Schema](https://github.com/standard-schema/standard-schema) for more info.
 
 ```ts twoslash
-import { defineCookies } from '@1hook/use-cookie'
+import { defineCookie } from '@1hook/use-cookie'
 // ---cut---
 import { z } from 'zod'
 
-defineCookies({
-  search: {
-    validate: z.string().default(''),
-  },
+defineCookie({
+  name: 'search',
+  validate: z.string().default(''),
 })
 ```
 
-## Read, Write & Clear outside of React
+## Outside of React
 
-You can read and write cookies outside of React using the `Cookies` object.
+`defineCookie` returns a standalone utility object that provides methods to `get`, `set` or `clear` the cookie outside of React components.
 
 ```ts twoslash include cookies-outside
 import { z } from 'zod'
-import { defineCookies } from '@1hook/use-cookie'
+import { defineCookie } from '@1hook/use-cookie'
 // ---cut---
-export const { CookieProvider, useCookie, Cookies } = defineCookies({
-  accessToken: {
-    validate: z.string().optional(),
-    expires: 7, // days from now
-  },
+export const [useCookie, Cookie] = defineCookie({
+  name: 'my-cookie',
+  validate: z.string().optional(),
+  expires: 7,
 })
 ```
 
-Using `Cookies` to set or clear cookies will still trigger a **React re-render**.
+Using it still triggers a **React re-render**.
 
 ```tsx twoslash
 // @noErrors
 // @include: cookies-outside
 // ---cut---
-import { Cookies } from './cookies'
+import { Cookie } from './cookie'
 
-// Write a cookie
-Cookies.set('accessToken', '123')
+// Write
+Cookie.set('new-token')
 
-// Read a cookie
-const accessToken = Cookies.get('accessToken')
+// Read
+Cookie.get()
 
-// Clear specific cookies
-Cookies.clear(['accessToken'])
-
-// Clear all cookies
-Cookies.clear()
+// Clear
+Cookie.clear()
 ```
 
-## Read cookies on the server
+## Read on the server
 
-To read cookies on the server, use `Cookies.fromHeaders`.
+The Cookie utility can read cookies from the cookie header.
 
 ```tsx twoslash
 // @noErrors
 // @include: cookies-outside
 // ---cut---
 import { headers } from 'next/headers'
-import { Cookies } from './cookies'
+import { Cookie } from './cookie'
 
-const accessToken = Cookies.fromHeaders(await headers()).get('accessToken')
-```
-
-## Custom (de)serialization
-
-In some cases you might need to customize the serialization and deserialization of the cookie value.
-
-You can do this by using the `serialize` and `deserialize` options.
-
-```ts twoslash
-import { defineCookies } from '@1hook/use-cookie'
-// ---cut---
-defineCookies(
-  { search: { validate: (value) => String(value ?? '') } },
-  {
-    serialize: (value) => JSON.stringify(value), // Custom serialization
-    deserialize: (value) => JSON.parse(value), // Custom deserialization
-  },
-)
+const cookieHeader = (await headers()).get('cookie')
+const token = Cookies.get(cookieHeader)
 ```
 
 <hr />
@@ -237,60 +188,51 @@ defineCookies(
 Generate typesafe hooks and a Provider from a cookie configuration object.
 
 ```ts
-function defineCookies(
-  config: Record<string, CookieConfig>,
-  options?: CookieServiceOptions,
-): {
-  CookieProvider
-  useCookie
-  Cookies
-}
+function defineCookie(options: DefineCookieOptions): [useCookie, Cookie]
 ```
 
 <AutoTypeTable
-  name="CookieConfig"
-  description="The config of a single cookie."
+  name="DefineCookieOptions"
+  description="The options of the cookie."
   path="packages/use-cookie/src/index.ts"
 />
 
-<AutoTypeTable
-  name="CookieServiceOptions"
-  description="The options of the cookie service."
-  path="packages/use-cookie/src/index.ts"
-/>
+### 👉 ServerCookieProvider
 
-### 👉 CookieProvider
+You can skip this component when building Single Page Applications (SPA).
 
-The CookieProvider component should be rendered at the highest possible level in your application's component tree, and must be used within a server component.
+In SSR frameworks it should be rendered at the top of the component tree, and must be used within a server component.
 
 ```tsx
-function CookieProvider(props: CookieProviderProps): ReactNode
+function CookieProvider(props: Props): ReactNode
 ```
 
 <AutoTypeTable
-  name="CookieProviderProps"
-  description="The props of the CookieProvider component."
-  path="packages/use-cookie/src/index.ts"
+  title="Props"
+  name="ServerCookieProviderProps"
+  description="The props of the ServerCookieProvider component."
+  path="packages/use-cookie/src/define-cookie.tsx"
 />
 
 ### 👉 useCookie
 
-Manage cookie state providing the cookie name.
+Manage cookie state like with useState.
 
 ```ts
-function useCookie(name: string): { value; set; clear; get }
+function useCookie(name: string): [state, setState]
 ```
 
-`set`, `clear` and `get` are convenience wrappers around `Cookies` methods.
+### 👉 Cookie
 
-### 👉 Cookies
-
-Read and write cookies outside of React.
-
-- `get`, `set`, `clear` are client only methods.
-- `set` and `clear` will trigger a **React re-render**
-- use `fromHeaders` to read cookies on the server.
+Read and write the cookie outside of React.
 
 ```ts
-const Cookies = { set; clear; get; fromHeaders }
+// read the cookie on the client
+Cookie.get()
+
+// read the cookie on the server
+Cookie.get((await headers()).get('cookie'))
+
+// set the cookie on the client
+Cookie.set('Hello World!')
 ```

@@ -41,10 +41,10 @@ export type DefineStorageReturn<TValidator extends Validator<unknown>> = [
     ValidatorOutput<TValidator>,
     React.Dispatch<React.SetStateAction<ValidatorOutput<TValidator>>>,
   ],
-  storage: {
+  Storage: {
     set(updater: React.SetStateAction<ValidatorOutput<TValidator>>): void
     get(): ValidatorOutput<TValidator>
-    remove(): void
+    clear(): void
     key: string
     subscribe: (
       listener: (state: ValidatorOutput<TValidator>) => void,
@@ -85,7 +85,7 @@ export function defineStorage<TValidator extends Validator<unknown>>({
       let parsed = value === undefined ? value : deserialize(value)
       return validateSync(validate, parsed)
     },
-    remove(): void {
+    clear(): void {
       storage?.removeItem(key)
       emitter.emit(service.get())
     },

@@ -69,7 +69,7 @@ export type DefineCookieReturn<TValidator extends Validator<unknown>> = [
   ],
   cookie: {
     set(updater: React.SetStateAction<ValidatorOutput<TValidator>>): void
-    get(allCookies?: string): ValidatorOutput<TValidator>
+    get(allCookies?: string | null): ValidatorOutput<TValidator>
     remove(): void
     name: string
     subscribe: (
@@ -143,8 +143,8 @@ export function defineCookie<TValidator extends Validator<unknown>>({
       emitter.emit(next)
       notifyOtherTabs()
     },
-    get(allCookies = document.cookie): State {
-      return parseCookieString(getCookieString(allCookies))
+    get(allCookies: string | null = document.cookie): State {
+      return parseCookieString(getCookieString(allCookies ?? ''))
     },
     remove(): void {
       setCookie('' as State, { ...cookieOptions, expires: -1 })
@@ -157,7 +157,7 @@ export function defineCookie<TValidator extends Validator<unknown>>({
 
   function useCookie() {
     const isHydrated = useIsHydrated()
-    const serverCookie = React.useContext(ServerCookie) ?? ''
+    const serverCookie = React.useContext(ServerCookie)
     const [state, setState] = React.useState<State>(() =>
       isHydrated ? service.get() : service.get(serverCookie),
     )

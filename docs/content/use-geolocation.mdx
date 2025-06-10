@@ -20,6 +20,7 @@ If location permissions haven't been granted yet, the browser will request permi
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function LocationDisplay() {
   const { coords, state, error } = useGeolocation()

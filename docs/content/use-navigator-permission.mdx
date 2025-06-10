@@ -19,6 +19,7 @@ Query a permission state:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (_: any) => {} }
 // ---cut---
 const permission = useNavigatorPermission({ name: 'geolocation' })
 

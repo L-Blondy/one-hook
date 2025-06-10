@@ -7,15 +7,13 @@ import {
 } from 'fumadocs-ui/page'
 import { notFound } from 'next/navigation'
 import { PackageDetails } from '@/lib/package-details'
-import defaultMdxComponents, { createRelativeLink } from 'fumadocs-ui/mdx'
-import { Popup, PopupContent, PopupTrigger } from 'fumadocs-twoslash/ui'
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
-import { Step, Steps } from 'fumadocs-ui/components/steps'
+import { createRelativeLink } from 'fumadocs-ui/mdx'
 import { TypeTable } from 'fumadocs-ui/components/type-table'
 import { AutoTypeTable } from '@/lib/auto-type-table'
 import { TableTitle } from '@/lib/table-title'
 import { TableDescription } from '@/lib/table-description'
 import { Code } from '@/lib/code'
+import { getMDXComponents } from '@/mdx-components'
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>
@@ -45,23 +43,15 @@ export default async function Page(props: {
 
       <DocsBody>
         <MDXContent
-          components={{
-            ...defaultMdxComponents,
+          components={getMDXComponents({
             // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
             Code,
-            Popup,
-            PopupContent,
-            PopupTrigger,
-            Tab,
-            Tabs,
-            Step,
-            Steps,
             AutoTypeTable,
             TypeTable,
             TableTitle,
             TableDescription,
-          }}
+          })}
         />
       </DocsBody>
     </DocsPage>

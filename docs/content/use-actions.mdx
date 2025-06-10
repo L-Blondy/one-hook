@@ -13,7 +13,7 @@ npm install @1hook/use-actions
 
 Define how each action modifies the state:
 
-```tsx twoslash include use-counter
+```ts twoslash include use-counter
 import { defineActions } from '@1hook/use-actions'
 // ---cut---
 export const useCounter = defineActions((state: number) => ({
@@ -24,7 +24,7 @@ export const useCounter = defineActions((state: number) => ({
 
 Use the actions in your component:
 
-```tsx twoslash
+```ts twoslash
 // @include: use-counter
 // ---cut---
 const [count, actions] = useCounter(0)
@@ -39,7 +39,7 @@ We can leverage typescript generics to build reusable hooks.
 
 Let's build a custom `useArray` hook:
 
-```tsx title="use-array.ts"
+```ts title="use-array.ts"
 export const useArray = defineActions(<T>(items: Array<T>) => ({
   push: (item: T) => [...items, item],
   remove: (item: T) => items.filter((i) => i !== item),
@@ -49,7 +49,7 @@ export const useArray = defineActions(<T>(items: Array<T>) => ({
 
 We can now use the `useArray` hook in our components:
 
-```tsx twoslash
+```ts twoslash
 import { defineActions } from '@1hook/use-actions'
 
 const useArray = defineActions((items: Array<number>) => ({

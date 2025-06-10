@@ -19,6 +19,8 @@ Observe an element:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref } = useResizeObserver((entry) => {
@@ -33,6 +35,8 @@ Manual observation control:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref, observe, unobserve } = useResizeObserver(

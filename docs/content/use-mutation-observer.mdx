@@ -19,6 +19,8 @@ Observe an element’s child list mutation:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 function MyComponent() {
   const { ref } = useMutationObserver(
@@ -34,6 +36,8 @@ Manual observation control:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 function MyComponent() {
   const { ref, observe, unobserve } = useMutationObserver(

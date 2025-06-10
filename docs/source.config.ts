@@ -17,13 +17,7 @@ export default defineConfig({
       },
       transformers: [
         ...(rehypeCodeDefaultOptions.transformers ?? []),
-        transformerTwoslash({
-          twoslashOptions: {
-            compilerOptions: {
-              allowUmdGlobalAccess: true,
-            },
-          },
-        }),
+        transformerTwoslash(),
       ],
     },
   },

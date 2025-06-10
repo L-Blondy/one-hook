@@ -50,6 +50,7 @@ const seconds = useCountdown({
 Prevent rerendering the component on every tick:
 
 ```tsx twoslash
+const console = { log: (_: any) => {} }
 // @include: imports
 // ---cut---
 useCountdown({

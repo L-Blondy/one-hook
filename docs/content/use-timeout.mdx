@@ -19,6 +19,7 @@ Set a timeout:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 const { cancel, reset, isPending } = useTimeout(() => {
   console.log('Hello')
@@ -29,6 +30,7 @@ Pause the timeout by setting the delay to `null`:
 
 ```ts twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 useTimeout(() => console.log('Hello'), null)
 ```

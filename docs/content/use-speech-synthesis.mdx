@@ -43,6 +43,7 @@ speak('Bonjour le monde!')
 Cancel speaking and check the current state:
 
 ```tsx twoslash
+const console = { log: (_: any) => {} }
 // @include: imports
 // ---cut---
 const { speak, cancel, state } = useSpeechSynthesis()

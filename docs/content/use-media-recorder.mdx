@@ -12,6 +12,7 @@ npm install @1hook/use-media-recorder
 ## Usage
 
 ```tsx twoslash include imports
+import React from 'react'
 const stream = new MediaStream()
 //---cut---
 import { useMediaRecorder } from '@1hook/use-media-recorder'
@@ -67,6 +68,8 @@ const { pause, resume } = useMediaRecorder(stream, {
 Record video from the device's camera:
 
 ```tsx twoslash include imports
+import React from 'react'
+// ---cut---
 import { useMediaRecorder } from '@1hook/use-media-recorder'
 import { useUserMedia } from '@1hook/use-user-media'
 import { useState } from 'react'

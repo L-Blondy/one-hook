@@ -12,7 +12,7 @@ npm install @1hook/use-invariant-context
 ## Usage
 
 ```tsx twoslash include imports
-import { createContext } from 'react'
+import React, { createContext } from 'react'
 type Value = any[]
 const MyContext = React.createContext<Value | null>(null)
 // ---cut---
@@ -38,7 +38,7 @@ This example shows how to use `useInvariantContext` to avoid missing context pro
 
 ```tsx twoslash
 import { useInvariantContext } from '@1hook/use-invariant-context'
-import { createContext, ReactNode, useContext } from 'react'
+import React, { createContext, ReactNode, useContext } from 'react'
 type Value = any[]
 // @noErrors
 // ---cut---

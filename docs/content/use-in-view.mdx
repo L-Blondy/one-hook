@@ -19,6 +19,7 @@ Track the visibility of an element:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref, inView } = useInView()
@@ -31,6 +32,7 @@ Set a default value until the target is observed:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref, inView = true } = useInView()
@@ -43,6 +45,7 @@ Customize the intersection observer:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref, inView } = useInView({
@@ -59,6 +62,7 @@ Observe once:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref, unobserve } = useInView({

@@ -24,6 +24,7 @@ The final call is scheduled to run after the interval expires.
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 const { throttle } = useThrottleFn(1000)
 
@@ -45,6 +46,7 @@ Use `trailing: false` to avoid scheduling the last call:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 const { throttle } = useThrottleFn(1000, { trailing: false })
 

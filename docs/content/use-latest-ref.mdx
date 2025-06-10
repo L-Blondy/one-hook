@@ -29,6 +29,7 @@ Use `ref.current` to read the latest `value` in effects, changes to `value` do n
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 import { useEffect } from 'react'
 type Value = any[]
 const value: Value = []

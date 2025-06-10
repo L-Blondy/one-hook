@@ -20,6 +20,7 @@ Execute on dependency change:
 ```tsx twoslash
 // @include: imports
 const state: string = ''
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 useUpdateEffect(() => console.log('State has changed'), [state])
 ```

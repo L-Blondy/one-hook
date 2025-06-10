@@ -18,6 +18,7 @@ import { useAudioAnalyser } from '@1hook/use-audio-analyser'
 Pass the `MediaStream` or `HTMLAudioElement` to analyze to `useAudioAnalyser`.
 
 ```tsx twoslash
+const console = { log: (_: any) => {} }
 const stream = new MediaStream()
 // @include: import
 // ---cut---
@@ -37,7 +38,7 @@ Visualize audio frequencies in real-time by analyzing data from an HTML audio el
 
 ```tsx twoslash
 import { useAudioAnalyser } from '@1hook/use-audio-analyser'
-import { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 // ---cut---
 function AudioVisualizer() {
   const [data, setData] = useState<number[]>([])
@@ -78,7 +79,7 @@ Combine the `useUserMedia` hook to capture microphone input with the `useAudioAn
 ```tsx twoslash
 import { useUserMedia } from '@1hook/use-user-media'
 import { useAudioAnalyser } from '@1hook/use-audio-analyser'
-import { useState } from 'react'
+import React, { useState } from 'react'
 // ---cut---
 function AudioVisualizer() {
   const [data, setData] = useState<number[]>([])
@@ -120,7 +121,7 @@ This example uses the `useAudioAnalyser` hook to analyze the audio frequency dat
 
 ```tsx twoslash
 import { useAudioAnalyser } from '@1hook/use-audio-analyser'
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 // ---cut---
 function CanvasVisualizer() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)

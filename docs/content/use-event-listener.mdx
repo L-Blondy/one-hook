@@ -18,6 +18,8 @@ npm install @1hook/use-event-listener
 ## Usage
 
 ```tsx twoslash include imports
+const console = { log: (_: any) => {} }
+// ---cut---
 import { useEventListener } from '@1hook/use-event-listener'
 ```
 
@@ -65,7 +67,7 @@ Using a ref:
 
 ```tsx twoslash
 // @include: imports
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 // ---cut---
 function MyComponent() {
   const ref = useRef<HTMLDivElement | null>(null)
@@ -80,7 +82,7 @@ Using a stateful element:
 
 ```tsx twoslash
 // @include: imports
-import { useState } from 'react'
+import React, { useState } from 'react'
 // ---cut---
 function MyComponent() {
   const [target, setTarget] = useState<HTMLDivElement | null>(null)
@@ -95,6 +97,7 @@ Using querySelector:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const target = document.querySelector('body > .scrollable')

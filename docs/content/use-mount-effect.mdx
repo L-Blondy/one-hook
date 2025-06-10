@@ -19,6 +19,7 @@ Execute a function on mount:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 useMountEffect(() => console.log('Mounted!'))
 ```

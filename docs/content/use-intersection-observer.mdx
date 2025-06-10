@@ -25,6 +25,8 @@ Observe an element's intersection with the viewport:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
+const console = { log: (_: any) => {} }
 // ---cut---
 function MyComponent() {
   const { ref } = useIntersectionObserver((entry) => {
@@ -39,6 +41,8 @@ Customize the intersection observer:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
+const console = { log: (_: any) => {} }
 // ---cut---
 function MyComponent() {
   const { ref } = useIntersectionObserver(
@@ -54,6 +58,8 @@ Stop observing the target after the first intersection:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
+const console = { log: (_: any) => {} }
 // ---cut---
 function MyComponent() {
   const { ref, unobserve } = useIntersectionObserver((entry) => {

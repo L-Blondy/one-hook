@@ -28,7 +28,7 @@ function logFileStructure() {
     return filelist
   }
 
-  const cwd = process.cwd()
+  const cwd = path.join(process.cwd(), '..', 'packages')
   console.log('File structure under', cwd)
   console.log(
     walkSync(cwd)

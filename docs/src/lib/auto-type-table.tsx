@@ -6,7 +6,11 @@ import { TableTitle } from './table-title'
 import { TableDescription } from './table-description'
 
 const generator = createGenerator({
-  tsconfigPath: path.join(process.cwd(), 'tsconfig.json'),
+  tsconfigPath: path.join(
+    process.cwd(),
+    process.cwd().endsWith('docs') ? '' : 'docs',
+    'tsconfig.json',
+  ),
 })
 
 type Props = React.ComponentProps<typeof FumaAutoTypeTable> & {

@@ -14,7 +14,7 @@ function logFileStructure() {
   function walkSync(dir: string, filelist: string[] = []) {
     const files = fs.readdirSync(dir)
 
-    files.forEach((file) => {
+    files.forEach((file: string) => {
       const filepath = path.join(dir, file)
       const stats = fs.statSync(filepath)
 

@@ -25,7 +25,11 @@ export function AutoTypeTable(props: Props) {
         {...props}
         path={
           typeof props.path === 'string'
-            ? path.join(process.cwd(), '..', props.path)
+            ? path.join(
+                process.cwd(),
+                process.cwd().endsWith('docs') ? '..' : '',
+                props.path,
+              )
             : props.path
         }
         generator={generator}

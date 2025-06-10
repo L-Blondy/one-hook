@@ -5,6 +5,8 @@ import { AutoTypeTable as FumaAutoTypeTable } from 'fumadocs-typescript/ui'
 import { TableTitle } from './table-title'
 import { TableDescription } from './table-description'
 
+console.log({ 'process.cwd()': process.cwd(), __dirname })
+
 const generator = createGenerator({
   tsconfigPath: path.join(
     process.cwd(),
@@ -19,6 +21,7 @@ type Props = React.ComponentProps<typeof FumaAutoTypeTable> & {
 }
 
 export function AutoTypeTable(props: Props) {
+  console.log({ 'process.cwd()': process.cwd(), __dirname })
   return (
     <div>
       <TableTitle value={props.title || props.name} />

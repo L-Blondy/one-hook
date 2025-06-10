@@ -10,7 +10,7 @@
     "bumpp": "bumpp --recursive --no-commit --no-push --no-tag",
     "clean": "rm -rf node_modules packages/*/node_modules docs/*/node_modules",
     "dev": "bun scripts/dev.ts",
-    "dev:docs": "cd docs && pnpm run docs",
+    "dev:docs": "cd docs && pnpm run dev",
     "dev:hooks": "pnpm run align && turbo --concurrency 50 --filter \"./packages/*\" dev",
     "test": "turbo test",
     "lint": "turbo lint",

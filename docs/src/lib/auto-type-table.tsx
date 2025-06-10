@@ -5,15 +5,7 @@ import { AutoTypeTable as FumaAutoTypeTable } from 'fumadocs-typescript/ui'
 import { TableTitle } from './table-title'
 import { TableDescription } from './table-description'
 
-console.log({ 'process.cwd()': process.cwd(), __dirname })
-
-const generator = createGenerator({
-  tsconfigPath: path.join(
-    process.cwd(),
-    process.cwd().endsWith('docs') ? '' : 'docs',
-    'tsconfig.json',
-  ),
-})
+const generator = createGenerator()
 
 type Props = React.ComponentProps<typeof FumaAutoTypeTable> & {
   title?: string
@@ -21,7 +13,6 @@ type Props = React.ComponentProps<typeof FumaAutoTypeTable> & {
 }
 
 export function AutoTypeTable(props: Props) {
-  console.log({ 'process.cwd()': process.cwd(), __dirname })
   return (
     <div>
       <TableTitle value={props.title || props.name} />
@@ -32,11 +23,7 @@ export function AutoTypeTable(props: Props) {
         {...props}
         path={
           typeof props.path === 'string'
-            ? path.join(
-                process.cwd(),
-                process.cwd().endsWith('docs') ? '..' : '',
-                props.path,
-              )
+            ? path.join(process.cwd(), '..', props.path)
             : props.path
         }
         generator={generator}

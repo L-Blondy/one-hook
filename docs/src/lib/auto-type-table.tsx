@@ -5,7 +5,9 @@ import { AutoTypeTable as FumaAutoTypeTable } from 'fumadocs-typescript/ui'
 import { TableTitle } from './table-title'
 import { TableDescription } from './table-description'
 
-const generator = createGenerator()
+const generator = createGenerator({
+  tsconfigPath: path.join(process.cwd(), 'tsconfig.json'),
+})
 
 type Props = React.ComponentProps<typeof FumaAutoTypeTable> & {
   title?: string

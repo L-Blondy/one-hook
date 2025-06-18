@@ -10,6 +10,7 @@ import { setupServer } from 'msw/node'
 import { ws } from 'msw'
 import { getSocketInstance, instanceMap } from './vanilla'
 import { noop } from '@1hook/utils/noop'
+import { z } from 'zod'
 
 const api = ws.link('wss://socket.test.domain')
 
@@ -35,26 +36,76 @@ afterAll(() => server.close())
 // Reset handlers after each test for test isolation
 afterEach(() => {
   server.resetHandlers()
-  instanceMap.forEach((instance) => instance.kill())
+  instanceMap.forEach((instance) => instance['~kill']())
   instanceMap.clear()
 })
 
 test('type inference', () => {
-  function main() {
-    const socket = getSocketInstance({
+  function incomingMessageType() {
+    const socket1 = getSocketInstance({
+      url: 'wss://socket.test.domain',
+    })
+    socket1.on('message', (data, event) => {
+      expectTypeOf(data).toEqualTypeOf<unknown>()
+      expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
+    })
+    const socket2 = getSocketInstance({
       url: 'wss://socket.test.domain',
       incomingMessage: {
         parse: (data) => String(data),
       },
     })
-    socket.on('message', (data) => {
+    socket2.on('message', (data, event) => {
       expectTypeOf(data).toEqualTypeOf<string>()
+      expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
     })
-    socket.on('open', () => {
-      noop()
+    const socket3 = getSocketInstance({
+      url: 'wss://socket.test.domain',
+      incomingMessage: {
+        parse: (data) => String(data),
+        // @ts-expect-error Input string expected number
+        schema: z.number(),
+      },
+    })
+    socket3.on('message', (data) => {
+      expectTypeOf(data).toEqualTypeOf<number>()
+    })
+    const socket4 = getSocketInstance({
+      url: 'wss://socket.test.domain',
+      incomingMessage: {
+        schema: z.number(),
+      },
+    })
+    socket4.on('message', (data) => {
+      expectTypeOf(data).toEqualTypeOf<number>()
     })
   }
-  noop(main)
+
+  function outgoingMessageType() {
+    const socket1 = getSocketInstance({
+      url: 'wss://socket.test.domain',
+    })
+    socket1.send('message data' as unknown) // unknown ok
+
+    const socket2 = getSocketInstance({
+      url: 'wss://socket.test.domain',
+      outgoingMessage: {
+        serialize: (data: boolean) => String(data),
+      },
+    })
+    // @ts-expect-error expect boolean receive unknown
+    socket2.send('message data' as unknown)
+
+    const socket3 = getSocketInstance({
+      url: 'wss://socket.test.domain',
+      outgoingMessage: {
+        serialize: (data: boolean) => String(data),
+      },
+    })
+    socket3.send(true)
+  }
+
+  noop(incomingMessageType, outgoingMessageType)
 })
 
 test('Should receive messages', async () => {

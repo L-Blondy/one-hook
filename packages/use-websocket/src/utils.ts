@@ -5,7 +5,7 @@ import { SchemaValidationError } from '@1hook/utils/validate'
 export type InstanceId = string & { instanceId: true }
 
 export function getInstanceId(
-  options: SocketInstanceOptions<any, any>,
+  options: SocketInstanceOptions<any, any, any>,
 ): InstanceId {
   return JSON.stringify({
     url: options.url,
@@ -20,4 +20,20 @@ export async function validate<TSchema extends StandardSchemaV1>(
   const result = await schema['~standard'].validate(data)
   if (result.issues) throw new SchemaValidationError(result, data)
   return result.value
+}
+
+export function safeJsonParse(data: unknown): unknown {
+  if (typeof data === 'string') {
+    try {
+      return JSON.parse(data)
+    } catch (_) {
+      // silent
+    }
+  }
+  return data
+}
+
+export function safeJsonStringify(data: unknown): string {
+  if (typeof data === 'string') return data
+  return JSON.stringify(data)
 }

@@ -1,8 +1,15 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec'
-import { getInstanceId, validate, type InstanceId } from './utils'
+import {
+  getInstanceId,
+  safeJsonParse,
+  safeJsonStringify,
+  validate,
+  type InstanceId,
+} from './utils'
 import type { MaybePromise } from '@1hook/utils/types'
+import { noop } from '@1hook/utils/noop'
 
-type EventMap<TMessage> = {
+type EventMap<TMessage = any> = {
   close: (event: CloseEvent) => void
   open: (event: Event) => void
   message: (message: TMessage, event: MessageEvent<unknown>) => void
@@ -10,10 +17,10 @@ type EventMap<TMessage> = {
 }
 
 export type SocketInstance<
-  TParsedMessage = unknown,
-  TSchema extends
-    StandardSchemaV1<TParsedMessage> = StandardSchemaV1<TParsedMessage>,
-> = ReturnType<typeof createInstance<TParsedMessage, TSchema>>
+  TParsedMessage,
+  TSchema extends StandardSchemaV1<TParsedMessage>,
+  TOutgoingMessage,
+> = ReturnType<typeof createInstance<TParsedMessage, TSchema, TOutgoingMessage>>
 
 export type WebSocketReconnectOption = {
   when?: (closeEvent: CloseEvent) => boolean
@@ -27,25 +34,63 @@ export type WebSocketPingOption = {
   leading?: boolean
 }
 
-export type SocketInstanceOptions<
-  TParsedMessage = unknown,
-  TSchema extends
-    StandardSchemaV1<TParsedMessage> = StandardSchemaV1<TParsedMessage>,
+export type WebSocketIncomingMessageOption<
+  TParsedMessage,
+  TSchema extends StandardSchemaV1<TParsedMessage>,
 > = {
-  url: string
-  protocols?: string | string[]
-  reconnect?: WebSocketReconnectOption
-  ping?: WebSocketPingOption
-  incomingMessage?: {
-    parse?: (data: unknown) => MaybePromise<TParsedMessage>
-    schema?: TSchema
-  }
-  outgoingMessage?: {
-    serialize: (data: TParsedMessage) => Parameters<WebSocket['send']>[0]
-  }
+  /**
+   * The incoming message options
+   */
+  parse?: (data: unknown) => MaybePromise<TParsedMessage>
+  /**
+   * Validation schema for the incoming message. Can be any StandardSchemaV1 compliant schema.
+   */
+  schema?: TSchema
 }
 
-export const instanceMap = new Map<InstanceId, SocketInstance>()
+export type WebSocketOutgoingMessageOption<TOutgoingMessage> = {
+  /**
+   * The function to serialize the outgoing message, before passing it to `WebSocket.send`
+   */
+  serialize: (data: TOutgoingMessage) => Parameters<WebSocket['send']>[0]
+}
+
+export type SocketInstanceOptions<
+  TParsedMessage,
+  TSchema extends StandardSchemaV1<TParsedMessage>,
+  TOutgoingMessage,
+> = {
+  /**
+   * The url of the websocket server.
+   *
+   * See [MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/WebSocket#url) for more details
+   */
+  url: string
+  /**
+   * The sub-protocols.
+   *
+   * See [MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/WebSocket#protocols) for more details
+   */
+  protocols?: string | string[]
+  /**
+   * Define the reconnection strategy, if any.
+   */
+  reconnect?: WebSocketReconnectOption
+  /**
+   * Define the ping strategy, if any.
+   */
+  ping?: WebSocketPingOption
+  /**
+   * Parse and validate the incoming message data
+   */
+  incomingMessage?: WebSocketIncomingMessageOption<TParsedMessage, TSchema>
+  /**
+   * The outgoing message options (WebSocket.send)
+   */
+  outgoingMessage?: WebSocketOutgoingMessageOption<TOutgoingMessage>
+}
+
+export const instanceMap = new Map<InstanceId, SocketInstance<any, any, any>>()
 
 /**
  * Features:
@@ -57,9 +102,10 @@ export function getSocketInstance<
   TParsedMessage = unknown,
   TSchema extends
     StandardSchemaV1<TParsedMessage> = StandardSchemaV1<TParsedMessage>,
+  TOutgoingMessage = unknown,
 >(
-  options: SocketInstanceOptions<TParsedMessage, TSchema>,
-): SocketInstance<TParsedMessage, TSchema> {
+  options: SocketInstanceOptions<TParsedMessage, TSchema, TOutgoingMessage>,
+): SocketInstance<TParsedMessage, TSchema, TOutgoingMessage> {
   const id = getInstanceId(options)
   const instance = instanceMap.get(id) ?? createInstance(id, options)
   instanceMap.set(id, instance)
@@ -67,10 +113,13 @@ export function getSocketInstance<
 }
 
 function createInstance<
-  TParsedMessage = unknown,
-  TSchema extends
-    StandardSchemaV1<TParsedMessage> = StandardSchemaV1<TParsedMessage>,
->(id: InstanceId, options: SocketInstanceOptions<TParsedMessage, TSchema>) {
+  TParsedMessage,
+  TSchema extends StandardSchemaV1<TParsedMessage>,
+  TOutgoingMessage,
+>(
+  id: InstanceId,
+  options: SocketInstanceOptions<TParsedMessage, TSchema, TOutgoingMessage>,
+) {
   type TMessage = StandardSchemaV1.InferOutput<TSchema>
   const listenersMap = {
     close: new Set<EventMap<TMessage>['close']>(),
@@ -87,8 +136,11 @@ function createInstance<
   const pingMessage = options.ping?.message ?? 'ping'
   const pingLeading = options.ping?.leading ?? false
 
-  const incomingParse = options.incomingMessage?.parse ?? ((d: unknown) => d)
+  const incomingParse = options.incomingMessage?.parse ?? safeJsonParse
   const incomingSchema = options.incomingMessage?.schema
+
+  const outgoingSerialize =
+    options.outgoingMessage?.serialize ?? safeJsonStringify
 
   let recoAttempt = 0
   let recoTimeoutId: NodeJS.Timeout | undefined
@@ -106,9 +158,13 @@ function createInstance<
         'close',
         (event) => {
           listenersMap.close.forEach((l) => l(event))
-          controller.abort() // remove listeners on that socket instance
+          controller.abort() // remove listeners on that socket instance. A new instance will be created.
           clearInterval(pingIntervalId)
-          if (recoWhen(event) && ++recoAttempt <= recoAttempts) {
+          if (
+            recoWhen(event) &&
+            instance.hasListeners &&
+            ++recoAttempt <= recoAttempts
+          ) {
             const delay =
               typeof recoDelay === 'function'
                 ? recoDelay(recoAttempt, event)
@@ -148,7 +204,9 @@ function createInstance<
         'message',
         (event: MessageEvent<unknown>) => {
           void (async function () {
-            const parsed = await incomingParse(event.data)
+            const parsed: TParsedMessage = (await incomingParse(
+              event.data,
+            )) as any
             const validated: TMessage = incomingSchema
               ? await validate(incomingSchema, parsed)
               : parsed
@@ -167,21 +225,13 @@ function createInstance<
     /**
      * Send a message.
      */
-    send(...args: Parameters<WebSocket['send']>) {
-      instance.socket?.send(...args)
+    send(message: TOutgoingMessage) {
+      instance.socket?.send(outgoingSerialize(message))
     },
-    /**
-     * Clears everything
-     */
-    kill() {
-      clearTimeout(recoTimeoutId)
-      instance.socket?.close()
-      // TODO maybe pass a custom code to close and clear in the listener
-      Object.values(listenersMap).forEach((set) => set.clear())
-    },
+
     on<TEventType extends keyof EventMap<TMessage>>(
       type: TEventType,
-      listener: EventMap<TMessage>[TEventType],
+      listener: EventMap<TMessage>[TEventType] = noop,
     ) {
       listenersMap[type].add(listener as any)
       return () => instance.off(type, listener)
@@ -194,6 +244,14 @@ function createInstance<
     },
     get hasListeners() {
       return Object.values(listenersMap).some((set) => set.size)
+    },
+    /**
+     * Clears everything
+     */
+    ['~kill']() {
+      clearTimeout(recoTimeoutId)
+      Object.values(listenersMap).forEach((set) => set.clear())
+      instance.socket?.close()
     },
   }
 

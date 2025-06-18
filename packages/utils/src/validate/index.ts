@@ -1,5 +1,6 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec'
 import { SchemaValidationError } from './schema-validation-error'
+export { SchemaValidationError }
 
 type ValidationFunction<TInput = any, TOutput = TInput> = (
   data: TInput,

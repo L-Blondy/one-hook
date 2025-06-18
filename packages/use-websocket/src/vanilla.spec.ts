@@ -1,7 +1,15 @@
-import { afterAll, afterEach, beforeAll, expect, test } from 'vitest'
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  expect,
+  expectTypeOf,
+  test,
+} from 'vitest'
 import { setupServer } from 'msw/node'
 import { ws } from 'msw'
-import { getSocketInstance, instanceMap } from './instance'
+import { getSocketInstance, instanceMap } from './vanilla'
+import { noop } from '@1hook/utils/noop'
 
 const api = ws.link('wss://socket.test.domain')
 
@@ -31,6 +39,24 @@ afterEach(() => {
   instanceMap.clear()
 })
 
+test('type inference', () => {
+  function main() {
+    const socket = getSocketInstance({
+      url: 'wss://socket.test.domain',
+      incomingMessage: {
+        parse: (data) => String(data),
+      },
+    })
+    socket.on('message', (data) => {
+      expectTypeOf(data).toEqualTypeOf<string>()
+    })
+    socket.on('open', () => {
+      noop()
+    })
+  }
+  noop(main)
+})
+
 test('Should receive messages', async () => {
   const socket = getSocketInstance({ url: 'wss://socket.test.domain' })
   socket.connect()
@@ -40,8 +66,8 @@ test('Should receive messages', async () => {
       socket.socket?.send('message data')
     })
 
-    socket.on('message', (event) => {
-      resolve(event.data)
+    socket.on('message', (data) => {
+      resolve(data)
     })
   })
   expect(data).toBe('message data')
@@ -59,8 +85,8 @@ test('Should ping at interval { leading: false }', async () => {
 
   const start = Date.now()
   const data = await new Promise((resolve) => {
-    socket.on('message', (event) => {
-      resolve(event.data)
+    socket.on('message', (data) => {
+      resolve(data)
     })
   })
   expect(data).toBe('pong')
@@ -80,8 +106,8 @@ test('Should ping immediately { leading: true }', async () => {
 
   const start = Date.now()
   const data = await new Promise((resolve) => {
-    socket.on('message', (event) => {
-      resolve(event.data)
+    socket.on('message', (data) => {
+      resolve(data)
     })
   })
   expect(data).toBe('pong')
@@ -100,8 +126,8 @@ test('Should ping a custom message { message: "custom" }', async () => {
   socket.connect()
 
   const data = await new Promise((resolve) => {
-    socket.on('message', (event) => {
-      resolve(event.data)
+    socket.on('message', (data) => {
+      resolve(data)
     })
   })
   expect(data).toBe('custom')

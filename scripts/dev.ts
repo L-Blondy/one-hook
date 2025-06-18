@@ -22,7 +22,7 @@ function main() {
         : `use-${packageName}`
 
   try {
-    const command = `pnpm run align && cd ./packages/${fullPackageName} && pnpm dev`
+    const command = `pnpm run align && cd ./packages/${fullPackageName} && vitest`
     consola.info(`Running: ${command}`)
     execSync(command, { stdio: 'inherit' })
   } catch (error) {

@@ -1,0 +1,1 @@
+export { createSocketInstance } from './instance'

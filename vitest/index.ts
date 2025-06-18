@@ -6,6 +6,7 @@ export const vitestConfig = (): ViteUserConfig => {
   return {
     plugins: [react(), tsconfigPaths()],
     test: {
+      globals: true,
       environment: 'jsdom',
       setupFiles: ['../../vitest/setup.ts'],
     },

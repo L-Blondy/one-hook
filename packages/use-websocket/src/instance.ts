@@ -1,3 +1,5 @@
+import { getInstanceId, type InstanceId } from './utils'
+
 type EventMap = {
   close: (event: CloseEvent) => void
   open: (event: Event) => void
@@ -5,7 +7,7 @@ type EventMap = {
   error: (event: Event) => void
 }
 
-export type SocketInstance = ReturnType<typeof createSocketInstance>
+export type SocketInstance = ReturnType<typeof createInstance>
 
 export type SocketInstanceOptions = {
   url: string
@@ -22,13 +24,24 @@ export type SocketInstanceOptions = {
   }
 }
 
+export const instanceMap = new Map<InstanceId, SocketInstance>()
+
 /**
  * Features:
  * - reconnect
  * - ping
- * - stable instance (no need to create a new instance)
+ * - stable instance given the some url + protocols
  */
-export function createSocketInstance(options: SocketInstanceOptions) {
+export function getSocketInstance(
+  options: SocketInstanceOptions,
+): SocketInstance {
+  const id = getInstanceId(options)
+  const instance = instanceMap.get(id) ?? createInstance(id, options)
+  instanceMap.set(id, instance)
+  return instance
+}
+
+function createInstance(id: InstanceId, options: SocketInstanceOptions) {
   const listenersMap = {
     close: new Set<EventMap['close']>(),
     open: new Set<EventMap['open']>(),
@@ -49,6 +62,7 @@ export function createSocketInstance(options: SocketInstanceOptions) {
   let pingIntervalId: NodeJS.Timeout | undefined
 
   const instance = {
+    id,
     socket: undefined as WebSocket | undefined,
     connect() {
       instance.socket = new WebSocket(options.url, options.protocols)

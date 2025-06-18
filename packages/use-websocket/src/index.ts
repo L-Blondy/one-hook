@@ -1,1 +1,1 @@
-export { createSocketInstance } from './instance'
+export { createInstance as createSocketInstance } from './instance'

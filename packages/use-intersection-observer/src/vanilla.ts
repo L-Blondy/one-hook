@@ -8,7 +8,9 @@ export function getIntersectionObserver(
   options: IntersectionObserverInit,
 ): IntersectionObserverInstance {
   const id = getInstanceId(options)
-  return instanceMap.get(id) ?? createInstance(id, options)
+  const instance = instanceMap.get(id) ?? createInstance(id, options)
+  instanceMap.set(id, instance)
+  return instance
 }
 
 export type Callback = (
@@ -65,6 +67,5 @@ function createInstance(id: InstanceId, options: IntersectionObserverInit) {
       observer.disconnect()
     },
   }
-  instanceMap.set(id, instance)
   return instance
 }

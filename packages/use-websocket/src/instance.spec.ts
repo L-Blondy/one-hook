@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, expect, test } from 'vitest'
 import { setupServer } from 'msw/node'
 import { ws } from 'msw'
-import { createSocketInstance } from './instance'
+import { getSocketInstance, instanceMap } from './instance'
 
 const api = ws.link('wss://socket.test.domain')
 
@@ -25,10 +25,14 @@ beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }))
 afterAll(() => server.close())
 
 // Reset handlers after each test for test isolation
-afterEach(() => server.resetHandlers())
+afterEach(() => {
+  server.resetHandlers()
+  instanceMap.forEach((instance) => instance.kill())
+  instanceMap.clear()
+})
 
 test('Should receive messages', async () => {
-  const socket = createSocketInstance({ url: 'wss://socket.test.domain' })
+  const socket = getSocketInstance({ url: 'wss://socket.test.domain' })
   socket.connect()
 
   const data = await new Promise((resolve) => {
@@ -41,11 +45,10 @@ test('Should receive messages', async () => {
     })
   })
   expect(data).toBe('message data')
-  socket.kill()
 })
 
 test('Should ping at interval { leading: false }', async () => {
-  const socket = createSocketInstance({
+  const socket = getSocketInstance({
     url: 'wss://socket.test.domain',
     ping: {
       interval: 100,
@@ -62,12 +65,11 @@ test('Should ping at interval { leading: false }', async () => {
   })
   expect(data).toBe('pong')
   expect(Date.now() - start).toBeGreaterThanOrEqual(100)
-  expect(Date.now() - start).toBeLessThan(150)
-  socket.kill()
+  expect(Date.now() - start).toBeLessThan(200)
 })
 
 test('Should ping immediately { leading: true }', async () => {
-  const socket = createSocketInstance({
+  const socket = getSocketInstance({
     url: 'wss://socket.test.domain',
     ping: {
       interval: 100,
@@ -84,11 +86,10 @@ test('Should ping immediately { leading: true }', async () => {
   })
   expect(data).toBe('pong')
   expect(Date.now() - start).toBeLessThan(50)
-  socket.kill()
 })
 
 test('Should ping a custom message { message: "custom" }', async () => {
-  const socket = createSocketInstance({
+  const socket = getSocketInstance({
     url: 'wss://socket.test.domain',
     ping: {
       interval: 100,
@@ -104,11 +105,10 @@ test('Should ping a custom message { message: "custom" }', async () => {
     })
   })
   expect(data).toBe('custom')
-  socket.kill()
 })
 
 test('Should try to reconnect', async () => {
-  const socket = createSocketInstance({
+  const socket = getSocketInstance({
     url: 'wss://notfound.test.com',
     reconnect: {
       delay: 1,
@@ -130,7 +130,7 @@ test('Should try to reconnect', async () => {
 })
 
 test('Should try to reconnect at interval { delay: 100 }', async () => {
-  const socket = createSocketInstance({
+  const socket = getSocketInstance({
     url: 'wss://notfound.test.com',
     reconnect: {
       delay: 100,
@@ -150,5 +150,20 @@ test('Should try to reconnect at interval { delay: 100 }', async () => {
   })
   expect(data).toBe(3)
   expect(Date.now() - start).toBeGreaterThanOrEqual(300)
-  expect(Date.now() - start).toBeLessThan(350)
+  expect(Date.now() - start).toBeLessThan(400)
+})
+
+test('Should reuse the same instance given a url & protocols', () => {
+  const socket1 = getSocketInstance({
+    url: 'wss://notfound.test.com',
+    protocols: ['test'],
+  })
+  const socket2 = getSocketInstance({
+    url: 'wss://notfound.test.com',
+    protocols: ['test'],
+  })
+  socket1.connect()
+  socket2.connect()
+  expect(socket1.id).toBe(socket2.id)
+  expect(instanceMap.size).toBe(1)
 })

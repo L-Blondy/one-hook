@@ -40,8 +40,8 @@ export function defineWebSocket<
 >({
   reconnect,
   ping,
-}: DefineWebSocketOptions<TParsedMessage, TSchema, TOutgoingMessage>) {
-  type TSocket = SocketInstance<TParsedMessage, TSchema, TOutgoingMessage>
+}: DefineWebSocketOptions<TParsedMessage, TSchema, TOutgoingMessage> = {}) {
+  type TInstance = SocketInstance<TParsedMessage, TSchema, TOutgoingMessage>
   type TMessage = StandardSchemaV1.InferOutput<TSchema>
 
   /**
@@ -54,20 +54,29 @@ export function defineWebSocket<
   }: UseWebSocketOptions<TMessage>) {
     const instanceOptions = useStableOptions({ url, protocols })
     const listenersRef = useLatestRef(listeners)
-    const [socket] = React.useState<TSocket | null>(null)
+    const instanceRef = React.useRef<TInstance | null>(null)
+
+    const send = React.useCallback((message: TOutgoingMessage) => {
+      instanceRef.current?.send(message)
+    }, [])
 
     React.useEffect(() => {
       if (!instanceOptions.url) return
-      const socket = getSocketInstance<any>({
+      const instance = getSocketInstance<any>({
         url: instanceOptions.url,
         protocols: instanceOptions.protocols,
         reconnect,
         ping,
       })
-      return socket.listen(listenersRef.current)
+      instanceRef.current = instance
+      const cleanup = instance.listen(listenersRef.current)
+      return () => {
+        cleanup()
+        instanceRef.current = null
+      }
     }, [instanceOptions, listenersRef])
 
-    return socket
+    return { send }
   }
 }
 

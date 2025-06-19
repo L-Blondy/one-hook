@@ -67,7 +67,10 @@ export const useIntersectionObserver = (
       threshold,
     })
     autoObserve && observe()
-    return unobserve
+    return () => {
+      unobserve()
+      instanceRef.current = null
+    }
   }, [autoObserve, observe, root, rootMargin, target, threshold, unobserve])
 
   return { observe, unobserve, ref, target }

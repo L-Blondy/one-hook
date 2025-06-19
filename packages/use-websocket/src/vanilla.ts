@@ -9,10 +9,10 @@ import {
 import type { MaybePromise } from '@1hook/utils/types'
 
 type Listeners<TMessage = any> = {
-  close: (event: CloseEvent) => void
-  open: (event: Event) => void
-  message: (message: TMessage, event: MessageEvent<unknown>) => void
-  error: (event: Event) => void
+  onClose?: (event: CloseEvent) => void
+  onOpen?: (event: Event) => void
+  onMessage?: (message: TMessage, event: MessageEvent<unknown>) => void
+  onError?: (event: Event) => void
 }
 
 export type SocketInstance<
@@ -67,7 +67,7 @@ export type SocketInstanceOptions<
    *
    * See [MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/WebSocket#url) for more details
    */
-  url: string
+  url: string | URL
   /**
    * The sub-protocols.
    *
@@ -154,7 +154,7 @@ function createInstance<
       'close',
       (event) => {
         allListeners.forEach((listeners) => {
-          listeners.close(event)
+          listeners.onClose?.(event)
         })
         controller.abort() // remove listeners on that socket instance. A new instance will be created.
         clearInterval(pingIntervalId)
@@ -180,7 +180,7 @@ function createInstance<
       'open',
       (event) => {
         allListeners.forEach((listeners) => {
-          listeners.open(event)
+          listeners.onOpen?.(event)
         })
         recoAttempt = 0
         clearTimeout(recoTimeoutId)
@@ -199,7 +199,7 @@ function createInstance<
       'error',
       (event) => {
         allListeners.forEach((listeners) => {
-          listeners.error(event)
+          listeners.onError?.(event)
         })
       },
       { signal },
@@ -216,7 +216,7 @@ function createInstance<
             ? await validate(incomingSchema, parsed)
             : parsed
           allListeners.forEach((listeners) => {
-            listeners.message(validated, event)
+            listeners.onMessage?.(validated, event)
           })
         })()
       },
@@ -224,11 +224,16 @@ function createInstance<
     )
   }
 
+  /**
+   * the `close` method is not part of the public API:
+   * calling it manually without removing the listeners
+   * would trigger a reconnection attempt.
+   */
   const instance = {
+    id,
     send(message: TOutgoingMessage) {
       instance['~socket']?.send(outgoingSerialize(message, instance['~socket']))
     },
-
     listen(listeners: Listeners<TMessage>) {
       allListeners.add(listeners)
       if (!instance['~socket']) connect()
@@ -240,7 +245,6 @@ function createInstance<
         }
       }
     },
-    id,
     ['~socket']: null as WebSocket | null,
   }
   instanceMap.set(id, instance)

@@ -45,13 +45,13 @@ test('type inference', () => {
     getSocketInstance({
       url: 'wss://socket.test.domain',
     }).listen({
-      message(data, event) {
+      onMessage(data, event) {
         expectTypeOf(data).toEqualTypeOf<unknown>()
         expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
       },
-      open: noop,
-      close: noop,
-      error: noop,
+      onOpen: noop,
+      onClose: noop,
+      onError: noop,
     })
 
     getSocketInstance({
@@ -60,13 +60,13 @@ test('type inference', () => {
         parse: (data) => String(data),
       },
     }).listen({
-      message(data, event) {
+      onMessage(data, event) {
         expectTypeOf(data).toEqualTypeOf<string>()
         expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
       },
-      open: noop,
-      close: noop,
-      error: noop,
+      onOpen: noop,
+      onClose: noop,
+      onError: noop,
     })
 
     getSocketInstance({
@@ -77,13 +77,13 @@ test('type inference', () => {
         schema: z.number(),
       },
     }).listen({
-      message(data, event) {
+      onMessage(data, event) {
         expectTypeOf(data).toEqualTypeOf<number>()
         expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
       },
-      open: noop,
-      close: noop,
-      error: noop,
+      onOpen: noop,
+      onClose: noop,
+      onError: noop,
     })
 
     getSocketInstance({
@@ -92,13 +92,13 @@ test('type inference', () => {
         schema: z.number(),
       },
     }).listen({
-      message(data, event) {
+      onMessage(data, event) {
         expectTypeOf(data).toEqualTypeOf<number>()
         expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
       },
-      open: noop,
-      close: noop,
-      error: noop,
+      onOpen: noop,
+      onClose: noop,
+      onError: noop,
     })
   }
 
@@ -132,14 +132,14 @@ test('Should receive messages', async () => {
 
   const data = await new Promise((resolve) => {
     socket.listen({
-      open() {
+      onOpen() {
         socket.send('message data')
       },
-      message(data) {
+      onMessage(data) {
         resolve(data)
       },
-      close: noop,
-      error: noop,
+      onClose: noop,
+      onError: noop,
     })
   })
   expect(data).toBe('message data')
@@ -157,12 +157,12 @@ test('Should ping at interval { leading: false }', async () => {
   const start = Date.now()
   const data = await new Promise((resolve) => {
     socket.listen({
-      message(data) {
+      onMessage(data) {
         resolve(data)
       },
-      open: noop,
-      close: noop,
-      error: noop,
+      onOpen: noop,
+      onClose: noop,
+      onError: noop,
     })
   })
   expect(data).toBe('pong')
@@ -182,12 +182,12 @@ test('Should ping immediately { leading: true }', async () => {
   const start = Date.now()
   const data = await new Promise((resolve) => {
     socket.listen({
-      message(data) {
+      onMessage(data) {
         resolve(data)
       },
-      open: noop,
-      close: noop,
-      error: noop,
+      onOpen: noop,
+      onClose: noop,
+      onError: noop,
     })
   })
   expect(data).toBe('pong')
@@ -206,12 +206,12 @@ test('Should ping a custom message { message: "custom" }', async () => {
 
   const data = await new Promise((resolve) => {
     socket.listen({
-      message(data) {
+      onMessage(data) {
         resolve(data)
       },
-      open: noop,
-      close: noop,
-      error: noop,
+      onOpen: noop,
+      onClose: noop,
+      onError: noop,
     })
   })
   expect(data).toBe('custom')
@@ -228,16 +228,16 @@ test('Should try to reconnect', async () => {
   const data = await new Promise((resolve) => {
     let attempt = -1
     socket.listen({
-      open() {
+      onOpen() {
         attempt++
         socket['~socket']?.close()
         if (attempt === 3) {
           resolve(attempt)
         }
       },
-      message: noop,
-      close: noop,
-      error: noop,
+      onMessage: noop,
+      onClose: noop,
+      onError: noop,
     })
   })
   expect(data).toBe(3)
@@ -254,16 +254,16 @@ test('Should try to reconnect at interval { delay: 100 }', async () => {
   const data = await new Promise((resolve) => {
     let attempt = -1
     socket.listen({
-      open() {
+      onOpen() {
         attempt++
         socket['~socket']?.close()
         if (attempt === 3) {
           resolve(attempt)
         }
       },
-      message: noop,
-      close: noop,
-      error: noop,
+      onMessage: noop,
+      onClose: noop,
+      onError: noop,
     })
   })
   expect(data).toBe(3)
@@ -281,16 +281,16 @@ test('Should reuse the same instance given a url & protocols', () => {
     protocols: ['test'],
   })
   socket1.listen({
-    open: noop,
-    message: noop,
-    close: noop,
-    error: noop,
+    onOpen: noop,
+    onMessage: noop,
+    onClose: noop,
+    onError: noop,
   })
   socket2.listen({
-    open: noop,
-    message: noop,
-    close: noop,
-    error: noop,
+    onOpen: noop,
+    onMessage: noop,
+    onClose: noop,
+    onError: noop,
   })
   expect(socket1.id).toBe(socket2.id)
   expect(instanceMap.size).toBe(1)

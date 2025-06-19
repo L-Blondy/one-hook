@@ -38,7 +38,9 @@ export type WebSocketIncomingMessageOption<
   TSchema extends StandardSchemaV1<TParsedMessage>,
 > = {
   /**
-   * The incoming message options
+   * The incoming message options.
+   *
+   * Return `undefined` to ignore messages.
    */
   parse?: (data: unknown, socket: WebSocket) => MaybePromise<TParsedMessage>
   /**
@@ -218,6 +220,8 @@ function createInstance<
             event.data,
             socket,
           )) as any
+          // ignore the message if the parse function returns `undefined`
+          if (parsed === undefined) return
           const validated: TMessage = incomingSchema
             ? await validate(incomingSchema, parsed)
             : parsed

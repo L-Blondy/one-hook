@@ -1,10 +1,19 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec'
 import { SchemaValidationError } from './schema-validation-error'
+import type { MaybePromise } from 'src/types'
 export { SchemaValidationError }
+
+type ValidationFunctionSync<TInput = any, TOutput = TInput> = (
+  data: TInput,
+) => TOutput
 
 type ValidationFunction<TInput = any, TOutput = TInput> = (
   data: TInput,
-) => TOutput
+) => MaybePromise<TOutput>
+
+export type ValidatorSync<TInput = any, TOutput = TInput> =
+  | ValidationFunctionSync<TInput, TOutput>
+  | StandardSchemaV1<TInput, TOutput>
 
 export type Validator<TInput = any, TOutput = TInput> =
   | ValidationFunction<TInput, TOutput>
@@ -37,7 +46,7 @@ export type ValidatorOutput<TValidator extends Validator> =
       ? StandardSchemaV1.InferOutput<TValidator>
       : never
 
-export function validateSync<TValidator extends Validator>(
+export function validateSync<TValidator extends ValidatorSync>(
   fnOrSchema: TValidator,
   data: ValidatorInput<TValidator>,
 ): ValidatorOutput<TValidator> {

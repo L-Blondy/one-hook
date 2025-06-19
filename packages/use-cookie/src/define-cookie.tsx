@@ -1,6 +1,6 @@
 import {
   validateSync,
-  type Validator,
+  type ValidatorSync,
   type ValidatorOutput,
 } from '@1hook/utils/validate'
 import React from 'react'
@@ -44,7 +44,7 @@ export function ServerCookieProvider(props: ServerCookieProviderProps) {
   return <Ctx.Provider {...props} />
 }
 
-export type DefineCookieOptions<TValidator extends Validator<unknown>> = {
+export type DefineCookieOptions<TValidator extends ValidatorSync<unknown>> = {
   /**
    * The name of the cookie.
    */
@@ -94,7 +94,7 @@ export type DefineCookieOptions<TValidator extends Validator<unknown>> = {
 
 type Unsubscribe = () => void
 
-export type DefineCookieReturn<TValidator extends Validator<unknown>> = [
+export type DefineCookieReturn<TValidator extends ValidatorSync<unknown>> = [
   useCookie: () => [
     ValidatorOutput<TValidator>,
     React.Dispatch<React.SetStateAction<ValidatorOutput<TValidator>>>,
@@ -110,7 +110,7 @@ export type DefineCookieReturn<TValidator extends Validator<unknown>> = [
   },
 ]
 
-export function defineCookie<TValidator extends Validator<unknown>>({
+export function defineCookie<TValidator extends ValidatorSync<unknown>>({
   name,
   validate,
   disableEncoding,

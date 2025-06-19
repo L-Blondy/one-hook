@@ -2,14 +2,14 @@ import React from 'react'
 import { createEmitter } from '@1hook/utils/emitter'
 import {
   validateSync,
-  type Validator,
+  type ValidatorSync,
   type ValidatorOutput,
 } from '@1hook/utils/validate'
 import { defaultDeserializer, defaultSerializer } from './serializer'
 import { isServer } from '@1hook/utils/is-server'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
 
-export type DefineStorageOptions<TValidator extends Validator<unknown>> = {
+export type DefineStorageOptions<TValidator extends ValidatorSync<unknown>> = {
   /**
    * The type of the storage.
    */
@@ -36,7 +36,7 @@ export type DefineStorageOptions<TValidator extends Validator<unknown>> = {
 
 type Unsubscribe = () => void
 
-export type DefineStorageReturn<TValidator extends Validator<unknown>> = [
+export type DefineStorageReturn<TValidator extends ValidatorSync<unknown>> = [
   useStorage: () => [
     ValidatorOutput<TValidator>,
     React.Dispatch<React.SetStateAction<ValidatorOutput<TValidator>>>,
@@ -52,7 +52,7 @@ export type DefineStorageReturn<TValidator extends Validator<unknown>> = [
   },
 ]
 
-export function defineStorage<TValidator extends Validator<unknown>>({
+export function defineStorage<TValidator extends ValidatorSync<unknown>>({
   type,
   key,
   validate,

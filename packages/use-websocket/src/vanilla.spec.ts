@@ -104,6 +104,21 @@ test('type inference', () => {
     getSocketInstance({
       url: 'wss://socket.test.domain',
       incomingMessage: {
+        validate: z.number().optional(),
+      },
+    }).listen({
+      onMessage(data, event) {
+        expectTypeOf(data).toEqualTypeOf<number>()
+        expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
+      },
+      onOpen: noop,
+      onClose: noop,
+      onError: noop,
+    })
+
+    getSocketInstance({
+      url: 'wss://socket.test.domain',
+      incomingMessage: {
         validate: Number,
       },
     }).listen({

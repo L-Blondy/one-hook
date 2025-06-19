@@ -57,11 +57,20 @@ export function validateSync<TValidator extends ValidatorSync>(
     : validateSchemaSync(fnOrSchema, data)
 }
 
+async function validateSchema<TSchema extends StandardSchemaV1>(
+  schema: TSchema,
+  data: StandardSchemaV1.InferInput<TSchema>,
+): Promise<StandardSchemaV1.InferOutput<TSchema>> {
+  let result = await schema['~standard'].validate(data)
+  if (result.issues) throw new SchemaValidationError(result, data)
+  return result.value
+}
+
 export function validate<TValidator extends Validator>(
   fnOrSchema: TValidator,
   data: ValidatorInput<TValidator>,
-): ValidatorOutput<TValidator> {
+): Promise<ValidatorOutput<TValidator>> {
   return typeof fnOrSchema === 'function'
     ? fnOrSchema(data)
-    : validateSchemaSync(fnOrSchema, data)
+    : validateSchema(fnOrSchema, data)
 }

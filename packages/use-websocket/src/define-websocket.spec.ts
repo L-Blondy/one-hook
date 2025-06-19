@@ -67,6 +67,18 @@ test('type inference', () => {
 
     defineWebSocket({
       incomingMessage: {
+        parse: (data) => Promise.resolve(String(data)),
+      },
+    })({
+      url: 'wss://socket.test.domain',
+      onMessage(data, event) {
+        expectTypeOf(data).toEqualTypeOf<string>()
+        expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
+      },
+    })
+
+    defineWebSocket({
+      incomingMessage: {
         parse: (data) => String(data),
         // @ts-expect-error Input string expected number
         validate: z.number(),
@@ -82,6 +94,30 @@ test('type inference', () => {
     defineWebSocket({
       incomingMessage: {
         validate: z.number(),
+      },
+    })({
+      url: 'wss://socket.test.domain',
+      onMessage(data, event) {
+        expectTypeOf(data).toEqualTypeOf<number>()
+        expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
+      },
+    })
+
+    defineWebSocket({
+      incomingMessage: {
+        validate: z.number().transform((val) => Promise.resolve(val * 2)),
+      },
+    })({
+      url: 'wss://socket.test.domain',
+      onMessage(data, event) {
+        expectTypeOf(data).toEqualTypeOf<number>()
+        expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
+      },
+    })
+
+    defineWebSocket({
+      incomingMessage: {
+        validate: z.number().optional(),
       },
     })({
       url: 'wss://socket.test.domain',

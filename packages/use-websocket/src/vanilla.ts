@@ -45,7 +45,7 @@ export type WebSocketIncomingMessageOption<
   /**
    * The incoming message options.
    *
-   * Return `undefined` to ignore the message.
+   * Return `null | undefined` to ignore the message.
    */
   parse?: (
     data: unknown,
@@ -55,7 +55,7 @@ export type WebSocketIncomingMessageOption<
   /**
    * Validation schema for the incoming message. Can be any StandardSchemaV1 compliant schema.
    *
-   * Return `undefined` to ignore the message.
+   * Return `null | undefined` to ignore the message.
    */
   validate?: TValidator
 }
@@ -137,7 +137,7 @@ function createInstance<
   id: InstanceId,
   options: SocketInstanceOptions<TParsedMessage, TValidator, TOutgoingMessage>,
 ) {
-  type TMessage = ValidatorOutput<TValidator>
+  type TMessage = Exclude<ValidatorOutput<TValidator>, undefined | null>
   const allListeners = new Set<Listeners<TMessage>>()
   const messageQueue: Array<Parameters<WebSocket['send']>[0]> = []
 
@@ -233,12 +233,12 @@ function createInstance<
             event,
             socket,
           )) as any
-          if (parsed === undefined) return
+          if (parsed === undefined || parsed === null) return
           const validated: TMessage = await validate(
-            incomingValidate,
+            incomingValidate as any,
             parsed as any,
           )
-          if (validated === undefined) return
+          if (validated === undefined || validated === null) return
           allListeners.forEach((listeners) => {
             listeners.onMessage?.(validated, event)
           })

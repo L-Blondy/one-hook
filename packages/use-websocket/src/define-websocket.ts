@@ -45,7 +45,10 @@ export function defineWebSocket<
   > = {},
 ) {
   type TInstance = SocketInstance<TParsedMessage, TSchema, TOutgoingMessage>
-  type TMessage = StandardSchemaV1.InferOutput<TSchema>
+  type TMessage = Exclude<
+    StandardSchemaV1.InferOutput<TSchema>,
+    undefined | null
+  >
 
   /**
    * The WebSocket connection is closed automatically when all hooks listening to a URL are unmounted.

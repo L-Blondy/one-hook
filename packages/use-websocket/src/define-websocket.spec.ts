@@ -86,22 +86,24 @@ test('type inference', () => {
   function useOutgoingMessageType() {
     defineWebSocket()({
       url: 'wss://socket.test.domain',
-    })?.send('message data' as unknown) // unknown ok
+    }).send('message data' as unknown) // unknown ok
 
-    getSocketInstance({
-      url: 'wss://socket.test.domain',
+    defineWebSocket({
       outgoingMessage: {
         serialize: (data: boolean) => String(data),
       },
+    })({
+      url: 'wss://socket.test.domain',
     })
       // @ts-expect-error expect boolean receive unknown
       .send('message data' as unknown)
 
-    getSocketInstance({
-      url: 'wss://socket.test.domain',
+    defineWebSocket({
       outgoingMessage: {
         serialize: (data: boolean) => String(data),
       },
+    })({
+      url: 'wss://socket.test.domain',
     }).send(true)
   }
 

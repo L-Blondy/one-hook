@@ -37,10 +37,13 @@ export function defineWebSocket<
   TSchema extends
     StandardSchemaV1<TParsedMessage> = StandardSchemaV1<TParsedMessage>,
   TOutgoingMessage = unknown,
->({
-  reconnect,
-  ping,
-}: DefineWebSocketOptions<TParsedMessage, TSchema, TOutgoingMessage> = {}) {
+>(
+  options: DefineWebSocketOptions<
+    TParsedMessage,
+    TSchema,
+    TOutgoingMessage
+  > = {},
+) {
   type TInstance = SocketInstance<TParsedMessage, TSchema, TOutgoingMessage>
   type TMessage = StandardSchemaV1.InferOutput<TSchema>
 
@@ -62,11 +65,10 @@ export function defineWebSocket<
 
     React.useEffect(() => {
       if (!instanceOptions.url) return
-      const instance = getSocketInstance<any>({
+      const instance = getSocketInstance<any, any, any>({
         url: instanceOptions.url,
         protocols: instanceOptions.protocols,
-        reconnect,
-        ping,
+        ...options,
       })
       instanceRef.current = instance
       const cleanup = instance.listen(listenersRef.current)

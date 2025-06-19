@@ -1,10 +1,19 @@
 import { noop } from '@1hook/utils/noop'
 import { ws } from 'msw'
 import { setupServer } from 'msw/node'
-import { afterAll, afterEach, beforeAll, expectTypeOf, test } from 'vitest'
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  expect,
+  expectTypeOf,
+  test,
+  vi,
+} from 'vitest'
 import { instanceMap } from './vanilla'
 import { defineWebSocket } from './define-websocket'
 import { z } from 'zod'
+import { renderHook, act } from '@testing-library/react'
 
 const api = ws.link('wss://socket.test.domain')
 
@@ -108,4 +117,30 @@ test('type inference', () => {
   }
 
   noop(useIncomingMessageType, useOutgoingMessageType)
+})
+
+test('Should queue messages while connecting', async () => {
+  const useWebSocket = defineWebSocket()
+  const spy = vi.fn()
+
+  await new Promise<void>((resolve) => {
+    const hook = renderHook(() =>
+      useWebSocket({
+        url: 'wss://socket.test.domain',
+        onMessage(message) {
+          if (message) {
+            spy(message)
+            resolve()
+          }
+        },
+      }),
+    )
+    hook.result.current.send('message 1')
+    hook.result.current.send('message 2')
+    hook.result.current.send('message 3')
+  })
+
+  expect(spy).toHaveBeenNthCalledWith(1, 'message 1')
+  expect(spy).toHaveBeenNthCalledWith(2, 'message 2')
+  expect(spy).toHaveBeenNthCalledWith(3, 'message 3')
 })

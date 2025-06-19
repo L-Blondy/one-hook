@@ -101,6 +101,7 @@ export const instanceMap = new Map<InstanceId, SocketInstance<any, any, any>>()
  * Features:
  * - reconnect
  * - ping
+ * - queue messages while connecting
  * - stable instance given the some url + protocols
  */
 export function getSocketInstance<
@@ -125,6 +126,7 @@ function createInstance<
 ) {
   type TMessage = StandardSchemaV1.InferOutput<TSchema>
   const allListeners = new Set<Listeners<TMessage>>()
+  const messageQueue: Array<Parameters<WebSocket['send']>[0]> = []
 
   const recoWhen = options.reconnect?.when ?? (() => true)
   const recoDelay = options.reconnect?.delay ?? 0
@@ -182,6 +184,9 @@ function createInstance<
         allListeners.forEach((listeners) => {
           listeners.onOpen?.(event)
         })
+        while (messageQueue.length) {
+          socket.send(messageQueue.shift()!)
+        }
         recoAttempt = 0
         clearTimeout(recoTimeoutId)
         if (pingInterval) {
@@ -232,7 +237,14 @@ function createInstance<
   const instance = {
     id,
     send(message: TOutgoingMessage) {
-      instance['~socket']?.send(outgoingSerialize(message, instance['~socket']))
+      const socket = instance['~socket']
+      if (!socket) return
+      const serialized = outgoingSerialize(message, socket)
+      if (socket.readyState === WebSocket.CONNECTING) {
+        messageQueue.push(serialized)
+      } else {
+        socket.send(serialized)
+      }
     },
     listen(listeners: Listeners<TMessage>) {
       allListeners.add(listeners)

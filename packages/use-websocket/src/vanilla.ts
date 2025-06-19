@@ -160,6 +160,7 @@ function createInstance<
         })
         controller.abort() // remove listeners on that socket instance. A new instance will be created.
         clearInterval(pingIntervalId)
+        messageQueue.length = 0 // clear the message queue
         if (
           !allListeners.size ||
           !recoWhen(event) ||
@@ -241,8 +242,10 @@ function createInstance<
       if (!socket) return
       const serialized = outgoingSerialize(message, socket)
       if (socket.readyState === WebSocket.CONNECTING) {
+        // queue the message only when the socket is connecting
         messageQueue.push(serialized)
       } else {
+        // other cases are all gracefully handled by default
         socket.send(serialized)
       }
     },

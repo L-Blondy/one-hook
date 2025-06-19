@@ -13,7 +13,7 @@ import {
 import { instanceMap } from './vanilla'
 import { defineWebSocket } from './define-websocket'
 import { z } from 'zod'
-import { renderHook, act } from '@testing-library/react'
+import { renderHook } from '@testing-library/react'
 
 const api = ws.link('wss://socket.test.domain')
 
@@ -144,3 +144,5 @@ test('Should queue messages while connecting', async () => {
   expect(spy).toHaveBeenNthCalledWith(2, 'message 2')
   expect(spy).toHaveBeenNthCalledWith(3, 'message 3')
 })
+
+// TODO: more tests

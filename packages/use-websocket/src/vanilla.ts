@@ -160,7 +160,7 @@ function createInstance<
         clearInterval(pingIntervalId)
         if (
           !allListeners.size ||
-          recoWhen(event) ||
+          !recoWhen(event) ||
           ++recoAttempt > recoAttempts
         ) {
           clearTimeout(recoTimeoutId)

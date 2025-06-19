@@ -2,7 +2,7 @@ import {
   afterAll,
   afterEach,
   beforeAll,
-  // expect,
+  expect,
   expectTypeOf,
   test,
 } from 'vitest'
@@ -127,147 +127,171 @@ test('type inference', () => {
   noop(incomingMessageType, outgoingMessageType)
 })
 
-/* eslint-disable vitest/no-commented-out-tests */
-// test('Should receive messages', async () => {
-//   const socket = getSocketInstance({ url: 'wss://socket.test.domain' })
+test('Should receive messages', async () => {
+  const socket = getSocketInstance({ url: 'wss://socket.test.domain' })
 
-//   const data = await new Promise((resolve) => {
-//     socket.listen({
-//       open() {
-//         socket.send('message data')
-//       },
-//       message(data) {
-//         resolve(data)
-//       },
-//       close: noop,
-//       error: noop,
-//     })
-//   })
-//   expect(data).toBe('message data')
-// })
+  const data = await new Promise((resolve) => {
+    socket.listen({
+      open() {
+        socket.send('message data')
+      },
+      message(data) {
+        resolve(data)
+      },
+      close: noop,
+      error: noop,
+    })
+  })
+  expect(data).toBe('message data')
+})
 
-// test('Should ping at interval { leading: false }', async () => {
-//   const socket = getSocketInstance({
-//     url: 'wss://socket.test.domain',
-//     ping: {
-//       interval: 100,
-//       leading: false,
-//     },
-//   })
-//   socket.connect()
+test('Should ping at interval { leading: false }', async () => {
+  const socket = getSocketInstance({
+    url: 'wss://socket.test.domain',
+    ping: {
+      interval: 100,
+      leading: false,
+    },
+  })
 
-//   const start = Date.now()
-//   const data = await new Promise((resolve) => {
-//     socket.listen({
-//       message(data) {
-//         resolve(data)
-//       },
-//       open: noop,
-//       close: noop,
-//       error: noop,
-//     })
-//   })
-//   expect(data).toBe('pong')
-//   expect(Date.now() - start).toBeGreaterThanOrEqual(100)
-//   expect(Date.now() - start).toBeLessThan(200)
-// })
+  const start = Date.now()
+  const data = await new Promise((resolve) => {
+    socket.listen({
+      message(data) {
+        resolve(data)
+      },
+      open: noop,
+      close: noop,
+      error: noop,
+    })
+  })
+  expect(data).toBe('pong')
+  expect(Date.now() - start).toBeGreaterThanOrEqual(100)
+  expect(Date.now() - start).toBeLessThan(200)
+})
 
-// test('Should ping immediately { leading: true }', async () => {
-//   const socket = getSocketInstance({
-//     url: 'wss://socket.test.domain',
-//     ping: {
-//       interval: 100,
-//       leading: true,
-//     },
-//   })
-//   socket.connect()
+test('Should ping immediately { leading: true }', async () => {
+  const socket = getSocketInstance({
+    url: 'wss://socket.test.domain',
+    ping: {
+      interval: 100,
+      leading: true,
+    },
+  })
 
-//   const start = Date.now()
-//   const data = await new Promise((resolve) => {
-//     socket.on('message', (data) => {
-//       resolve(data)
-//     })
-//   })
-//   expect(data).toBe('pong')
-//   expect(Date.now() - start).toBeLessThan(50)
-// })
+  const start = Date.now()
+  const data = await new Promise((resolve) => {
+    socket.listen({
+      message(data) {
+        resolve(data)
+      },
+      open: noop,
+      close: noop,
+      error: noop,
+    })
+  })
+  expect(data).toBe('pong')
+  expect(Date.now() - start).toBeLessThan(50)
+})
 
-// test('Should ping a custom message { message: "custom" }', async () => {
-//   const socket = getSocketInstance({
-//     url: 'wss://socket.test.domain',
-//     ping: {
-//       interval: 100,
-//       message: 'custom',
-//       leading: true,
-//     },
-//   })
-//   socket.connect()
+test('Should ping a custom message { message: "custom" }', async () => {
+  const socket = getSocketInstance({
+    url: 'wss://socket.test.domain',
+    ping: {
+      interval: 100,
+      message: 'custom',
+      leading: true,
+    },
+  })
 
-//   const data = await new Promise((resolve) => {
-//     socket.on('message', (data) => {
-//       resolve(data)
-//     })
-//   })
-//   expect(data).toBe('custom')
-// })
+  const data = await new Promise((resolve) => {
+    socket.listen({
+      message(data) {
+        resolve(data)
+      },
+      open: noop,
+      close: noop,
+      error: noop,
+    })
+  })
+  expect(data).toBe('custom')
+})
 
-// test('Should try to reconnect', async () => {
-//   const socket = getSocketInstance({
-//     url: 'wss://notfound.test.com',
-//     reconnect: {
-//       delay: 1,
-//     },
-//   })
-//   socket.connect()
+test('Should try to reconnect', async () => {
+  const socket = getSocketInstance({
+    url: 'wss://notfound.test.com',
+    reconnect: {
+      delay: 1,
+    },
+  })
 
-//   const data = await new Promise((resolve) => {
-//     let attempt = -1
-//     socket.on('open', () => {
-//       attempt++
-//       socket.close()
-//       if (attempt === 3) {
-//         resolve(attempt)
-//       }
-//     })
-//   })
-//   expect(data).toBe(3)
-// })
+  const data = await new Promise((resolve) => {
+    let attempt = -1
+    socket.listen({
+      open() {
+        attempt++
+        socket['~socket']?.close()
+        if (attempt === 3) {
+          resolve(attempt)
+        }
+      },
+      message: noop,
+      close: noop,
+      error: noop,
+    })
+  })
+  expect(data).toBe(3)
+})
 
-// test('Should try to reconnect at interval { delay: 100 }', async () => {
-//   const socket = getSocketInstance({
-//     url: 'wss://notfound.test.com',
-//     reconnect: {
-//       delay: 100,
-//     },
-//   })
-//   socket.connect()
-//   const start = Date.now()
-//   const data = await new Promise((resolve) => {
-//     let attempt = -1
-//     socket.on('open', () => {
-//       attempt++
-//       socket.close()
-//       if (attempt === 3) {
-//         resolve(attempt)
-//       }
-//     })
-//   })
-//   expect(data).toBe(3)
-//   expect(Date.now() - start).toBeGreaterThanOrEqual(300)
-//   expect(Date.now() - start).toBeLessThan(400)
-// })
+test('Should try to reconnect at interval { delay: 100 }', async () => {
+  const socket = getSocketInstance({
+    url: 'wss://notfound.test.com',
+    reconnect: {
+      delay: 100,
+    },
+  })
+  const start = Date.now()
+  const data = await new Promise((resolve) => {
+    let attempt = -1
+    socket.listen({
+      open() {
+        attempt++
+        socket['~socket']?.close()
+        if (attempt === 3) {
+          resolve(attempt)
+        }
+      },
+      message: noop,
+      close: noop,
+      error: noop,
+    })
+  })
+  expect(data).toBe(3)
+  expect(Date.now() - start).toBeGreaterThanOrEqual(300)
+  expect(Date.now() - start).toBeLessThan(400)
+})
 
-// test('Should reuse the same instance given a url & protocols', () => {
-//   const socket1 = getSocketInstance({
-//     url: 'wss://notfound.test.com',
-//     protocols: ['test'],
-//   })
-//   const socket2 = getSocketInstance({
-//     url: 'wss://notfound.test.com',
-//     protocols: ['test'],
-//   })
-//   socket1.connect()
-//   socket2.connect()
-//   expect(socket1.id).toBe(socket2.id)
-//   expect(instanceMap.size).toBe(1)
-// })
+test('Should reuse the same instance given a url & protocols', () => {
+  const socket1 = getSocketInstance({
+    url: 'wss://notfound.test.com',
+    protocols: ['test'],
+  })
+  const socket2 = getSocketInstance({
+    url: 'wss://notfound.test.com',
+    protocols: ['test'],
+  })
+  socket1.listen({
+    open: noop,
+    message: noop,
+    close: noop,
+    error: noop,
+  })
+  socket2.listen({
+    open: noop,
+    message: noop,
+    close: noop,
+    error: noop,
+  })
+  expect(socket1.id).toBe(socket2.id)
+  expect(instanceMap.size).toBe(1)
+})

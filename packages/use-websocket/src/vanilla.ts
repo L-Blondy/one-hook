@@ -39,14 +39,16 @@ export type WebSocketIncomingMessageOption<
 > = {
   /**
    * The incoming message options.
-   *
-   * Return `undefined` to ignore messages.
    */
   parse?: (data: unknown, socket: WebSocket) => MaybePromise<TParsedMessage>
   /**
    * Validation schema for the incoming message. Can be any StandardSchemaV1 compliant schema.
    */
   schema?: TSchema
+  /**
+   * Ignore the message
+   */
+  ignore?: (message: TParsedMessage, socket: WebSocket) => boolean
 }
 
 export type WebSocketOutgoingMessageOption<TOutgoingMessage> = {

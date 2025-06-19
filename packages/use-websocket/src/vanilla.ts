@@ -7,9 +7,8 @@ import {
   type InstanceId,
 } from './utils'
 import type { MaybePromise } from '@1hook/utils/types'
-import { noop } from '@1hook/utils/noop'
 
-type EventMap<TMessage = any> = {
+type Listeners<TMessage = any> = {
   close: (event: CloseEvent) => void
   open: (event: Event) => void
   message: (message: TMessage, event: MessageEvent<unknown>) => void
@@ -41,7 +40,7 @@ export type WebSocketIncomingMessageOption<
   /**
    * The incoming message options
    */
-  parse?: (data: unknown) => MaybePromise<TParsedMessage>
+  parse?: (data: unknown, socket: WebSocket) => MaybePromise<TParsedMessage>
   /**
    * Validation schema for the incoming message. Can be any StandardSchemaV1 compliant schema.
    */
@@ -52,7 +51,10 @@ export type WebSocketOutgoingMessageOption<TOutgoingMessage> = {
   /**
    * The function to serialize the outgoing message, before passing it to `WebSocket.send`
    */
-  serialize: (data: TOutgoingMessage) => Parameters<WebSocket['send']>[0]
+  serialize: (
+    data: TOutgoingMessage,
+    socket: WebSocket,
+  ) => Parameters<WebSocket['send']>[0]
 }
 
 export type SocketInstanceOptions<
@@ -90,6 +92,9 @@ export type SocketInstanceOptions<
   outgoingMessage?: WebSocketOutgoingMessageOption<TOutgoingMessage>
 }
 
+/**
+ * Store the instances the reuse based on a unique id.
+ */
 export const instanceMap = new Map<InstanceId, SocketInstance<any, any, any>>()
 
 /**
@@ -107,9 +112,7 @@ export function getSocketInstance<
   options: SocketInstanceOptions<TParsedMessage, TSchema, TOutgoingMessage>,
 ): SocketInstance<TParsedMessage, TSchema, TOutgoingMessage> {
   const id = getInstanceId(options)
-  const instance = instanceMap.get(id) ?? createInstance(id, options)
-  instanceMap.set(id, instance)
-  return instance
+  return instanceMap.get(id) ?? createInstance(id, options)
 }
 
 function createInstance<
@@ -121,12 +124,7 @@ function createInstance<
   options: SocketInstanceOptions<TParsedMessage, TSchema, TOutgoingMessage>,
 ) {
   type TMessage = StandardSchemaV1.InferOutput<TSchema>
-  const listenersMap = {
-    close: new Set<EventMap<TMessage>['close']>(),
-    open: new Set<EventMap<TMessage>['open']>(),
-    message: new Set<EventMap<TMessage>['message']>(),
-    error: new Set<EventMap<TMessage>['error']>(),
-  }
+  const allListeners = new Set<Listeners<TMessage>>()
 
   const recoWhen = options.reconnect?.when ?? (() => true)
   const recoDelay = options.reconnect?.delay ?? 0
@@ -146,114 +144,105 @@ function createInstance<
   let recoTimeoutId: NodeJS.Timeout | undefined
   let pingIntervalId: NodeJS.Timeout | undefined
 
-  const instance = {
-    id,
-    socket: undefined as WebSocket | undefined,
-    connect() {
-      instance.socket = new WebSocket(options.url, options.protocols)
-      const controller = new AbortController()
-      const { signal } = controller
+  function connect() {
+    const socket = new WebSocket(options.url, options.protocols)
+    instance['~socket'] = socket
+    const controller = new AbortController()
+    const { signal } = controller
 
-      instance.socket.addEventListener(
-        'close',
-        (event) => {
-          listenersMap.close.forEach((l) => l(event))
-          controller.abort() // remove listeners on that socket instance. A new instance will be created.
-          clearInterval(pingIntervalId)
-          if (
-            recoWhen(event) &&
-            instance.hasListeners &&
-            ++recoAttempt <= recoAttempts
-          ) {
-            const delay =
-              typeof recoDelay === 'function'
-                ? recoDelay(recoAttempt, event)
-                : recoDelay
-            if (delay) {
-              recoTimeoutId = setTimeout(() => instance.connect(), delay)
-            }
-          }
-        },
-        { signal },
-      )
-      instance.socket.addEventListener(
-        'open',
-        (event) => {
-          listenersMap.open.forEach((l) => l(event))
-          recoAttempt = 0
+    socket.addEventListener(
+      'close',
+      (event) => {
+        allListeners.forEach((listeners) => {
+          listeners.close(event)
+        })
+        controller.abort() // remove listeners on that socket instance. A new instance will be created.
+        clearInterval(pingIntervalId)
+        if (
+          !allListeners.size ||
+          recoWhen(event) ||
+          ++recoAttempt > recoAttempts
+        ) {
           clearTimeout(recoTimeoutId)
-          if (pingInterval) {
-            if (pingLeading) {
-              instance.socket?.send(pingMessage)
-            }
-            pingIntervalId = setInterval(() => {
-              instance.socket?.send(pingMessage)
-            }, pingInterval)
+          return
+        }
+        const delay =
+          typeof recoDelay === 'function'
+            ? recoDelay(recoAttempt, event)
+            : recoDelay
+        if (delay) {
+          recoTimeoutId = setTimeout(() => connect(), delay)
+        }
+      },
+      { signal },
+    )
+    socket.addEventListener(
+      'open',
+      (event) => {
+        allListeners.forEach((listeners) => {
+          listeners.open(event)
+        })
+        recoAttempt = 0
+        clearTimeout(recoTimeoutId)
+        if (pingInterval) {
+          if (pingLeading) {
+            socket.send(pingMessage)
           }
-        },
-        { signal },
-      )
-      instance.socket.addEventListener(
-        'error',
-        (event) => {
-          listenersMap.error.forEach((l) => l(event))
-        },
-        { signal },
-      )
-      instance.socket.addEventListener(
-        'message',
-        (event: MessageEvent<unknown>) => {
-          void (async function () {
-            const parsed: TParsedMessage = (await incomingParse(
-              event.data,
-            )) as any
-            const validated: TMessage = incomingSchema
-              ? await validate(incomingSchema, parsed)
-              : parsed
-            listenersMap.message.forEach((l) => l(validated, event))
-          })()
-        },
-        { signal },
-      )
-    },
-    /**
-     * Close the socket but does not clear the listeners. \
-     */
-    close(...args: Parameters<WebSocket['close']>) {
-      instance.socket?.close(...args)
-    },
-    /**
-     * Send a message.
-     */
-    send(message: TOutgoingMessage) {
-      instance.socket?.send(outgoingSerialize(message))
-    },
-
-    on<TEventType extends keyof EventMap<TMessage>>(
-      type: TEventType,
-      listener: EventMap<TMessage>[TEventType] = noop,
-    ) {
-      listenersMap[type].add(listener as any)
-      return () => instance.off(type, listener)
-    },
-    off<TEventType extends keyof EventMap<TMessage>>(
-      type: TEventType,
-      listener: EventMap<TMessage>[TEventType],
-    ) {
-      listenersMap[type].delete(listener as any)
-    },
-    get hasListeners() {
-      return Object.values(listenersMap).some((set) => set.size)
-    },
-    /**
-     * Clears everything
-     */
-    ['~kill']() {
-      clearTimeout(recoTimeoutId)
-      Object.values(listenersMap).forEach((set) => set.clear())
-      instance.socket?.close()
-    },
+          pingIntervalId = setInterval(() => {
+            socket.send(pingMessage)
+          }, pingInterval)
+        }
+      },
+      { signal },
+    )
+    socket.addEventListener(
+      'error',
+      (event) => {
+        allListeners.forEach((listeners) => {
+          listeners.error(event)
+        })
+      },
+      { signal },
+    )
+    socket.addEventListener(
+      'message',
+      (event: MessageEvent<unknown>) => {
+        void (async function () {
+          const parsed: TParsedMessage = (await incomingParse(
+            event.data,
+            socket,
+          )) as any
+          const validated: TMessage = incomingSchema
+            ? await validate(incomingSchema, parsed)
+            : parsed
+          allListeners.forEach((listeners) => {
+            listeners.message(validated, event)
+          })
+        })()
+      },
+      { signal },
+    )
   }
 
+  const instance = {
+    send(message: TOutgoingMessage) {
+      instance['~socket']?.send(outgoingSerialize(message, instance['~socket']))
+    },
+
+    listen(listeners: Listeners<TMessage>) {
+      allListeners.add(listeners)
+      if (!instance['~socket']) connect()
+      return () => {
+        allListeners.delete(listeners)
+        if (!allListeners.size) {
+          instance['~socket']?.close()
+          instanceMap.delete(id)
+        }
+      }
+    },
+    id,
+    ['~socket']: null as WebSocket | null,
+  }
+  instanceMap.set(id, instance)
   return instance
 }

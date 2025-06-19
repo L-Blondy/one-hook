@@ -2,7 +2,7 @@
   "name": "one-hook",
   "private": true,
   "type": "module",
-  "version": "0.1.6-beta.2",
+  "version": "0.1.6-beta.3",
   "scripts": {
     "align": "bun scripts/align-all-package-json.ts",
     "build": "pnpm run align && turbo --filter \"./packages/*\" build",

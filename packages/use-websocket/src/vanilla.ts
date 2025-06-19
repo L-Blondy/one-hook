@@ -40,15 +40,25 @@ export type WebSocketIncomingMessageOption<
   /**
    * The incoming message options.
    */
-  parse?: (data: unknown, socket: WebSocket) => MaybePromise<TParsedMessage>
+  parse?: (
+    data: unknown,
+    event: MessageEvent<unknown>,
+    socket: WebSocket,
+  ) => MaybePromise<TParsedMessage>
   /**
    * Validation schema for the incoming message. Can be any StandardSchemaV1 compliant schema.
    */
   schema?: TSchema
   /**
-   * Ignore the message
+   * Ignore the message.
+   *
+   * Ignore message are not validated
    */
-  ignore?: (message: TParsedMessage, socket: WebSocket) => boolean
+  ignore?: (
+    message: TParsedMessage,
+    event: MessageEvent<unknown>,
+    socket: WebSocket,
+  ) => boolean
 }
 
 export type WebSocketOutgoingMessageOption<TOutgoingMessage> = {
@@ -106,6 +116,7 @@ export const instanceMap = new Map<InstanceId, SocketInstance<any, any, any>>()
  * - reconnect
  * - ping
  * - queue messages while connecting
+ * - ignore incoming messages
  * - stable instance given the some url + protocols
  */
 export function getSocketInstance<
@@ -142,6 +153,7 @@ function createInstance<
 
   const incomingParse = options.incomingMessage?.parse ?? safeJsonParse
   const incomingSchema = options.incomingMessage?.schema
+  const incomingIgnore = options.incomingMessage?.ignore ?? (() => false)
 
   const outgoingSerialize =
     options.outgoingMessage?.serialize ?? safeJsonStringify
@@ -220,10 +232,10 @@ function createInstance<
         void (async function () {
           const parsed: TParsedMessage = (await incomingParse(
             event.data,
+            event,
             socket,
           )) as any
-          // ignore the message if the parse function returns `undefined`
-          if (parsed === undefined) return
+          if (incomingIgnore(parsed, event, socket)) return
           const validated: TMessage = incomingSchema
             ? await validate(incomingSchema, parsed)
             : parsed

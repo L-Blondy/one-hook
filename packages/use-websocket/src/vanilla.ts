@@ -1,12 +1,15 @@
-import type { StandardSchemaV1 } from '@standard-schema/spec'
 import {
   getInstanceId,
   safeJsonParse,
   safeJsonStringify,
-  validate,
   type InstanceId,
 } from './utils'
 import type { MaybePromise } from '@1hook/utils/types'
+import {
+  validate,
+  type Validator,
+  type ValidatorOutput,
+} from '@1hook/utils/validate'
 
 type Listeners<TMessage = any> = {
   onClose?: (event: CloseEvent) => void
@@ -17,9 +20,11 @@ type Listeners<TMessage = any> = {
 
 export type SocketInstance<
   TParsedMessage,
-  TSchema extends StandardSchemaV1<TParsedMessage>,
+  TValidator extends Validator<TParsedMessage, any>,
   TOutgoingMessage,
-> = ReturnType<typeof createInstance<TParsedMessage, TSchema, TOutgoingMessage>>
+> = ReturnType<
+  typeof createInstance<TParsedMessage, TValidator, TOutgoingMessage>
+>
 
 export type WebSocketReconnectOption = {
   when?: (closeEvent: CloseEvent) => boolean
@@ -35,10 +40,12 @@ export type WebSocketPingOption = {
 
 export type WebSocketIncomingMessageOption<
   TParsedMessage,
-  TSchema extends StandardSchemaV1<TParsedMessage>,
+  TValidator extends Validator<TParsedMessage, any>,
 > = {
   /**
    * The incoming message options.
+   *
+   * Return `undefined` to ignore the message.
    */
   parse?: (
     data: unknown,
@@ -47,18 +54,10 @@ export type WebSocketIncomingMessageOption<
   ) => MaybePromise<TParsedMessage>
   /**
    * Validation schema for the incoming message. Can be any StandardSchemaV1 compliant schema.
-   */
-  schema?: TSchema
-  /**
-   * Ignore the message.
    *
-   * Ignore message are not validated
+   * Return `undefined` to ignore the message.
    */
-  ignore?: (
-    message: TParsedMessage,
-    event: MessageEvent<unknown>,
-    socket: WebSocket,
-  ) => boolean
+  validate?: TValidator
 }
 
 export type WebSocketOutgoingMessageOption<TOutgoingMessage> = {
@@ -73,7 +72,7 @@ export type WebSocketOutgoingMessageOption<TOutgoingMessage> = {
 
 export type SocketInstanceOptions<
   TParsedMessage,
-  TSchema extends StandardSchemaV1<TParsedMessage>,
+  TValidator extends Validator<TParsedMessage, any>,
   TOutgoingMessage,
 > = {
   /**
@@ -99,7 +98,7 @@ export type SocketInstanceOptions<
   /**
    * Parse and validate the incoming message data
    */
-  incomingMessage?: WebSocketIncomingMessageOption<TParsedMessage, TSchema>
+  incomingMessage?: WebSocketIncomingMessageOption<TParsedMessage, TValidator>
   /**
    * The outgoing message options (WebSocket.send)
    */
@@ -121,25 +120,24 @@ export const instanceMap = new Map<InstanceId, SocketInstance<any, any, any>>()
  */
 export function getSocketInstance<
   TParsedMessage = unknown,
-  TSchema extends
-    StandardSchemaV1<TParsedMessage> = StandardSchemaV1<TParsedMessage>,
+  TValidator extends Validator<TParsedMessage, any> = Validator<TParsedMessage>,
   TOutgoingMessage = unknown,
 >(
-  options: SocketInstanceOptions<TParsedMessage, TSchema, TOutgoingMessage>,
-): SocketInstance<TParsedMessage, TSchema, TOutgoingMessage> {
+  options: SocketInstanceOptions<TParsedMessage, TValidator, TOutgoingMessage>,
+): SocketInstance<TParsedMessage, TValidator, TOutgoingMessage> {
   const id = getInstanceId(options)
   return instanceMap.get(id) ?? createInstance(id, options)
 }
 
 function createInstance<
   TParsedMessage,
-  TSchema extends StandardSchemaV1<TParsedMessage>,
+  TValidator extends Validator<TParsedMessage, any>,
   TOutgoingMessage,
 >(
   id: InstanceId,
-  options: SocketInstanceOptions<TParsedMessage, TSchema, TOutgoingMessage>,
+  options: SocketInstanceOptions<TParsedMessage, TValidator, TOutgoingMessage>,
 ) {
-  type TMessage = StandardSchemaV1.InferOutput<TSchema>
+  type TMessage = ValidatorOutput<TValidator>
   const allListeners = new Set<Listeners<TMessage>>()
   const messageQueue: Array<Parameters<WebSocket['send']>[0]> = []
 
@@ -152,8 +150,8 @@ function createInstance<
   const pingLeading = options.ping?.leading ?? false
 
   const incomingParse = options.incomingMessage?.parse ?? safeJsonParse
-  const incomingSchema = options.incomingMessage?.schema
-  const incomingIgnore = options.incomingMessage?.ignore ?? (() => false)
+  const incomingValidate =
+    options.incomingMessage?.validate ?? ((x: TMessage) => x)
 
   const outgoingSerialize =
     options.outgoingMessage?.serialize ?? safeJsonStringify
@@ -235,10 +233,12 @@ function createInstance<
             event,
             socket,
           )) as any
-          if (incomingIgnore(parsed, event, socket)) return
-          const validated: TMessage = incomingSchema
-            ? await validate(incomingSchema, parsed)
-            : parsed
+          if (parsed === undefined) return
+          const validated: TMessage = await validate(
+            incomingValidate,
+            parsed as any,
+          )
+          if (validated === undefined) return
           allListeners.forEach((listeners) => {
             listeners.onMessage?.(validated, event)
           })

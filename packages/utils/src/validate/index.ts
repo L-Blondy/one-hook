@@ -32,21 +32,32 @@ function validateSchemaSync<TSchema extends StandardSchemaV1>(
   return result.value
 }
 
-export type ValidatorInput<TValidator extends Validator> =
+export type ValidatorInput<TValidator extends Validator> = Awaited<
   TValidator extends ValidationFunction
     ? Parameters<TValidator>[0]
     : TValidator extends StandardSchemaV1
       ? StandardSchemaV1.InferInput<TValidator>
       : never
+>
 
-export type ValidatorOutput<TValidator extends Validator> =
+export type ValidatorOutput<TValidator extends Validator> = Awaited<
   TValidator extends ValidationFunction
     ? ReturnType<TValidator>
     : TValidator extends StandardSchemaV1
       ? StandardSchemaV1.InferOutput<TValidator>
       : never
+>
 
 export function validateSync<TValidator extends ValidatorSync>(
+  fnOrSchema: TValidator,
+  data: ValidatorInput<TValidator>,
+): ValidatorOutput<TValidator> {
+  return typeof fnOrSchema === 'function'
+    ? fnOrSchema(data)
+    : validateSchemaSync(fnOrSchema, data)
+}
+
+export function validate<TValidator extends Validator>(
   fnOrSchema: TValidator,
   data: ValidatorInput<TValidator>,
 ): ValidatorOutput<TValidator> {

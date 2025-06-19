@@ -69,7 +69,7 @@ test('type inference', () => {
       incomingMessage: {
         parse: (data) => String(data),
         // @ts-expect-error Input string expected number
-        schema: z.number(),
+        validate: z.number(),
       },
     })({
       url: 'wss://socket.test.domain',
@@ -81,7 +81,7 @@ test('type inference', () => {
 
     defineWebSocket({
       incomingMessage: {
-        schema: z.number(),
+        validate: z.number(),
       },
     })({
       url: 'wss://socket.test.domain',

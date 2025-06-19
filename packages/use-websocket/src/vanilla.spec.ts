@@ -74,7 +74,7 @@ test('type inference', () => {
       incomingMessage: {
         parse: (data) => String(data),
         // @ts-expect-error Input string expected number
-        schema: z.number(),
+        validate: z.number(),
       },
     }).listen({
       onMessage(data, event) {
@@ -89,7 +89,22 @@ test('type inference', () => {
     getSocketInstance({
       url: 'wss://socket.test.domain',
       incomingMessage: {
-        schema: z.number(),
+        validate: z.number(),
+      },
+    }).listen({
+      onMessage(data, event) {
+        expectTypeOf(data).toEqualTypeOf<number>()
+        expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
+      },
+      onOpen: noop,
+      onClose: noop,
+      onError: noop,
+    })
+
+    getSocketInstance({
+      url: 'wss://socket.test.domain',
+      incomingMessage: {
+        validate: Number,
       },
     }).listen({
       onMessage(data, event) {

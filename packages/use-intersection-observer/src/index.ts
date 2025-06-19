@@ -2,11 +2,11 @@ import React from 'react'
 import { useEventHandler } from '@1hook/use-event-handler'
 import {
   getIntersectionObserver,
-  type Callback,
+  type Listener,
   type IntersectionObserverInstance,
 } from './vanilla'
 
-export type UseIntersectionObserverCallback = Callback
+export type UseIntersectionObserverCallback = Listener
 
 export type UseIntersectionObserverOptions = IntersectionObserverInit & {
   /**

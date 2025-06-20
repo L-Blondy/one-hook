@@ -3,9 +3,4 @@ export {
   type DefineWebSocketOptions,
   type UseWebSocketOptions,
 } from './define-websocket'
-export type {
-  WebSocketPingOption,
-  WebSocketReconnectOption,
-  WebSocketIncomingMessageOption,
-  WebSocketOutgoingMessageOption,
-} from './vanilla'
+export type { WebSocketPingOption, WebSocketReconnectOption } from './vanilla'

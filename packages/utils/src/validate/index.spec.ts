@@ -1,6 +1,6 @@
 import { expect, expectTypeOf, it } from 'vitest'
 import * as v from 'valibot'
-import { validate, validateSync } from '.'
+import { validateAsync, validateSync } from '.'
 import { invariant } from 'src/invariant'
 import type { StandardSchemaV1 } from '@standard-schema/spec'
 import { isValidationError } from './schema-validation-error'
@@ -38,22 +38,22 @@ it('type inference', () => {
     expectTypeOf(d4).toEqualTypeOf<string>()
   }
   async function testValidate() {
-    const d1 = await validate(schema, { key: 'value' })
+    const d1 = await validateAsync(schema, { key: 'value' })
     expectTypeOf(d1).toEqualTypeOf<{ key: string; other: string }>()
     // @ts-expect-error
-    const d2 = await validate(schema, { key: 1 })
+    const d2 = await validateAsync(schema, { key: 1 })
     expectTypeOf(d2).toEqualTypeOf<{ key: string; other: string }>()
 
-    const d3 = await validate((_data: number) => '', 1)
+    const d3 = await validateAsync((_data: number) => '', 1)
     expectTypeOf(d3).toEqualTypeOf<string>()
     // @ts-expect-error
-    const d4 = await validate((_data: number) => '', '')
+    const d4 = await validateAsync((_data: number) => '', '')
     expectTypeOf(d4).toEqualTypeOf<string>()
     // async schema
-    const d5 = await validate(asyncSchema, { key: 'value' })
+    const d5 = await validateAsync(asyncSchema, { key: 'value' })
     expectTypeOf(d5).toEqualTypeOf<{ key: string; other: string }>()
     // async fn
-    const d6 = await validate((_: string) => Promise.resolve(1), 'str')
+    const d6 = await validateAsync((_: string) => Promise.resolve(1), 'str')
     expectTypeOf(d6).toEqualTypeOf<number>()
   }
   noop(testValidateSync, testValidate)
@@ -75,7 +75,7 @@ it('validateSync function should return the parsed value', () => {
 
 it('validate schema should return the parsed value', async () => {
   const input = { key: 'value' } as const
-  const output = await validate(asyncSchema, input)
+  const output = await validateAsync(asyncSchema, input)
   const expected = { key: 'value', other: 'other' }
   expect(output).toEqual(expected)
 })
@@ -83,7 +83,7 @@ it('validate schema should return the parsed value', async () => {
 it('validate function should return the parsed value', async () => {
   const validationFn = (input: number) => Promise.resolve(String(input))
   const input = 1
-  const output = await validate(validationFn, input)
+  const output = await validateAsync(validationFn, input)
   expect(output).toEqual('1')
 })
 

@@ -2,16 +2,16 @@ import type { SocketInstanceOptions } from './vanilla'
 
 export type InstanceId = string & { instanceId: true }
 
-export function getInstanceId(
-  options: SocketInstanceOptions<any, any, any>,
-): InstanceId {
+export type SendableMessage = Parameters<WebSocket['send']>[0]
+
+export function getInstanceId(options: SocketInstanceOptions): InstanceId {
   return JSON.stringify({
     url: options.url,
     protocols: options.protocols,
   }) as InstanceId
 }
 
-export function safeJsonParse(data: unknown): unknown {
+function safeJsonParse(data: unknown): unknown {
   if (typeof data === 'string') {
     try {
       return JSON.parse(data)
@@ -22,7 +22,10 @@ export function safeJsonParse(data: unknown): unknown {
   return data
 }
 
-export function safeJsonStringify(data: unknown): string {
+export const fallbackParseMessage = (e: MessageEvent<unknown>) =>
+  safeJsonParse(e.data) as any
+
+export function fallbackSerializeMessage(data: unknown): string {
   if (typeof data === 'string') return data
   return JSON.stringify(data)
 }

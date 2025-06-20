@@ -45,6 +45,7 @@ afterEach(() => {
 
 test('type inference', () => {
   function useIncomingMessageType() {
+    // default message is unknown
     defineWebSocket()({
       url: 'wss://socket.test.domain',
       onMessage(data, event) {
@@ -53,10 +54,9 @@ test('type inference', () => {
       },
     })
 
+    // default parse
     defineWebSocket({
-      incomingMessage: {
-        parse: (data) => String(data),
-      },
+      parseMessage: (data) => String(data),
     })({
       url: 'wss://socket.test.domain',
       onMessage(data, event) {
@@ -65,10 +65,9 @@ test('type inference', () => {
       },
     })
 
+    // default parse async
     defineWebSocket({
-      incomingMessage: {
-        parse: (data) => Promise.resolve(String(data)),
-      },
+      parseMessage: (data) => Promise.resolve(String(data)),
     })({
       url: 'wss://socket.test.domain',
       onMessage(data, event) {
@@ -77,79 +76,105 @@ test('type inference', () => {
       },
     })
 
+    // parse
     defineWebSocket({
-      incomingMessage: {
-        parse: (data) => String(data),
-        // @ts-expect-error Input string expected number
-        validate: z.number(),
-      },
+      parseMessage: (data) => Number(data),
     })({
       url: 'wss://socket.test.domain',
+      parseMessage: (data) => String(data),
+      onMessage(data, event) {
+        expectTypeOf(data).toEqualTypeOf<string>()
+        expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
+      },
+    })
+
+    // parse async
+    defineWebSocket({
+      parseMessage: (data) => Promise.resolve(Number(data)),
+    })({
+      url: 'wss://socket.test.domain',
+      parseMessage: (data) => Promise.resolve(String(data)),
+      onMessage(data, event) {
+        expectTypeOf(data).toEqualTypeOf<string>()
+        expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
+      },
+    })
+
+    // validate schema async
+    defineWebSocket({
+      parseMessage: (data) => String(data),
+    })({
+      url: 'wss://socket.test.domain',
+      validate: z.string().transform((v) => Promise.resolve(Number(v))),
       onMessage(data, event) {
         expectTypeOf(data).toEqualTypeOf<number>()
         expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
       },
     })
 
+    // validate function async
     defineWebSocket({
-      incomingMessage: {
-        validate: z.number(),
-      },
+      parseMessage: (data) => String(data),
     })({
       url: 'wss://socket.test.domain',
+      validate: (v) => Promise.resolve(Number(v)),
       onMessage(data, event) {
         expectTypeOf(data).toEqualTypeOf<number>()
         expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
       },
     })
 
-    defineWebSocket({
-      incomingMessage: {
-        validate: z.number().transform((val) => Promise.resolve(val * 2)),
-      },
-    })({
+    // message should be non-nullable
+    // validate function async
+    defineWebSocket({})({
       url: 'wss://socket.test.domain',
+      validate: z.string().nullish(),
       onMessage(data, event) {
-        expectTypeOf(data).toEqualTypeOf<number>()
-        expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
-      },
-    })
-
-    defineWebSocket({
-      incomingMessage: {
-        validate: z.number().optional(),
-      },
-    })({
-      url: 'wss://socket.test.domain',
-      onMessage(data, event) {
-        expectTypeOf(data).toEqualTypeOf<number>()
+        expectTypeOf(data).toEqualTypeOf<string>()
         expectTypeOf(event).toEqualTypeOf<MessageEvent<unknown>>()
       },
     })
   }
 
   function useOutgoingMessageType() {
+    // should allow unknown by default
     defineWebSocket()({
       url: 'wss://socket.test.domain',
     }).send('message data' as unknown) // unknown ok
 
+    // default type 1
     defineWebSocket({
-      outgoingMessage: {
-        serialize: (data: boolean) => String(data),
-      },
+      serializeMessage: (data: boolean) => String(data),
     })({
       url: 'wss://socket.test.domain',
     })
-      // @ts-expect-error expect boolean receive unknown
-      .send('message data' as unknown)
+      // @ts-expect-error
+      .send('message data' as string)
 
+    // default type 2
     defineWebSocket({
-      outgoingMessage: {
-        serialize: (data: boolean) => String(data),
-      },
+      serializeMessage: (data: boolean) => String(data),
     })({
       url: 'wss://socket.test.domain',
     }).send(true)
+
+    // hook type 1
+    defineWebSocket({
+      serializeMessage: (data: boolean) => String(data),
+    })({
+      serializeMessage: (data: number) => String(data),
+      url: 'wss://socket.test.domain',
+    })
+      // @ts-expect-error
+      .send('message data' as string)
+
+    // hook type 2
+    defineWebSocket({
+      serializeMessage: (data: boolean) => String(data),
+    })({
+      serializeMessage: (data: number) => String(data),
+      url: 'wss://socket.test.domain',
+    }).send(1)
   }
 
   noop(useIncomingMessageType, useOutgoingMessageType)
@@ -164,10 +189,8 @@ test('Should queue messages while connecting', async () => {
       useWebSocket({
         url: 'wss://socket.test.domain',
         onMessage(message) {
-          if (message) {
-            spy(message)
-            resolve()
-          }
+          spy(message)
+          resolve()
         },
       }),
     )
@@ -181,4 +204,169 @@ test('Should queue messages while connecting', async () => {
   expect(spy).toHaveBeenNthCalledWith(3, 'message 3')
 })
 
-// TODO: more tests
+test('Should ping at interval { leading: false }', async () => {
+  const useWebSocket = defineWebSocket({
+    ping: {
+      interval: 100,
+      leading: false,
+    },
+  })
+  const startDate = Date.now()
+
+  const message = await new Promise((resolve) => {
+    renderHook(() =>
+      useWebSocket({
+        url: 'wss://socket.test.domain',
+        onMessage(message) {
+          resolve(message)
+        },
+      }),
+    )
+  })
+
+  expect(message).toBe('pong')
+  expect(Date.now() - startDate).toBeGreaterThanOrEqual(100)
+  expect(Date.now() - startDate).toBeLessThan(200)
+})
+
+test('Should ping immediately { leading: true }', async () => {
+  const useWebSocket = defineWebSocket({
+    ping: {
+      interval: 100,
+      leading: true,
+    },
+  })
+  const startDate = Date.now()
+
+  const message = await new Promise((resolve) => {
+    renderHook(() =>
+      useWebSocket({
+        url: 'wss://socket.test.domain',
+        onMessage(message) {
+          resolve(message)
+        },
+      }),
+    )
+  })
+
+  expect(message).toBe('pong')
+  expect(Date.now() - startDate).toBeLessThan(50)
+})
+
+test('Should ping a custom message { message: "custom" }', async () => {
+  const useWebSocket = defineWebSocket({
+    ping: {
+      interval: 100,
+      leading: true,
+      message: 'custom',
+    },
+  })
+
+  const message = await new Promise((resolve) => {
+    renderHook(() =>
+      useWebSocket({
+        url: 'wss://socket.test.domain',
+        onMessage(message) {
+          resolve(message)
+        },
+      }),
+    )
+  })
+
+  expect(message).toBe('custom')
+})
+
+test('Should try to reconnect', async () => {
+  const useWebSocket = defineWebSocket({
+    reconnect: { delay: 1 },
+  })
+
+  let attempt = -1
+
+  await new Promise<void>((resolve) => {
+    renderHook(() => {
+      const socket = useWebSocket({
+        url: 'wss://notfound.test.com',
+        onOpen() {
+          attempt++
+          socket['~socket']?.close()
+          if (attempt === 3) {
+            resolve()
+          }
+        },
+      })
+    })
+  })
+
+  expect(attempt).toBe(3)
+})
+
+test('Should try to reconnect at interval { delay: 100 }', async () => {
+  const useWebSocket = defineWebSocket({
+    reconnect: { delay: 100 },
+  })
+
+  let attempt = -1
+  const startDate = Date.now()
+
+  await new Promise<void>((resolve) => {
+    renderHook(() => {
+      const socket = useWebSocket({
+        url: 'wss://notfound.test.com',
+        onOpen() {
+          attempt++
+          socket['~socket']?.close()
+          if (attempt === 3) {
+            resolve()
+          }
+        },
+      })
+    })
+  })
+
+  expect(attempt).toBe(3)
+  expect(Date.now() - startDate).toBeGreaterThanOrEqual(300)
+  expect(Date.now() - startDate).toBeLessThan(400)
+})
+
+test('Should reuse the same instance given a url & protocols', async () => {
+  const useWebSocket1 = defineWebSocket()
+  const useWebSocket2 = defineWebSocket()
+
+  let openCount = 0
+
+  await new Promise<void>((resolve) => {
+    renderHook(() => {
+      useWebSocket1({
+        url: 'wss://socket.test.domain',
+        protocols: ['test'],
+        onOpen() {
+          ++openCount === 4 && resolve()
+        },
+      })
+      useWebSocket1({
+        url: 'wss://socket.test.domain',
+        protocols: ['test'],
+        onOpen() {
+          ++openCount === 4 && resolve()
+        },
+      })
+      useWebSocket2({
+        url: 'wss://socket.test.domain',
+        protocols: ['test'],
+        onOpen() {
+          ++openCount === 4 && resolve()
+        },
+      })
+      useWebSocket2({
+        url: 'wss://socket.test.domain',
+        protocols: ['test'],
+        onOpen() {
+          ++openCount === 4 && resolve()
+        },
+      })
+    })
+  })
+
+  expect(instanceMap.size).toBe(1)
+})

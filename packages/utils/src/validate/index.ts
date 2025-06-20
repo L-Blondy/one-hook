@@ -57,7 +57,7 @@ export function validateSync<TValidator extends ValidatorSync>(
     : validateSchemaSync(fnOrSchema, data)
 }
 
-async function validateSchema<TSchema extends StandardSchemaV1>(
+async function validateSchemaAsync<TSchema extends StandardSchemaV1>(
   schema: TSchema,
   data: StandardSchemaV1.InferInput<TSchema>,
 ): Promise<StandardSchemaV1.InferOutput<TSchema>> {
@@ -66,11 +66,11 @@ async function validateSchema<TSchema extends StandardSchemaV1>(
   return result.value
 }
 
-export function validate<TValidator extends Validator>(
+export function validateAsync<TValidator extends Validator>(
   fnOrSchema: TValidator,
   data: ValidatorInput<TValidator>,
 ): Promise<ValidatorOutput<TValidator>> {
   return typeof fnOrSchema === 'function'
     ? fnOrSchema(data)
-    : validateSchema(fnOrSchema, data)
+    : validateSchemaAsync(fnOrSchema, data)
 }

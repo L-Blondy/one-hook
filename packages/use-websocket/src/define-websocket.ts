@@ -4,84 +4,137 @@ import {
   type WebSocketPingOption,
   getSocketInstance,
   type SocketInstance,
-  type WebSocketIncomingMessageOption,
-  type WebSocketOutgoingMessageOption,
 } from './vanilla'
-import { useLatestRef } from '@1hook/use-latest-ref'
-import type { StandardSchemaV1 } from '@standard-schema/spec'
+import {
+  validateAsync,
+  type Validator,
+  type ValidatorOutput,
+} from '@1hook/utils/validate'
+import {
+  fallbackParseMessage,
+  fallbackSerializeMessage,
+  type SendableMessage,
+} from './utils'
+import type { Falsy, MaybePromise } from '@1hook/utils/types'
+import { useEventHandler } from '@1hook/use-event-handler'
 
-export type DefineWebSocketOptions<
+export type DefineWebSocketOptions<TDefaultParsedMessage, TDefaultSendMessage> =
+  {
+    reconnect?: WebSocketReconnectOption
+    ping?: WebSocketPingOption
+    binaryType?: BinaryType
+    parseMessage?: (
+      event: MessageEvent<unknown>,
+    ) => MaybePromise<TDefaultParsedMessage>
+    serializeMessage?: (data: TDefaultSendMessage) => SendableMessage
+  }
+
+export type UseWebSocketOptions<
   TParsedMessage,
-  TSchema extends StandardSchemaV1<TParsedMessage>,
-  TOutgoingMessage,
+  TSendMessage,
+  TValidator extends Validator<TParsedMessage, any>,
 > = {
-  reconnect?: WebSocketReconnectOption
-  ping?: WebSocketPingOption
-  incomingMessage?: WebSocketIncomingMessageOption<TParsedMessage, TSchema>
-  outgoingMessage?: WebSocketOutgoingMessageOption<TOutgoingMessage>
-}
-
-type Falsy = null | undefined | false | 0 | ''
-
-export type UseWebSocketOptions<TMessage> = {
   url: string | URL | Falsy
   protocols?: string | string[]
-  onMessage?: (message: TMessage, event: MessageEvent<unknown>) => void
+  validate?: TValidator
+  parseMessage?: (event: MessageEvent<unknown>) => MaybePromise<TParsedMessage>
+  serializeMessage?: (message: TSendMessage) => SendableMessage
+  onMessage?: (
+    message: Exclude<ValidatorOutput<TValidator>, undefined | null>,
+    event: MessageEvent<unknown>,
+  ) => void
   onOpen?: (event: Event) => void
   onClose?: (event: CloseEvent) => void
   onError?: (event: Event) => void
 }
 
 export function defineWebSocket<
-  TParsedMessage = unknown,
-  TSchema extends
-    StandardSchemaV1<TParsedMessage> = StandardSchemaV1<TParsedMessage>,
-  TOutgoingMessage = unknown,
->(
-  options: DefineWebSocketOptions<
-    TParsedMessage,
-    TSchema,
-    TOutgoingMessage
-  > = {},
-) {
-  type TInstance = SocketInstance<TParsedMessage, TSchema, TOutgoingMessage>
-  type TMessage = Exclude<
-    StandardSchemaV1.InferOutput<TSchema>,
-    undefined | null
-  >
-
+  TDefaultParsedMessage = unknown,
+  TDefaultSendMessage = unknown,
+>({
+  ping,
+  reconnect,
+  binaryType,
+  parseMessage: defaultParseMessage = fallbackParseMessage,
+  serializeMessage: defaultSerializeMessage = fallbackSerializeMessage,
+}: DefineWebSocketOptions<TDefaultParsedMessage, TDefaultSendMessage> = {}) {
   /**
    * The WebSocket connection is closed automatically when all hooks listening to a URL are unmounted.
    */
-  return function useWebSocket({
+  return function useWebSocket<
+    TParsedMessage = TDefaultParsedMessage,
+    TSendMessage = TDefaultSendMessage,
+    TValidator extends Validator<
+      TParsedMessage,
+      any
+    > = Validator<TParsedMessage>,
+  >({
     url,
     protocols,
-    ...listeners
-  }: UseWebSocketOptions<TMessage>) {
+    parseMessage = defaultParseMessage as any,
+    serializeMessage = defaultSerializeMessage as any,
+    validate = ((x: any) => x) as any,
+    onClose,
+    onError,
+    onMessage,
+    onOpen,
+  }: UseWebSocketOptions<TParsedMessage, TSendMessage, TValidator>) {
+    const instanceRef = React.useRef<SocketInstance | null>(null)
     const instanceOptions = useStableOptions({ url, protocols })
-    const listenersRef = useLatestRef(listeners)
-    const instanceRef = React.useRef<TInstance | null>(null)
 
-    const send = React.useCallback((message: TOutgoingMessage) => {
-      instanceRef.current?.send(message)
-    }, [])
+    const handleClose = useEventHandler(onClose)
+    const handleError = useEventHandler(onError)
+    const handleOpen = useEventHandler(onOpen)
+    const handleMessage = useEventHandler(
+      async (event: MessageEvent<unknown>) => {
+        if (!onMessage) return
+        const parsed = await parseMessage(event)
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (parsed === null || parsed === undefined) return
+        const message = await validateAsync(validate, parsed as any)
+        if (message === null || message === undefined) return
+        onMessage(message, event)
+      },
+    )
+
+    // `useEventHandler` is ok since `send` should never be called during render
+    const send = useEventHandler((message: TSendMessage) => {
+      instanceRef.current?.send(serializeMessage(message))
+    })
 
     React.useEffect(() => {
       if (!instanceOptions.url) return
-      const instance = getSocketInstance<any, any, any>({
+      const instance = getSocketInstance({
         url: instanceOptions.url,
         protocols: instanceOptions.protocols,
-        ...options,
+        ping,
+        reconnect,
       })
+      if (binaryType && instance['~socket']) {
+        instance['~socket'].binaryType = binaryType
+      }
       instanceRef.current = instance
-      const cleanup = instance.listen(listenersRef.current)
+      const cleanup = instance.listen({
+        onClose: handleClose,
+        onOpen: handleOpen,
+        onError: handleError,
+        onMessage: handleMessage,
+      })
       return () => {
         cleanup()
         instanceRef.current = null
       }
-    }, [instanceOptions, listenersRef])
+    }, [instanceOptions, handleClose, handleError, handleOpen, handleMessage])
 
-    return { send }
+    return {
+      send,
+      /**
+       * DO NOT USE
+       */
+      get ['~socket']() {
+        return instanceRef.current?.['~socket'] ?? null
+      },
+    }
   }
 }
 
@@ -89,7 +142,7 @@ export function defineWebSocket<
  * new URL("...") is properly transformed to string
  */
 function useStableOptions(
-  options: Pick<UseWebSocketOptions<any>, 'url' | 'protocols'>,
+  options: Pick<UseWebSocketOptions<any, any, any>, 'url' | 'protocols'>,
 ) {
   const [stableOptions, setStableOptions] = React.useState(options)
   if (JSON.stringify(options) !== JSON.stringify(stableOptions)) {

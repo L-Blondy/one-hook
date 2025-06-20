@@ -1192,6 +1192,9 @@ importers:
 
   packages/use-websocket:
     dependencies:
+      '@1hook/use-event-handler':
+        specifier: workspace:*
+        version: link:../use-event-handler
       '@1hook/use-latest-ref':
         specifier: workspace:*
         version: link:../use-latest-ref

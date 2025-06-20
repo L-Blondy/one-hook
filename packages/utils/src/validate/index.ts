@@ -1,7 +1,7 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec'
-import { SchemaValidationError } from './schema-validation-error'
+import { ValidationError } from './schema-validation-error'
 import type { MaybePromise } from 'src/types'
-export { SchemaValidationError }
+export { ValidationError as SchemaValidationError }
 
 type ValidationFunctionSync<TInput = any, TOutput = TInput> = (
   data: TInput,
@@ -28,7 +28,7 @@ function validateSchemaSync<TSchema extends StandardSchemaV1>(
     // the validation library implements asyc validation
     throw new Error('async validation is not supported')
   }
-  if (result.issues) throw new SchemaValidationError(result, data)
+  if (result.issues) throw new ValidationError(result, data)
   return result.value
 }
 
@@ -62,7 +62,7 @@ async function validateSchema<TSchema extends StandardSchemaV1>(
   data: StandardSchemaV1.InferInput<TSchema>,
 ): Promise<StandardSchemaV1.InferOutput<TSchema>> {
   let result = await schema['~standard'].validate(data)
-  if (result.issues) throw new SchemaValidationError(result, data)
+  if (result.issues) throw new ValidationError(result, data)
   return result.value
 }
 

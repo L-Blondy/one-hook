@@ -1,6 +1,6 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec'
 
-export class SchemaValidationError<TData = any> extends Error {
+export class ValidationError<TData = any> extends Error {
   override name: 'ValidationError'
   issues: readonly StandardSchemaV1.Issue[]
   data: TData
@@ -13,5 +13,5 @@ export class SchemaValidationError<TData = any> extends Error {
   }
 }
 
-export let isValidationError = (error: any): error is SchemaValidationError =>
-  error instanceof SchemaValidationError
+export let isValidationError = (error: any): error is ValidationError =>
+  error instanceof ValidationError

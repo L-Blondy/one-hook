@@ -321,6 +321,23 @@ test('Should try to reconnect at interval { delay: 100 }', async () => {
   expect(Date.now() - startDate).toBeLessThan(400)
 })
 
+test('Should not generate memory leaks', () => {
+  const useWebSocket = defineWebSocket()
+
+  const hook = renderHook(() => {
+    useWebSocket({ url: 'wss://notfound.test.com', protocols: ['test1'] })
+    useWebSocket({ url: 'wss://notfound.test.com', protocols: ['test1'] })
+    useWebSocket({ url: 'wss://notfound.test.com', protocols: ['test2'] })
+    useWebSocket({ url: 'wss://notfound.test.com', protocols: ['test2'] })
+    useWebSocket({ url: 'wss://notfound.test.com', protocols: ['test3'] })
+    useWebSocket({ url: 'wss://notfound.test.com', protocols: ['test3'] })
+  })
+
+  expect(instanceMap.size).toBe(3)
+  hook.unmount()
+  expect(instanceMap.size).toBe(0)
+})
+
 test('Should reuse the same instance given a url & protocols', async () => {
   const useWebSocket1 = defineWebSocket()
   const useWebSocket2 = defineWebSocket()

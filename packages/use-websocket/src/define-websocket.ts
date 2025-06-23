@@ -123,7 +123,7 @@ export type UseWebSocketReturn<TSendMessage = unknown> = {
   /**
    * @private
    */
-  __socket: () => WebSocket | null
+  ['~socket']: () => WebSocket | null
 }
 
 export function defineWebSocket<
@@ -190,11 +190,6 @@ export function defineWebSocket<
       instanceRef.current?.send(serializeMessage(message))
     })
 
-    const __socket = React.useCallback(
-      () => instanceRef.current?.['~socket'] ?? null,
-      [],
-    )
-
     React.useEffect(() => {
       if (!instanceOptions.url) return
       const instance = getSocketInstance({
@@ -227,7 +222,7 @@ export function defineWebSocket<
       state: !useIsHydrated() || !instanceOptions.url ? 'closed' : state,
       send,
       /** @private */
-      __socket,
+      ['~socket']: () => instanceRef.current?.['~socket'] ?? null,
     }
   }
 }

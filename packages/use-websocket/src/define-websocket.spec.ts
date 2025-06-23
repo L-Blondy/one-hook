@@ -288,7 +288,7 @@ test('Should try to reconnect', async () => {
       url: 'wss://notfound.test.com',
       onOpen() {
         attempt++
-        socket.__socket()?.close()
+        socket['~socket']()?.close()
       },
     })
   })
@@ -309,7 +309,7 @@ test('Should try to reconnect at interval { delay: 100 }', async () => {
       url: 'wss://notfound.test.com',
       onOpen() {
         attempt++
-        socket.__socket()?.close()
+        socket['~socket']()?.close()
       },
     })
   })

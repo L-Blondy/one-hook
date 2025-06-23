@@ -3,6 +3,10 @@ import { getAllPackageJsonPaths, readPackageJson } from './package-json-utils'
 import path from 'path'
 import consola from 'consola'
 
+execSync('pnpm run build')
+execSync('pnpm run lint')
+execSync('pnpm run test')
+
 // release all
 await Promise.all(
   getAllPackageJsonPaths('./packages').map((packageJsonPath) => {
@@ -14,8 +18,6 @@ await Promise.all(
       execSync(
         [
           `cd ${packagePath}`,
-          'pnpm run build',
-          'pnpm run test',
           `pnpm publish --quiet --access public --tag ${tag} --no-git-checks`,
         ].join(' && '),
       )

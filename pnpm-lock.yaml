@@ -483,6 +483,9 @@ importers:
       '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../use-is-hydrated
+      '@1hook/use-isomorphic-layout-effect':
+        specifier: workspace:*
+        version: link:../use-isomorphic-layout-effect
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
@@ -1087,6 +1090,9 @@ importers:
       '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../use-is-hydrated
+      '@1hook/use-isomorphic-layout-effect':
+        specifier: workspace:*
+        version: link:../use-isomorphic-layout-effect
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils

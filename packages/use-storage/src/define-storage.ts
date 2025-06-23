@@ -8,6 +8,7 @@ import {
 import { defaultDeserializer, defaultSerializer } from './serializer'
 import { isServer } from '@1hook/utils/is-server'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
+import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 
 export type DefineStorageOptions<TValidator extends ValidatorSync<unknown>> = {
   /**
@@ -105,7 +106,7 @@ export function defineStorage<TValidator extends ValidatorSync<unknown>>({
   function useStorage() {
     const isHydrated = useIsHydrated()
     const [state, setState] = React.useState<State>(service.get)
-    React.useLayoutEffect(() => service.subscribe(setState), [])
+    useIsomorphicLayoutEffect(() => service.subscribe(setState), [])
     return [isHydrated ? state : serverSnapshot, service.set] as [
       State,
       React.Dispatch<React.SetStateAction<State>>,

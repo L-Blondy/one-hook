@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@1hook/use-event-handler": "workspace:*",
+    "@1hook/use-is-hydrated": "workspace:*",
     "@1hook/utils": "workspace:*"
   },
   "devDependencies": {

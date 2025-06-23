@@ -17,15 +17,33 @@ import {
 } from './utils'
 import type { Falsy, MaybePromise } from '@1hook/utils/types'
 import { useEventHandler } from '@1hook/use-event-handler'
+import { useIsHydrated } from '@1hook/use-is-hydrated'
 
 export type DefineWebSocketOptions<TDefaultParsedMessage, TDefaultSendMessage> =
   {
+    /**
+     * The reconnection strategy.
+     */
     reconnect?: WebSocketReconnectOption
+    /**
+     * The ping strategy.
+     */
     ping?: WebSocketPingOption
+    /**
+     * The binary type. See [MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/binaryType) for more details.
+     */
     binaryType?: BinaryType
+    /**
+     * The default function to parse the incoming message.
+     *
+     * Return `null | undefined` to ignore the message
+     */
     parseMessage?: (
       event: MessageEvent<unknown>,
     ) => MaybePromise<TDefaultParsedMessage>
+    /**
+     * The default function to serialize the outgoing message.
+     */
     serializeMessage?: (data: TDefaultSendMessage) => SendableMessage
   }
 
@@ -34,18 +52,78 @@ export type UseWebSocketOptions<
   TSendMessage,
   TValidator extends Validator<TParsedMessage, any>,
 > = {
+  /**
+   * The URL of the WebSocket server.
+   * Pass a falsy value to stop listening to the WebSocket server.
+   */
   url: string | URL | Falsy
+  /**
+   * The sub-protocols.
+   *
+   * See [MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/WebSocket#protocols) for more details
+   */
   protocols?: string | string[]
-  validate?: TValidator
+  /**
+   * The function to parse the incoming message.
+   *
+   * Uses `JSON.parse` by default.
+   *
+   * Return `null | undefined` to ignore the message
+   */
   parseMessage?: (event: MessageEvent<unknown>) => MaybePromise<TParsedMessage>
+  /**
+   * Incoming message validator. Can be one of the following:
+   * - a **function** that returns the value or throws an error
+   * - a **schema** from a validation library like zod, valibot or arktype that follows the [Standard Schema](https://github.com/standard-schema/standard-schema) spec
+   *
+   * Return `null | undefined` to ignore the message
+   */
+  validate?: TValidator
+  /**
+   * The function to serialize the outgoing message.
+   *
+   * Uses `JSON.stringify` by default.
+   */
   serializeMessage?: (message: TSendMessage) => SendableMessage
+  /**
+   * Executed when a message is received from the server, after it has been parsed and validated.
+   *
+   * `null` and `undefined` messages are ignored.
+   */
   onMessage?: (
     message: Exclude<ValidatorOutput<TValidator>, undefined | null>,
     event: MessageEvent<unknown>,
   ) => void
+  /**
+   * [See MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/open_event)
+   */
   onOpen?: (event: Event) => void
+  /**
+   * [See MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/close_event)
+   */
   onClose?: (event: CloseEvent) => void
+  /**
+   * [See MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/error_event)
+   */
   onError?: (event: Event) => void
+}
+
+export type UseWebSocketReturn<TSendMessage = unknown> = {
+  /**
+   * Send a message to the server. \
+   * The message will be serialized using the `serializeMessage` function.
+   */
+  send: (message: TSendMessage) => void
+  /**
+   * The current `readyState` of the WebSocket as a string literal type for convenience.
+   *
+   * Since the `"closing"` state can never be observed, it is not included in the type.
+   */
+  state: 'connecting' | 'open' | 'closed'
+  /**
+   * @private
+   */
+  __socket: () => WebSocket | null
 }
 
 export function defineWebSocket<
@@ -58,6 +136,13 @@ export function defineWebSocket<
   parseMessage: defaultParseMessage = fallbackParseMessage,
   serializeMessage: defaultSerializeMessage = fallbackSerializeMessage,
 }: DefineWebSocketOptions<TDefaultParsedMessage, TDefaultSendMessage> = {}) {
+  /**
+   * store the current state of the WebSocket connection to have it immediately when mounting a new hook
+   */
+  const __state = new Map<'current', UseWebSocketReturn['state']>([
+    ['current', 'closed'],
+  ])
+
   /**
    * The WebSocket connection is closed automatically when all hooks listening to a URL are unmounted.
    */
@@ -81,6 +166,9 @@ export function defineWebSocket<
   }: UseWebSocketOptions<TParsedMessage, TSendMessage, TValidator>) {
     const instanceRef = React.useRef<SocketInstance | null>(null)
     const instanceOptions = useStableOptions({ url, protocols })
+    const [state, setState] = React.useState<UseWebSocketReturn['state']>(
+      () => __state.get('current')!,
+    )
 
     const handleClose = useEventHandler(onClose)
     const handleError = useEventHandler(onError)
@@ -102,6 +190,11 @@ export function defineWebSocket<
       instanceRef.current?.send(serializeMessage(message))
     })
 
+    const __socket = React.useCallback(
+      () => instanceRef.current?.['~socket'] ?? null,
+      [],
+    )
+
     React.useEffect(() => {
       if (!instanceOptions.url) return
       const instance = getSocketInstance({
@@ -119,6 +212,10 @@ export function defineWebSocket<
         onOpen: handleOpen,
         onError: handleError,
         onMessage: handleMessage,
+        onStateChange(state) {
+          __state.set('current', state)
+          setState(state)
+        },
       })
       return () => {
         cleanup()
@@ -127,13 +224,10 @@ export function defineWebSocket<
     }, [instanceOptions, handleClose, handleError, handleOpen, handleMessage])
 
     return {
+      state: !useIsHydrated() || !instanceOptions.url ? 'closed' : state,
       send,
-      /**
-       * DO NOT USE
-       */
-      get ['~socket']() {
-        return instanceRef.current?.['~socket'] ?? null
-      },
+      /** @private */
+      __socket,
     }
   }
 }

@@ -1,17 +1,33 @@
 import { getInstanceId, type InstanceId, type SendableMessage } from './utils'
 
+type State = 'connecting' | 'open' | 'closed'
+
 type Listeners = {
   onClose?: (event: CloseEvent) => void
   onOpen?: (event: Event) => void
   onMessage?: (event: MessageEvent<unknown>) => any
   onError?: (event: Event) => void
+  onStateChange?: (state: State) => void
 }
 
 export type SocketInstance = ReturnType<typeof createInstance>
 
 export type WebSocketReconnectOption = {
+  /**
+   * The function to determine if a reconnection should be attempted.
+   *
+   * @default () => true
+   */
   when?: (closeEvent: CloseEvent) => boolean
+  /**
+   * The delay in milliseconds between reconnection attempts. Set to 0 to disable reconnection.
+   */
   delay: number | ((attempt: number, closeEvent: CloseEvent) => number)
+  /**
+   * The maximum number of reconnection attempts.
+   *
+   * @default Infinity
+   */
   attempts?: number
 }
 
@@ -22,25 +38,9 @@ export type WebSocketPingOption = {
 }
 
 export type SocketInstanceOptions = {
-  /**
-   * The url of the websocket server.
-   *
-   * See [MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/WebSocket#url) for more details
-   */
   url: string | URL
-  /**
-   * The sub-protocols.
-   *
-   * See [MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/WebSocket#protocols) for more details
-   */
   protocols: string | string[] | undefined
-  /**
-   * Define the reconnection strategy, if any.
-   */
   reconnect: WebSocketReconnectOption | undefined
-  /**
-   * Define the ping strategy, if any.
-   */
   ping: WebSocketPingOption | undefined
 }
 
@@ -85,31 +85,37 @@ function createInstance(id: InstanceId, options: SocketInstanceOptions) {
     instance['~socket'] = socket
     const controller = new AbortController()
     const { signal } = controller
+    allListeners.forEach((listeners) => {
+      listeners.onStateChange?.('connecting')
+    })
 
     socket.addEventListener(
       'close',
       (event) => {
+        allListeners.forEach((listeners) => {
+          listeners.onStateChange?.('closed')
+        })
         allListeners.forEach((listeners) => {
           listeners.onClose?.(event)
         })
         controller.abort() // remove listeners on that socket instance. A new instance will be created.
         clearInterval(pingIntervalId)
         messageQueue.length = 0 // clear the message queue
+        let delay: number
+
         if (
           !allListeners.size ||
           !recoWhen(event) ||
-          ++recoAttempt > recoAttempts
+          ++recoAttempt > recoAttempts ||
+          !(delay =
+            typeof recoDelay === 'function'
+              ? recoDelay(recoAttempt, event)
+              : recoDelay)
         ) {
           clearTimeout(recoTimeoutId)
           return
         }
-        const delay =
-          typeof recoDelay === 'function'
-            ? recoDelay(recoAttempt, event)
-            : recoDelay
-        if (delay) {
-          recoTimeoutId = setTimeout(() => connect(), delay)
-        }
+        recoTimeoutId = setTimeout(() => connect(), delay)
       },
       { signal },
     )
@@ -117,6 +123,7 @@ function createInstance(id: InstanceId, options: SocketInstanceOptions) {
       'open',
       (event) => {
         allListeners.forEach((listeners) => {
+          listeners.onStateChange?.('open')
           listeners.onOpen?.(event)
         })
         while (messageQueue.length) {
@@ -139,6 +146,7 @@ function createInstance(id: InstanceId, options: SocketInstanceOptions) {
       'error',
       (event) => {
         allListeners.forEach((listeners) => {
+          listeners.onStateChange?.('closed')
           listeners.onError?.(event)
         })
       },

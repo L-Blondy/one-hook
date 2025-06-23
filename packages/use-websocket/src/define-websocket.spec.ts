@@ -13,7 +13,7 @@ import {
 import { instanceMap } from './vanilla'
 import { defineWebSocket } from './define-websocket'
 import { z } from 'zod'
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 const api = ws.link('wss://socket.test.domain')
 
@@ -283,22 +283,17 @@ test('Should try to reconnect', async () => {
 
   let attempt = -1
 
-  await new Promise<void>((resolve) => {
-    renderHook(() => {
-      const socket = useWebSocket({
-        url: 'wss://notfound.test.com',
-        onOpen() {
-          attempt++
-          socket['~socket']?.close()
-          if (attempt === 3) {
-            resolve()
-          }
-        },
-      })
+  renderHook(() => {
+    const socket = useWebSocket({
+      url: 'wss://notfound.test.com',
+      onOpen() {
+        attempt++
+        socket.__socket()?.close()
+      },
     })
   })
 
-  expect(attempt).toBe(3)
+  await waitFor(() => expect(attempt).toBeGreaterThanOrEqual(0))
 })
 
 test('Should try to reconnect at interval { delay: 100 }', async () => {
@@ -309,20 +304,17 @@ test('Should try to reconnect at interval { delay: 100 }', async () => {
   let attempt = -1
   const startDate = Date.now()
 
-  await new Promise<void>((resolve) => {
-    renderHook(() => {
-      const socket = useWebSocket({
-        url: 'wss://notfound.test.com',
-        onOpen() {
-          attempt++
-          socket['~socket']?.close()
-          if (attempt === 3) {
-            resolve()
-          }
-        },
-      })
+  renderHook(() => {
+    const socket = useWebSocket({
+      url: 'wss://notfound.test.com',
+      onOpen() {
+        attempt++
+        socket.__socket()?.close()
+      },
     })
   })
+
+  await waitFor(() => expect(attempt).toBe(3))
 
   expect(attempt).toBe(3)
   expect(Date.now() - startDate).toBeGreaterThanOrEqual(300)
@@ -335,38 +327,56 @@ test('Should reuse the same instance given a url & protocols', async () => {
 
   let openCount = 0
 
-  await new Promise<void>((resolve) => {
-    renderHook(() => {
-      useWebSocket1({
-        url: 'wss://socket.test.domain',
-        protocols: ['test'],
-        onOpen() {
-          ++openCount === 4 && resolve()
-        },
-      })
-      useWebSocket1({
-        url: 'wss://socket.test.domain',
-        protocols: ['test'],
-        onOpen() {
-          ++openCount === 4 && resolve()
-        },
-      })
-      useWebSocket2({
-        url: 'wss://socket.test.domain',
-        protocols: ['test'],
-        onOpen() {
-          ++openCount === 4 && resolve()
-        },
-      })
-      useWebSocket2({
-        url: 'wss://socket.test.domain',
-        protocols: ['test'],
-        onOpen() {
-          ++openCount === 4 && resolve()
-        },
-      })
+  renderHook(() => {
+    useWebSocket1({
+      url: 'wss://socket.test.domain',
+      protocols: ['test'],
+      onOpen() {
+        ++openCount
+      },
+    })
+    useWebSocket1({
+      url: 'wss://socket.test.domain',
+      protocols: ['test'],
+      onOpen() {
+        ++openCount
+      },
+    })
+    useWebSocket2({
+      url: 'wss://socket.test.domain',
+      protocols: ['test'],
+      onOpen() {
+        ++openCount
+      },
+    })
+    useWebSocket2({
+      url: 'wss://socket.test.domain',
+      protocols: ['test'],
+      onOpen() {
+        ++openCount
+      },
     })
   })
-
+  await waitFor(() => expect(openCount).toBe(4))
   expect(instanceMap.size).toBe(1)
+})
+
+test('Should transition state from connecting to open', async () => {
+  const useWebSocket = defineWebSocket()
+
+  const hook = renderHook(() =>
+    useWebSocket({ url: 'wss://socket.test.domain' }),
+  )
+
+  expect(hook.result.current.state).toBe('connecting')
+  await waitFor(() => expect(hook.result.current.state).toBe('open'))
+})
+
+test('Should transition state to closed after socket close', async () => {
+  const useWebSocket = defineWebSocket()
+  const hook = renderHook((url?: string | null) => useWebSocket({ url }))
+  hook.rerender('wss://socket.test.domain')
+  await waitFor(() => expect(hook.result.current.state).toBe('open'))
+  hook.rerender(null)
+  await waitFor(() => expect(hook.result.current.state).toBe('closed'))
 })

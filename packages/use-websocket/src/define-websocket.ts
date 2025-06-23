@@ -163,7 +163,11 @@ export function defineWebSocket<
     onError,
     onMessage,
     onOpen,
-  }: UseWebSocketOptions<TParsedMessage, TSendMessage, TValidator>) {
+  }: UseWebSocketOptions<
+    TParsedMessage,
+    TSendMessage,
+    TValidator
+  >): UseWebSocketReturn<TSendMessage> {
     const instanceRef = React.useRef<SocketInstance | null>(null)
     const instanceOptions = useStableOptions({ url, protocols })
     const [state, setState] = React.useState<UseWebSocketReturn['state']>(

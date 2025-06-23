@@ -3,8 +3,13 @@ import { getAllPackageJsonPaths, readPackageJson } from './package-json-utils'
 import path from 'path'
 import consola from 'consola'
 
+consola.info('Building all packages...')
 execSync('pnpm run build')
+
+consola.info('Linting all packages...')
 execSync('pnpm run lint')
+
+consola.info('Testing all packages...')
 execSync('pnpm run test')
 
 // release all

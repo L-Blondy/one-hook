@@ -17,10 +17,13 @@ export type WebSocketReconnectOption = {
    * The function to determine if a reconnection should be attempted.
    *
    * @default () => true
+   * @remarks `Function`
    */
   when?: (closeEvent: CloseEvent) => boolean
   /**
    * The delay in milliseconds between reconnection attempts. Set to 0 to disable reconnection.
+   *
+   * @remarks `Function`
    */
   delay: number | ((attempt: number, closeEvent: CloseEvent) => number)
   /**
@@ -33,7 +36,17 @@ export type WebSocketReconnectOption = {
 
 export type WebSocketPingOption = {
   interval: number
+  /**
+   * The message to send when pinging.
+   *
+   * @default 'ping'
+   */
   message?: string
+  /**
+   * Whether to send the ping message as soon as the connection is established.
+   *
+   * @default false
+   */
   leading?: boolean
 }
 

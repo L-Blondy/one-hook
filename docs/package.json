@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
     "info": "next info",
@@ -50,6 +50,7 @@
     "@1hook/use-unmount-effect": "workspace:*",
     "@1hook/use-update-effect": "workspace:*",
     "@1hook/use-user-media": "workspace:*",
+    "@1hook/use-websocket": "workspace:*",
     "@1hook/use-window-size": "workspace:*",
     "@1hook/utils": "workspace:*",
     "@eslint/js": "^9.24.0",

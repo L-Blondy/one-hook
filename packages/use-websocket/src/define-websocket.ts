@@ -37,12 +37,16 @@ export type DefineWebSocketOptions<TDefaultParsedMessage, TDefaultSendMessage> =
      * The default function to parse the incoming message.
      *
      * Return `null | undefined` to ignore the message
+     *
+     * @remarks `Function`
      */
     parseMessage?: (
       event: MessageEvent<unknown>,
     ) => MaybePromise<TDefaultParsedMessage>
     /**
      * The default function to serialize the outgoing message.
+     *
+     * @remarks `Function`
      */
     serializeMessage?: (data: TDefaultSendMessage) => SendableMessage
   }
@@ -55,6 +59,8 @@ export type UseWebSocketOptions<
   /**
    * The URL of the WebSocket server.
    * Pass a falsy value to stop listening to the WebSocket server.
+   *
+   * @remarks `string | URL | Falsy`
    */
   url: string | URL | Falsy
   /**
@@ -69,6 +75,8 @@ export type UseWebSocketOptions<
    * Uses `JSON.parse` by default.
    *
    * Return `null | undefined` to ignore the message
+   *
+   * @remarks `(event: MessageEvent) => MaybePromise<T>`
    */
   parseMessage?: (event: MessageEvent<unknown>) => MaybePromise<TParsedMessage>
   /**
@@ -83,12 +91,16 @@ export type UseWebSocketOptions<
    * The function to serialize the outgoing message.
    *
    * Uses `JSON.stringify` by default.
+   *
+   * @remarks `Function`
    */
   serializeMessage?: (message: TSendMessage) => SendableMessage
   /**
    * Executed when a message is received from the server, after it has been parsed and validated.
    *
    * `null` and `undefined` messages are ignored.
+   *
+   * @remarks `(message: T, event: MessageEvent) => void`
    */
   onMessage?: (
     message: Exclude<ValidatorOutput<TValidator>, undefined | null>,
@@ -110,8 +122,9 @@ export type UseWebSocketOptions<
 
 export type UseWebSocketReturn<TSendMessage = unknown> = {
   /**
-   * Send a message to the server. \
-   * The message will be serialized using the `serializeMessage` function.
+   * Send a message to the server.
+   *
+   * The message is serialized using the `serializeMessage` function.
    */
   send: (message: TSendMessage) => void
   /**
@@ -122,6 +135,7 @@ export type UseWebSocketReturn<TSendMessage = unknown> = {
   state: 'connecting' | 'open' | 'closed'
   /**
    * @private
+   * @internal
    */
   ['~socket']: () => WebSocket | null
 }

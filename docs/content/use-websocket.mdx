@@ -1,0 +1,248 @@
+---
+title: useWebSocket
+description: WebSocket client designed for React.
+---
+
+## Features
+
+- **Built-in Validation:** Validate messages with [zod](https://zod.dev/), [valibot](https://valibot.dev/), [arktype](https://arktype.dev/) or with a simple function.
+- **Connection Reuse:** Share a WebSocket connection across multiple hook instances.
+- **Automatic Reconnect:** Configurable reconnection strategies for resilient connections.
+- **Ping Support:** Built-in ping to keep connections alive.
+- **Message Queueing:** Outgoing messages are queued while connecting.
+- **Automatic Parsing/Serialization:** Customizable message parsing and serialization.
+- **Friendly API:** Simple, ergonomic API for sending messages and tracking connection state.
+
+## Installation
+
+```package-install
+npm install @1hook/use-websocket
+```
+
+## Quick Start
+
+<Steps>
+
+<Step>
+### Setup the WebSocket
+
+Define the ping and reconnect strategies for the useWebSocket hook.
+
+```tsx twoslash title="websocket.ts" include imports
+const console = { log: (..._: any[]) => {} }
+import React from 'react'
+// ---cut---
+import { z } from 'zod'
+import { defineWebSocket } from '@1hook/use-websocket'
+
+export const useWebSocket = defineWebSocket({
+  ping: { interval: 10000 },
+  reconnect: { delay: 5000 },
+})
+```
+
+</Step>
+
+<Step>
+
+### Send and Receive messages
+
+Connect to a WebSocket server, validate and handle incoming messages. \
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { send } = useWebSocket({
+  url: 'wss://echo.websocket.org',
+  validate: z.object({ text: z.string() }),
+  onMessage: console.log,
+})
+```
+
+Use the `send` method the send messages to the server.
+
+```tsx
+send({ text: 'Hello!' })
+```
+
+All hooks using the same url + protocol share a single WebSocket connection. \
+The connection closes automatically when all listeners unmount.
+
+</Step>
+
+</Steps>
+
+## Validation
+
+The `validate` option ensures incoming messages match your expected format, providing both runtime validation and type safety.
+
+### 👉 Functional validation
+
+For simple cases you can use a function to validate the incoming message.
+
+```ts twoslash
+// @include: imports
+// ---cut---
+useWebSocket({
+  url: 'wss://echo.websocket.org',
+  validate: (message) => String(message),
+  onMessage: (message) => {
+    // message: string
+  },
+})
+```
+
+### 👉 Schema validation
+
+For more complex cases you can use a schema to validate the cookie value. Compatible validation libraries include [zod 3.24+](https://zod.dev/), [valibot
+1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/). Check out [Standard
+Schema](https://github.com/standard-schema/standard-schema) for more info.
+
+```ts twoslash
+// @include: imports
+// ---cut---
+useWebSocket({
+  url: 'wss://echo.websocket.org',
+  validate: z.object({ type: z.string(), text: z.string() }),
+  onMessage: (message) => {
+    // message: { type: string, text: string }
+  },
+})
+```
+
+## Message Filtering
+
+Sometimes you need to selectively process messages based on their content. Rather than writing complex validation logic to handle every possible message format, you can simply ignore unwanted messages.
+
+Return `null | undefined` from the `validate` option to skip processing specific messages. The hook will silently ignore these messages and only trigger `onMessage` for validated ones.
+
+```ts twoslash
+// @include: imports
+// ---cut---
+useWebSocket({
+  url: 'wss://echo.websocket.org',
+  validate: z
+    .object({ type: z.string(), text: z.string() })
+    .nullable() // allows returning null from catch() to ignore invalid messages
+    .catch(null),
+  onMessage: (message) => {
+    // message: { type: string, text: string }
+  },
+})
+```
+
+Note that returning `null` or `undefined` from the `parseMessage` option will also ignore messages.
+
+## Custom Parsing/Serialization
+
+You can configure default message parsing and serialization in `defineWebSocket`, while still having the flexibility to override these settings in individual `useWebSocket` calls.
+
+```ts twoslash
+import { defineWebSocket } from '@1hook/use-websocket'
+// ---cut---
+defineWebSocket({
+  parseMessage(event) {
+    if (typeof event.data !== 'string') return event.data
+    return JSON.parse(event.data)
+  },
+  serializeMessage(msg) {
+    return JSON.stringify(msg)
+  },
+})
+```
+
+Since JSON parsing and serialization are the default behavior, you typically won't need to customize these settings.
+
+## Typesafe message sending
+
+Type the `serializeMessage` parameter to constrain what messages can be sent through the `send` method.
+
+```ts twoslash include send
+// @include: imports
+// ---cut---
+type OutgoingMessage = { type: string; text: string }
+
+const { send } = useWebSocket({
+  url: 'wss://echo.websocket.org',
+  serializeMessage(message: OutgoingMessage) {
+    return JSON.stringify(message)
+  },
+})
+```
+
+Now the `send` method only accepts messages matching the `OutgoingMessage` type.
+
+```ts twoslash
+// @include: send
+// @noErrors
+// ---cut---
+// ✅ ok
+send({ type: 'hello', text: 'world' })
+
+// ❌ error
+send({ type: 'hello', text: 123 })
+```
+
+## Closing the connection
+
+The WebSocket connection automatically closes when there are no more active listeners. The listeners are removed when
+
+- the hook unmounts
+- The url is set to `null`
+
+Note that if the connection closes for any other reason (like network issues, server-side closure or using the close method of the WebSocket instance directly), the configured reconnection strategy will attempt to restore the connection.
+
+```tsx twoslash
+const enabled: boolean = true
+// @include: imports
+// ---cut---
+useWebSocket({
+  url: enabled ? 'wss://echo.websocket.org' : null,
+})
+```
+
+## API Reference
+
+### 👉 defineWebSocket
+
+```ts
+function defineWebSocket(options: DefineWebSocketOptions): useWebSocket
+```
+
+<AutoTypeTable
+  name="DefineWebSocketOptions"
+  description="Options for defineWebSocket."
+  path="packages/use-websocket/src/define-websocket.ts"
+/>
+
+<AutoTypeTable
+  name="WebSocketPingOption"
+  description="The ping options."
+  path="packages/use-websocket/src/vanilla.ts"
+/>
+
+<AutoTypeTable
+  name="WebSocketReconnectOption"
+  description="The reconnect options."
+  path="packages/use-websocket/src/vanilla.ts"
+/>
+
+### 👉 useWebSocket
+
+Send and Receive messages from a WebSocket server.
+
+```ts
+function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn
+```
+
+<AutoTypeTable
+  name="UseWebSocketOptions"
+  description="Options for the useWebSocket hook."
+  path="packages/use-websocket/src/define-websocket.ts"
+/>
+
+<AutoTypeTable
+  name="UseWebSocketReturn"
+  description="Return value of the useWebSocket hook."
+  path="packages/use-websocket/src/define-websocket.ts"
+/>

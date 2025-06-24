@@ -18,7 +18,7 @@ importers:
         specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/react':
-        specifier: ^16.2.0
+        specifier: ^16.3.0
         version: 16.3.0(@testing-library/dom@10.4.0)(@types/react-dom@19.1.6(@types/react@19.1.7))(@types/react@19.1.7)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@testing-library/user-event':
         specifier: ^14.6.1
@@ -227,6 +227,9 @@ importers:
       '@1hook/use-user-media':
         specifier: workspace:*
         version: link:../packages/use-user-media
+      '@1hook/use-websocket':
+        specifier: workspace:*
+        version: link:../packages/use-websocket
       '@1hook/use-window-size':
         specifier: workspace:*
         version: link:../packages/use-window-size

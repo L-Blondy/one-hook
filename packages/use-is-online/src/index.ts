@@ -1,34 +1,23 @@
-import React from 'react'
-import { isServer } from '@1hook/utils/is-server'
+import { useSyncExternalStore } from 'react'
 
-const listeners = new Set<(online: boolean) => void>()
+let subs = 0
 
-if (!isServer) {
-  window.addEventListener(
-    'online',
-    () => {
-      listeners.forEach((l) => l(true))
-    },
-    { passive: true },
-  )
-  window.addEventListener(
-    'offline',
-    () => {
-      listeners.forEach((l) => l(false))
-    },
-    { passive: true },
-  )
+function subscribe(getSnapshot: () => void) {
+  ++subs
+  window.addEventListener('online', getSnapshot, { passive: true })
+  window.addEventListener('offline', getSnapshot, { passive: true })
+  return () => {
+    if (!--subs) {
+      window.removeEventListener('online', getSnapshot)
+      window.removeEventListener('offline', getSnapshot)
+    }
+  }
 }
 
 export function useIsOnline() {
-  const [isOnline, setIsOnline] = React.useState(isServer || navigator.onLine)
-
-  React.useEffect(() => {
-    listeners.add(setIsOnline)
-    return () => {
-      listeners.delete(setIsOnline)
-    }
-  }, [])
-
-  return isOnline
+  return useSyncExternalStore(
+    subscribe,
+    () => navigator.onLine,
+    () => true,
+  )
 }

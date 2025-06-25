@@ -3,12 +3,6 @@ title: useEventListener
 description: React version of `addEventListener`, optimized for performance and memory usage.
 ---
 
-## Features
-
-- Reuses the same event listener instance for the same target, type, and options.
-- Automatically attaches and detaches the event listener when the component unmounts.
-- Provides methods to manually attach and detach the event listener.
-
 ## Installation
 
 ```package-install
@@ -32,34 +26,7 @@ const target = document.getElementById('target')
 useEventListener(target, 'click', () => console.log('click'))
 ```
 
-## Examples
-
-### 1. Listen to a Window event
-
-SPA example:
-
-```tsx twoslash
-// @include: imports
-const target = document.getElementById('target')
-// ---cut---
-useEventListener(window, 'click', (e) => console.log(e.target))
-```
-
-SSR example:
-
-```tsx twoslash
-// @include: imports
-const target = document.getElementById('target')
-// ---cut---
-import { isServer } from '@1hook/use-event-listener'
-
-useEventListener(!isServer && window, 'click', (e) => console.log(e.target))
-```
-
-`!isServer && window` ensures the code is runs the client before accessing the
-window object
-
-### 2. Targeting a DOM Element
+### Target a DOM Element
 
 You can use `useEventListener` to attach event listeners to specific DOM elements.
 
@@ -108,7 +75,29 @@ function MyComponent() {
 }
 ```
 
-### 3. Trigger the listener manually
+### Target the window / document
+
+For single-page applications (SPAs), you can directly use the `window` or `document` object:
+
+```tsx twoslash
+// @include: imports
+const target = document.getElementById('target')
+// ---cut---
+useEventListener(window, 'click', (e) => console.log(e.target))
+```
+
+With SSR, you need to check if the code runs on the server before accessing the window object:
+
+```tsx twoslash
+// @include: imports
+const target = document.getElementById('target')
+// ---cut---
+import { isServer } from '@1hook/use-event-listener'
+
+useEventListener(!isServer && window, 'click', (e) => console.log(e.target))
+```
+
+### Trigger the listener manually
 
 This example shows how to listen for the `'mousemove'` & `'mouseup'` global events only after the `'mousedown'` event has occurred.
 

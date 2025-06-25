@@ -1,7 +1,7 @@
 'use client'
+import { useDocumentHasFocus } from '@1hook/use-document-has-focus'
 import Link from 'fumadocs-core/link'
 import { useState } from 'react'
-import { useIsOnline } from '@1hook/use-is-online'
 
 export default function Homepage() {
   const [tab, setTab] = useState(1)
@@ -25,16 +25,16 @@ export default function Homepage() {
 }
 
 function Tab1() {
-  console.log('tab 1', useIsOnline())
+  console.log('tab 1', useDocumentHasFocus())
   return <div className="text-2xl">Tab1</div>
 }
 
 function Tab2() {
-  console.log('tab 2', useIsOnline())
+  console.log('tab 2', useDocumentHasFocus())
   return <div className="text-2xl">Tab2</div>
 }
 
 function TabNull() {
-  console.log('tab null', useIsOnline())
+  console.log('tab null', useDocumentHasFocus())
   return null
 }

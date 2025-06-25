@@ -6,7 +6,7 @@ import { useIsHydrated } from '@1hook/use-is-hydrated'
 const allListeners = new Set<(isVisible: boolean) => void>()
 
 if (!isServer) {
-  window.addEventListener(
+  document.addEventListener(
     'visibilitychange',
     () => {
       allListeners.forEach((l) => l(!document.hidden))

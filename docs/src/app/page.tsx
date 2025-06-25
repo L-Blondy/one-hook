@@ -1,5 +1,5 @@
 'use client'
-import { useDocumentHasFocus } from '@1hook/use-document-has-focus'
+import { useDocumentVisibility } from '@1hook/use-document-visibility'
 import Link from 'fumadocs-core/link'
 import { useState } from 'react'
 
@@ -25,16 +25,16 @@ export default function Homepage() {
 }
 
 function Tab1() {
-  console.log('tab 1', useDocumentHasFocus())
+  console.log('tab 1', useDocumentVisibility())
   return <div className="text-2xl">Tab1</div>
 }
 
 function Tab2() {
-  console.log('tab 2', useDocumentHasFocus())
+  console.log('tab 2', useDocumentVisibility())
   return <div className="text-2xl">Tab2</div>
 }
 
 function TabNull() {
-  console.log('tab null', useDocumentHasFocus())
+  console.log('tab null', useDocumentVisibility())
   return null
 }

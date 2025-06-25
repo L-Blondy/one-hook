@@ -1,12 +1,19 @@
 import React from 'react'
 import { useEventHandler } from '@1hook/use-event-handler'
 import { isServer } from '@1hook/utils/is-server'
+import { useIsHydrated } from '@1hook/use-is-hydrated'
 
-const listeners = new Set<(isVisible: boolean) => void>()
+const allListeners = new Set<(isVisible: boolean) => void>()
 
-const getState = () => !document.hidden
-
-const callAllListeners = () => listeners.forEach((l) => l(getState()))
+if (!isServer) {
+  window.addEventListener(
+    'visibilitychange',
+    () => {
+      allListeners.forEach((l) => l(!document.hidden))
+    },
+    { passive: true },
+  )
+}
 
 export type UseDocumentVisibilityOptions = {
   /**
@@ -15,36 +22,21 @@ export type UseDocumentVisibilityOptions = {
   onChange?: (isVisible: boolean) => void
 }
 
-export function useDocumentVisibility({
-  onChange,
-}: UseDocumentVisibilityOptions = {}): boolean {
-  const handleChange = useEventHandler(onChange)
-  const [state, setState] = React.useState<boolean>(
-    isServer ? true : getState(),
-  )
+export function useDocumentVisibility(
+  options: UseDocumentVisibilityOptions = {},
+): boolean {
+  const onChange = useEventHandler(options.onChange)
+  const [state, setState] = React.useState(isServer || !document.hidden)
 
   React.useEffect(() => {
-    if (listeners.size === 0) {
-      document.addEventListener('visibilitychange', callAllListeners, {
-        passive: true,
-      })
-    }
-
-    function listener(isVisible: boolean) {
-      setState(isVisible)
-      handleChange(isVisible)
-    }
-
-    listeners.add(listener)
+    allListeners.add(setState)
+    allListeners.add(onChange)
 
     return () => {
-      listeners.delete(listener)
-
-      if (!listeners.size) {
-        document.removeEventListener('visibilitychange', callAllListeners)
-      }
+      allListeners.delete(setState)
+      allListeners.delete(onChange)
     }
-  }, [setState, handleChange])
+  }, [onChange])
 
-  return state
+  return !useIsHydrated() || state
 }

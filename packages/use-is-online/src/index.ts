@@ -1,15 +1,19 @@
 import { useSyncExternalStore } from 'react'
 
-let subs = 0
+const allListeners = new Set<() => void>()
+const callAllListeners = () => allListeners.forEach((l) => l())
 
 function subscribe(getSnapshot: () => void) {
-  ++subs
-  window.addEventListener('online', getSnapshot, { passive: true })
-  window.addEventListener('offline', getSnapshot, { passive: true })
+  allListeners.add(getSnapshot)
+  if (allListeners.size === 1) {
+    window.addEventListener('online', callAllListeners, { passive: true })
+    window.addEventListener('offline', callAllListeners, { passive: true })
+  }
   return () => {
-    if (!--subs) {
-      window.removeEventListener('online', getSnapshot)
-      window.removeEventListener('offline', getSnapshot)
+    allListeners.delete(getSnapshot)
+    if (allListeners.size === 0) {
+      window.removeEventListener('online', callAllListeners)
+      window.removeEventListener('offline', callAllListeners)
     }
   }
 }

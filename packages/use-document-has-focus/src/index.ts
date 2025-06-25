@@ -1,12 +1,26 @@
 import React from 'react'
 import { useEventHandler } from '@1hook/use-event-handler'
 import { isServer } from '@1hook/utils/is-server'
+import { useIsHydrated } from '@1hook/use-is-hydrated'
 
-const listeners = new Set<(hasFocus: boolean) => void>()
+const allListeners = new Set<(hasFocus: boolean) => void>()
 
-const getState = () => document.hasFocus()
-
-const callAllListeners = () => listeners.forEach((l) => l(getState()))
+if (!isServer) {
+  window.addEventListener(
+    'focus',
+    () => {
+      allListeners.forEach((l) => l(true))
+    },
+    { passive: true },
+  )
+  window.addEventListener(
+    'blur',
+    () => {
+      allListeners.forEach((l) => l(false))
+    },
+    { passive: true },
+  )
+}
 
 export type UseDocumentHasFocusOptions = {
   /**
@@ -15,36 +29,21 @@ export type UseDocumentHasFocusOptions = {
   onChange?: (hasFocus: boolean) => void
 }
 
-export function useDocumentHasFocus({
-  onChange,
-}: UseDocumentHasFocusOptions = {}): boolean {
-  const handleChange = useEventHandler(onChange)
-  const [state, setState] = React.useState<boolean>(
-    isServer ? true : getState(),
-  )
+export function useDocumentHasFocus(
+  options: UseDocumentHasFocusOptions = {},
+): boolean {
+  const onChange = useEventHandler(options.onChange)
+  const [state, setState] = React.useState(isServer || document.hasFocus())
 
   React.useEffect(() => {
-    if (listeners.size === 0) {
-      window.addEventListener('focus', callAllListeners, { passive: true })
-      window.addEventListener('blur', callAllListeners, { passive: true })
-    }
-
-    function listener(hasFocus: boolean) {
-      setState(hasFocus)
-      handleChange(hasFocus)
-    }
-
-    listeners.add(listener)
+    allListeners.add(setState)
+    allListeners.add(onChange)
 
     return () => {
-      listeners.delete(listener)
-
-      if (!listeners.size) {
-        window.removeEventListener('focus', callAllListeners)
-        window.removeEventListener('blur', callAllListeners)
-      }
+      allListeners.delete(setState)
+      allListeners.delete(onChange)
     }
-  }, [setState, handleChange])
+  }, [onChange])
 
-  return state
+  return !useIsHydrated() || state
 }

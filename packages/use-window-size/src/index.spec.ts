@@ -23,11 +23,11 @@ test('type inference', () => {
   type Size = { width: number; height: number }
   renderHook(() => {
     const ws1 = defineUseWindowSize()()
-    const ws2 = defineUseWindowSize({ spa: false })()
-    const ws3 = defineUseWindowSize({ spa: true })()
-    expectTypeOf(ws1).toEqualTypeOf<Partial<Size>>()
-    expectTypeOf(ws2).toEqualTypeOf<Partial<Size>>()
-    expectTypeOf(ws3).toEqualTypeOf<Size>()
+    const ws2 = defineUseWindowSize({ ssr: false })()
+    const ws3 = defineUseWindowSize({ ssr: true })()
+    expectTypeOf(ws1).toEqualTypeOf<Size>()
+    expectTypeOf(ws2).toEqualTypeOf<Size>()
+    expectTypeOf(ws3).toEqualTypeOf<Partial<Size>>()
 
     defineUseWindowSize()({
       onChange(size) {

@@ -1241,6 +1241,9 @@ importers:
       '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
+      '@1hook/use-is-hydrated':
+        specifier: workspace:*
+        version: link:../use-is-hydrated
       '@1hook/use-isomorphic-layout-effect':
         specifier: workspace:*
         version: link:../use-isomorphic-layout-effect

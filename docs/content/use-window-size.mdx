@@ -20,11 +20,10 @@ npm install @1hook/use-window-size
 ```tsx twoslash include imports
 import { defineUseWindowSize } from '@1hook/use-window-size'
 
-export const useWindowSize = defineUseWindowSize({ spa: true })
+export const useWindowSize = defineUseWindowSize({ ssr: true })
 ```
 
-`defineUseWindowSize` accepts a `spa` option that enables Single Page Application optimizations. \
-When `spa: false` the width and height are initialized with `undefined`.
+Setting `ssr` to `true` initializes width and height as `undefined` to prevent hydration mismatches between server and client.
 
 ```tsx twoslash
 // @include: imports

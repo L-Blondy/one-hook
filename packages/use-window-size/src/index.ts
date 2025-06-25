@@ -2,8 +2,9 @@ import React from 'react'
 import { useEventHandler } from '@1hook/use-event-handler'
 import { isServer } from '@1hook/utils/is-server'
 import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
+import { useIsHydrated } from '@1hook/use-is-hydrated'
 
-type Size<TSpa extends boolean = false> = TSpa extends true
+type Size<TSSR extends boolean = false> = TSSR extends false
   ? {
       width: number
       height: number
@@ -13,18 +14,23 @@ type Size<TSpa extends boolean = false> = TSpa extends true
       height?: number
     }
 
-const listeners = new Set<(size: Size<true>) => void>()
+const listeners = new Set<(size: Size) => void>()
 
-const callAllListeners = () =>
+if (!isServer) {
+  window.addEventListener('resize', callAllListeners)
+}
+
+function callAllListeners() {
   listeners.forEach((l) =>
     l({
       width: window.innerWidth,
       height: window.innerHeight,
     }),
   )
+}
 
-export type DefineUseWindowSizeOptions<TSpa extends boolean> = {
-  spa?: TSpa
+export type DefineUseWindowSizeOptions<TSSR extends boolean> = {
+  ssr?: TSSR
 }
 
 export type UseWindowSizeOptions = {
@@ -37,56 +43,40 @@ export type UseWindowSizeOptions = {
   /**
    * Executes when the size changes, even if `trackState` is `false`.
    */
-  onChange?: (size: Size<true>) => void
+  onChange?: (size: Size) => void
 }
 
-export type UseWindowSizeReturn<TSpa extends boolean> = Size<TSpa>
+export type UseWindowSizeReturn<TSSR extends boolean> = Size<TSSR>
 
-export function defineUseWindowSize<TSpa extends boolean = false>({
-  spa,
-}: DefineUseWindowSizeOptions<TSpa> = {}) {
+export function defineUseWindowSize<TSSR extends boolean = false>(
+  options: DefineUseWindowSizeOptions<TSSR> = {},
+) {
   return function useWindowSize({
     trackState = true,
     onChange,
-  }: UseWindowSizeOptions = {}): UseWindowSizeReturn<TSpa> {
+  }: UseWindowSizeOptions = {}): UseWindowSizeReturn<TSSR> {
     const handleChange = useEventHandler(onChange)
-    const [size, setSize] = React.useState<Size>({
-      width: spa && !isServer ? window.innerWidth : undefined,
-      height: spa && !isServer ? window.innerHeight : undefined,
-    })
+    const [size, setSize] = React.useState<Size | null>(
+      isServer
+        ? null
+        : {
+            width: window.innerWidth,
+            height: window.innerHeight,
+          },
+    )
 
     useIsomorphicLayoutEffect(() => {
-      if (!spa) {
-        const size = {
-          width: window.innerWidth,
-          height: window.innerHeight,
-        }
-        setSize(size)
-        handleChange(size)
-      }
-    }, [spa, handleChange])
-
-    React.useEffect(() => {
-      if (listeners.size === 0) {
-        window.addEventListener('resize', callAllListeners, { passive: true })
-      }
-
-      function listener(size: Size<true>) {
+      function listener(size: Size) {
         trackState && setSize(size)
         handleChange(size)
       }
 
       listeners.add(listener)
-
       return () => {
         listeners.delete(listener)
-
-        if (!listeners.size) {
-          window.removeEventListener('resize', callAllListeners)
-        }
       }
     }, [setSize, trackState, handleChange])
 
-    return size as Size<TSpa>
+    return (!useIsHydrated() && options.ssr ? {} : size) as Size<TSSR>
   }
 }

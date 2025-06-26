@@ -1,6 +1,5 @@
 import React from 'react'
 import { useEventHandler } from '@1hook/use-event-handler'
-import type { AnyFunction } from '@1hook/utils/types'
 import { set, clear, type IntervalToken } from './vanilla'
 
 export type UseIntervalOptions = {
@@ -34,7 +33,7 @@ export type UseIntervalReturn = {
 }
 
 export function useInterval(
-  callback: AnyFunction,
+  callback: () => any,
   delay: number | null | false | undefined,
   { leading, sync }: UseIntervalOptions = {},
 ): UseIntervalReturn {

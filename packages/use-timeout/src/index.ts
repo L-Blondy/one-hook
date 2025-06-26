@@ -1,6 +1,5 @@
 import React from 'react'
 import { useEventHandler } from '@1hook/use-event-handler'
-import type { AnyFunction } from '@1hook/utils/types'
 
 export type UseTimeoutReturn = {
   /**
@@ -20,7 +19,7 @@ export type UseTimeoutReturn = {
 }
 
 export const useTimeout = (
-  callback: AnyFunction,
+  callback: () => any,
   delay: number | null | false | undefined,
 ): UseTimeoutReturn => {
   const [isPending, setIsPending] = React.useState(isEnabled(delay))

@@ -44,7 +44,7 @@ npm install @1hook/use-actions
 
 Define how each action modifies the state:
 
-```tsx twoslash include use-counter
+```ts twoslash include use-counter
 import { defineActions } from '@1hook/use-actions'
 // ---cut---
 export const useCounter = defineActions((state: number) => ({
@@ -55,7 +55,7 @@ export const useCounter = defineActions((state: number) => ({
 
 Use the actions in your component:
 
-```tsx twoslash
+```ts twoslash
 // @include: use-counter
 // ---cut---
 const [count, actions] = useCounter(0)
@@ -70,7 +70,7 @@ We can leverage typescript generics to build reusable hooks.
 
 Let's build a custom `useArray` hook:
 
-```tsx title="use-array.ts"
+```ts title="use-array.ts"
 export const useArray = defineActions(<T>(items: Array<T>) => ({
   push: (item: T) => [...items, item],
   remove: (item: T) => items.filter((i) => i !== item),
@@ -80,7 +80,7 @@ export const useArray = defineActions(<T>(items: Array<T>) => ({
 
 We can now use the `useArray` hook in our components:
 
-```tsx twoslash
+```ts twoslash
 import { defineActions } from '@1hook/use-actions'
 
 const useArray = defineActions((items: Array<number>) => ({
@@ -117,6 +117,7 @@ import { useAudioAnalyser } from '@1hook/use-audio-analyser'
 Pass the `MediaStream` or `HTMLAudioElement` to analyze to `useAudioAnalyser`.
 
 ```tsx twoslash
+const console = { log: (_: any) => {} }
 const stream = new MediaStream()
 // @include: import
 // ---cut---
@@ -136,7 +137,7 @@ Visualize audio frequencies in real-time by analyzing data from an HTML audio el
 
 ```tsx twoslash
 import { useAudioAnalyser } from '@1hook/use-audio-analyser'
-import { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 // ---cut---
 function AudioVisualizer() {
   const [data, setData] = useState<number[]>([])
@@ -177,7 +178,7 @@ Combine the `useUserMedia` hook to capture microphone input with the `useAudioAn
 ```tsx twoslash
 import { useUserMedia } from '@1hook/use-user-media'
 import { useAudioAnalyser } from '@1hook/use-audio-analyser'
-import { useState } from 'react'
+import React, { useState } from 'react'
 // ---cut---
 function AudioVisualizer() {
   const [data, setData] = useState<number[]>([])
@@ -219,7 +220,7 @@ This example uses the `useAudioAnalyser` hook to analyze the audio frequency dat
 
 ```tsx twoslash
 import { useAudioAnalyser } from '@1hook/use-audio-analyser'
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 // ---cut---
 function CanvasVisualizer() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -574,6 +575,7 @@ const seconds = useCountdown({
 Prevent rerendering the component on every tick:
 
 ```tsx twoslash
+const console = { log: (_: any) => {} }
 // @include: imports
 // ---cut---
 useCountdown({
@@ -645,6 +647,7 @@ All calls are delayed until 1000ms have passed since the last invocation,
 then only the final call executes.
 
 ```tsx twoslash
+const console = { log: (_: any) => {} }
 // @include: imports
 // ---cut---
 const { debounce } = useDebounceFn(1000)
@@ -656,6 +659,7 @@ debounce(() => console.log('Executed after 1000ms'))
 Override the default delay:
 
 ```tsx twoslash
+const console = { log: (_: any) => {} }
 // @include: imports
 // ---cut---
 const { debounce } = useDebounceFn(1000)
@@ -767,7 +771,7 @@ This predictable state flow makes it easy to build UIs that respond appropriatel
 Capture and display the device's screen:
 
 ```tsx twoslash
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDisplayMedia } from '@1hook/use-display-media'
 
 export default function ScreenShare() {
@@ -930,12 +934,6 @@ useEffect(() => {
 
 React version of `addEventListener`, optimized for performance and memory usage.
 
-## Features
-
-- Reuses the same event listener instance for the same target, type, and options.
-- Automatically attaches and detaches the event listener when the component unmounts.
-- Provides methods to manually attach and detach the event listener.
-
 ## Installation
 
 ```package-install
@@ -945,6 +943,8 @@ npm install @1hook/use-event-listener
 ## Usage
 
 ```tsx twoslash include imports
+const console = { log: (_: any) => {} }
+// ---cut---
 import { useEventListener } from '@1hook/use-event-listener'
 ```
 
@@ -957,34 +957,7 @@ const target = document.getElementById('target')
 useEventListener(target, 'click', () => console.log('click'))
 ```
 
-## Examples
-
-### 1. Listen to a Window event
-
-SPA example:
-
-```tsx twoslash
-// @include: imports
-const target = document.getElementById('target')
-// ---cut---
-useEventListener(window, 'click', (e) => console.log(e.target))
-```
-
-SSR example:
-
-```tsx twoslash
-// @include: imports
-const target = document.getElementById('target')
-// ---cut---
-import { isServer } from '@1hook/use-event-listener'
-
-useEventListener(!isServer && window, 'click', (e) => console.log(e.target))
-```
-
-`!isServer && window` ensures the code is runs the client before accessing the
-window object
-
-### 2. Targeting a DOM Element
+### Target a DOM Element
 
 You can use `useEventListener` to attach event listeners to specific DOM elements.
 
@@ -992,7 +965,7 @@ Using a ref:
 
 ```tsx twoslash
 // @include: imports
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 // ---cut---
 function MyComponent() {
   const ref = useRef<HTMLDivElement | null>(null)
@@ -1007,7 +980,7 @@ Using a stateful element:
 
 ```tsx twoslash
 // @include: imports
-import { useState } from 'react'
+import React, { useState } from 'react'
 // ---cut---
 function MyComponent() {
   const [target, setTarget] = useState<HTMLDivElement | null>(null)
@@ -1022,6 +995,7 @@ Using querySelector:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const target = document.querySelector('body > .scrollable')
@@ -1032,7 +1006,29 @@ function MyComponent() {
 }
 ```
 
-### 3. Trigger the listener manually
+### Target the window / document
+
+For single-page applications (SPAs), you can directly use the `window` or `document` object:
+
+```tsx twoslash
+// @include: imports
+const target = document.getElementById('target')
+// ---cut---
+useEventListener(window, 'click', (e) => console.log(e.target))
+```
+
+With SSR, you need to check if the code runs on the server before accessing the window object:
+
+```tsx twoslash
+// @include: imports
+const target = document.getElementById('target')
+// ---cut---
+import { isServer } from '@1hook/use-event-listener'
+
+useEventListener(!isServer && window, 'click', (e) => console.log(e.target))
+```
+
+### Trigger the listener manually
 
 This example shows how to listen for the `'mousemove'` & `'mouseup'` global events only after the `'mousedown'` event has occurred.
 
@@ -1112,6 +1108,7 @@ If location permissions haven't been granted yet, the browser will request permi
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function LocationDisplay() {
   const { coords, state, error } = useGeolocation()
@@ -1180,6 +1177,7 @@ import { useGetIsMounted } from '@1hook/use-get-is-mounted'
 Get the mounted state of the component at any time
 
 ```tsx twoslash
+const console = { log: (_: any) => {} }
 // @include: imports
 // ---cut---
 const getIsMounted = useGetIsMounted()
@@ -1291,6 +1289,7 @@ Track the visibility of an element:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref, inView } = useInView()
@@ -1303,6 +1302,7 @@ Set a default value until the target is observed:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref, inView = true } = useInView()
@@ -1315,6 +1315,7 @@ Customize the intersection observer:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref, inView } = useInView({
@@ -1331,6 +1332,7 @@ Observe once:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref, unobserve } = useInView({
@@ -1383,6 +1385,8 @@ Observe an element's intersection with the viewport:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
+const console = { log: (_: any) => {} }
 // ---cut---
 function MyComponent() {
   const { ref } = useIntersectionObserver((entry) => {
@@ -1397,6 +1401,8 @@ Customize the intersection observer:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
+const console = { log: (_: any) => {} }
 // ---cut---
 function MyComponent() {
   const { ref } = useIntersectionObserver(
@@ -1412,6 +1418,8 @@ Stop observing the target after the first intersection:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
+const console = { log: (_: any) => {} }
 // ---cut---
 function MyComponent() {
   const { ref, unobserve } = useIntersectionObserver((entry) => {
@@ -1453,6 +1461,8 @@ npm install @1hook/use-interval
 ## Usage
 
 ```tsx twoslash include imports
+const console = { log: (_: any) => {} }
+// ---cut---
 import { useInterval } from '@1hook/use-interval'
 ```
 
@@ -1519,7 +1529,7 @@ npm install @1hook/use-invariant-context
 ## Usage
 
 ```tsx twoslash include imports
-import { createContext } from 'react'
+import React, { createContext } from 'react'
 type Value = any[]
 const MyContext = React.createContext<Value | null>(null)
 // ---cut---
@@ -1545,7 +1555,7 @@ This example shows how to use `useInvariantContext` to avoid missing context pro
 
 ```tsx twoslash
 import { useInvariantContext } from '@1hook/use-invariant-context'
-import { createContext, ReactNode, useContext } from 'react'
+import React, { createContext, ReactNode, useContext } from 'react'
 type Value = any[]
 // @noErrors
 // ---cut---
@@ -1589,6 +1599,7 @@ import { useIsHydrated } from '@1hook/use-is-hydrated'
 Check if the component is hydrated:
 
 ```tsx twoslash
+import React from 'react'
 // @include: imports
 // ---cut---
 function MyComponent() {
@@ -1658,6 +1669,7 @@ Use `ref.current` to read the latest `value` in effects, changes to `value` do n
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 import { useEffect } from 'react'
 type Value = any[]
 const value: Value = []
@@ -1721,6 +1733,7 @@ npm install @1hook/use-media-recorder
 ## Usage
 
 ```tsx twoslash include imports
+import React from 'react'
 const stream = new MediaStream()
 //---cut---
 import { useMediaRecorder } from '@1hook/use-media-recorder'
@@ -1776,6 +1789,8 @@ const { pause, resume } = useMediaRecorder(stream, {
 Record video from the device's camera:
 
 ```tsx twoslash include imports
+import React from 'react'
+// ---cut---
 import { useMediaRecorder } from '@1hook/use-media-recorder'
 import { useUserMedia } from '@1hook/use-user-media'
 import { useState } from 'react'
@@ -1883,6 +1898,7 @@ Execute a function on mount:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 useMountEffect(() => console.log('Mounted!'))
 ```
@@ -1909,6 +1925,8 @@ Observe an element’s child list mutation:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 function MyComponent() {
   const { ref } = useMutationObserver(
@@ -1924,6 +1942,8 @@ Manual observation control:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 function MyComponent() {
   const { ref, observe, unobserve } = useMutationObserver(
@@ -1987,6 +2007,7 @@ Query a permission state:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (_: any) => {} }
 // ---cut---
 const permission = useNavigatorPermission({ name: 'geolocation' })
 
@@ -2102,6 +2123,8 @@ Observe an element:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref } = useResizeObserver((entry) => {
@@ -2116,6 +2139,8 @@ Manual observation control:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref, observe, unobserve } = useResizeObserver(
@@ -2179,6 +2204,7 @@ Observe an element:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 function MyComponent() {
   const { ref, width, height } = useSize()
@@ -2191,6 +2217,7 @@ Provide default values:
 
 ```tsx twoslash
 // @include: imports
+import React from 'react'
 // ---cut---
 const { ref, width = 0, height = 0 } = useSize()
 ```
@@ -2255,6 +2282,7 @@ speak('Bonjour le monde!')
 Cancel speaking and check the current state:
 
 ```tsx twoslash
+const console = { log: (_: any) => {} }
 // @include: imports
 // ---cut---
 const { speak, cancel, state } = useSpeechSynthesis()
@@ -2477,6 +2505,7 @@ The final call is scheduled to run after the interval expires.
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 const { throttle } = useThrottleFn(1000)
 
@@ -2498,6 +2527,7 @@ Use `trailing: false` to avoid scheduling the last call:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 const { throttle } = useThrottleFn(1000, { trailing: false })
 
@@ -2551,6 +2581,7 @@ Set a timeout:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 const { cancel, reset, isPending } = useTimeout(() => {
   console.log('Hello')
@@ -2561,6 +2592,7 @@ Pause the timeout by setting the delay to `null`:
 
 ```ts twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 useTimeout(() => console.log('Hello'), null)
 ```
@@ -2595,6 +2627,7 @@ Execute a function on unmount:
 
 ```tsx twoslash
 // @include: imports
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 useUnmountEffect(() => console.log('Unmounted!'))
 ```
@@ -2622,6 +2655,7 @@ Execute on dependency change:
 ```tsx twoslash
 // @include: imports
 const state: string = ''
+const console = { log: (..._: any[]) => {} }
 // ---cut---
 useUpdateEffect(() => console.log('State has changed'), [state])
 ```
@@ -2669,6 +2703,8 @@ This predictable state flow makes it easy to build UIs that respond appropriatel
 Capture and display video from the device's camera.
 
 ```tsx twoslash
+import React from 'react'
+// ---cut---
 import { useEffect, useRef } from 'react'
 import { useUserMedia } from '@1hook/use-user-media'
 
@@ -2721,6 +2757,255 @@ export default function VideoCapture() {
 
 ---
 
+# useWebSocket
+
+WebSocket client designed for React.
+
+## Features
+
+- **Built-in Validation:** Validate messages with [zod](https://zod.dev/), [valibot](https://valibot.dev/), [arktype](https://arktype.dev/) or with a simple function.
+- **Connection Reuse:** Share a WebSocket connection across multiple hook instances.
+- **Automatic Reconnect:** Configurable reconnection strategies for resilient connections.
+- **Ping Support:** Built-in ping to keep connections alive.
+- **Message Queueing:** Outgoing messages are queued while connecting.
+- **Automatic Parsing/Serialization:** Customizable message parsing and serialization.
+- **Friendly API:** Simple, ergonomic API for sending messages and tracking connection state.
+
+## Installation
+
+```package-install
+npm install @1hook/use-websocket
+```
+
+## Quick Start
+
+<Steps>
+
+<Step>
+### Setup the WebSocket
+
+Define the ping and reconnect strategies for the useWebSocket hook.
+
+```tsx twoslash title="websocket.ts" include imports
+const console = { log: (..._: any[]) => {} }
+import React from 'react'
+// ---cut---
+import { z } from 'zod'
+import { defineWebSocket } from '@1hook/use-websocket'
+
+export const useWebSocket = defineWebSocket({
+  ping: { interval: 10000 },
+  reconnect: { delay: 5000 },
+})
+```
+
+</Step>
+
+<Step>
+
+### Send and Receive messages
+
+Connect to a WebSocket server, validate and handle incoming messages.
+
+```tsx twoslash
+// @include: imports
+// ---cut---
+const { send } = useWebSocket({
+  url: 'wss://echo.websocket.org',
+  validate: z.object({ text: z.string() }),
+  onMessage: console.log,
+})
+```
+
+Use the `send` method the send messages to the server.
+
+```tsx
+send({ text: 'Hello!' })
+```
+
+All hooks using the same url + protocol share a single WebSocket connection. \
+
+</Step>
+
+</Steps>
+
+## Validation
+
+The `validate` option ensures incoming messages match your expected format, providing both runtime validation and type safety.
+
+### 👉 Functional validation
+
+For simple cases you can use a function to validate the incoming message.
+
+```ts twoslash
+// @include: imports
+// ---cut---
+useWebSocket({
+  url: 'wss://echo.websocket.org',
+  validate: (message) => String(message),
+  onMessage: (message) => {
+    // message: string
+  },
+})
+```
+
+### 👉 Schema validation
+
+For more complex cases you can use a schema to validate the cookie value. Compatible validation libraries include [zod 3.24+](https://zod.dev/), [valibot
+1.0+](https://valibot.dev/) or [arktype 2.0+](https://arktype.dev/). Check out [Standard
+Schema](https://github.com/standard-schema/standard-schema) for more info.
+
+```ts twoslash
+// @include: imports
+// ---cut---
+useWebSocket({
+  url: 'wss://echo.websocket.org',
+  validate: z.object({ type: z.string(), text: z.string() }),
+  onMessage: (message) => {
+    // message: { type: string, text: string }
+  },
+})
+```
+
+## Message Filtering
+
+Sometimes you need to selectively process messages based on their content. Rather than writing complex validation logic to handle every possible message format, you can simply ignore unwanted messages.
+
+Return `null | undefined` from the `validate` option to skip processing specific messages. The hook will silently ignore these messages and only trigger `onMessage` for validated ones.
+
+```ts twoslash
+// @include: imports
+// ---cut---
+useWebSocket({
+  url: 'wss://echo.websocket.org',
+  validate: z
+    .object({ type: z.string(), text: z.string() })
+    .nullable() // allows returning null from catch() to ignore invalid messages
+    .catch(null),
+  onMessage: (message) => {
+    // message: { type: string, text: string }
+  },
+})
+```
+
+Note that returning `null` or `undefined` from the `parseMessage` option will also ignore messages.
+
+## Custom Parsing/Serialization
+
+You can configure default message parsing and serialization in `defineWebSocket`, while still having the flexibility to override these settings in individual `useWebSocket` calls.
+
+```ts twoslash
+import { defineWebSocket } from '@1hook/use-websocket'
+// ---cut---
+defineWebSocket({
+  parseMessage(event) {
+    if (typeof event.data !== 'string') return event.data
+    return JSON.parse(event.data)
+  },
+  serializeMessage(msg) {
+    return JSON.stringify(msg)
+  },
+})
+```
+
+Since JSON parsing and serialization are the default behavior, you typically won't need to customize these settings.
+
+## Typesafe message sending
+
+Type the `serializeMessage` parameter to constrain what messages can be sent through the `send` method.
+
+```ts twoslash include send
+// @include: imports
+// ---cut---
+type OutgoingMessage = { type: string; text: string }
+
+const { send } = useWebSocket({
+  url: 'wss://echo.websocket.org',
+  serializeMessage(message: OutgoingMessage) {
+    return JSON.stringify(message)
+  },
+})
+```
+
+Now the `send` method only accepts messages matching the `OutgoingMessage` type.
+
+```ts twoslash
+// @include: send
+// @noErrors
+// ---cut---
+// ✅ ok
+send({ type: 'hello', text: 'world' })
+
+// ❌ error
+send({ type: 'hello', text: 123 })
+```
+
+## Closing the connection
+
+The WebSocket connection automatically closes when there are no more active listeners. The listeners are removed when
+
+- the hook unmounts
+- The url is set to `null`
+
+Note that if the connection closes for any other reason (like network issues, server-side closure or using the close method of the WebSocket instance directly), the configured reconnection strategy will attempt to restore the connection.
+
+```tsx twoslash
+const enabled: boolean = true
+// @include: imports
+// ---cut---
+useWebSocket({
+  url: enabled ? 'wss://echo.websocket.org' : null,
+})
+```
+
+## API Reference
+
+### 👉 defineWebSocket
+
+```ts
+function defineWebSocket(options: DefineWebSocketOptions): useWebSocket
+```
+
+<AutoTypeTable
+  name="DefineWebSocketOptions"
+  description="Options for defineWebSocket."
+  path="packages/use-websocket/src/define-websocket.ts"
+/>
+
+<AutoTypeTable
+  name="WebSocketPingOption"
+  description="The ping options."
+  path="packages/use-websocket/src/vanilla.ts"
+/>
+
+<AutoTypeTable
+  name="WebSocketReconnectOption"
+  description="The reconnect options."
+  path="packages/use-websocket/src/vanilla.ts"
+/>
+
+### 👉 useWebSocket
+
+Send and Receive messages from a WebSocket server.
+
+```ts
+function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn
+```
+
+<AutoTypeTable
+  name="UseWebSocketOptions"
+  description="Options for the useWebSocket hook."
+  path="packages/use-websocket/src/define-websocket.ts"
+/>
+
+<AutoTypeTable
+  name="UseWebSocketReturn"
+  description="Return value of the useWebSocket hook."
+  path="packages/use-websocket/src/define-websocket.ts"
+/>
+
+---
+
 # useWindowSize
 
 Track the dimensions of the window.
@@ -2742,11 +3027,10 @@ npm install @1hook/use-window-size
 ```tsx twoslash include imports
 import { defineUseWindowSize } from '@1hook/use-window-size'
 
-export const useWindowSize = defineUseWindowSize({ spa: true })
+export const useWindowSize = defineUseWindowSize({ ssr: true })
 ```
 
-`defineUseWindowSize` accepts a `spa` option that enables Single Page Application optimizations. \
-When `spa: false` the width and height are initialized with `undefined`.
+Setting `ssr` to `true` initializes width and height as `undefined` to prevent hydration mismatches between server and client.
 
 ```tsx twoslash
 // @include: imports

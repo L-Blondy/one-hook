@@ -49,6 +49,8 @@ function BuildSize({ filename }: Props) {
 
 function SourceLink({ filename }: { filename: string }) {
   const href = path.join(repoUrl(), 'tree/main/packages', filename)
+
+  console.log({ href })
   return (
     <a
       href={href}

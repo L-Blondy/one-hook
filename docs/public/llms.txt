@@ -41,6 +41,7 @@
 - [useUnmountEffect](https://one-hook.vercel.app/docs/use-unmount-effect): Execute the callback when the component unmounts (cleanup effect).
 - [useUpdateEffect](https://one-hook.vercel.app/docs/use-update-effect): useEffect without the initial effect.
 - [useUserMedia](https://one-hook.vercel.app/docs/use-user-media): Access and manage media devices like camera and microphone.
+- [useWebSocket](https://one-hook.vercel.app/docs/use-websocket): WebSocket client designed for React.
 - [useWindowSize](https://one-hook.vercel.app/docs/use-window-size): Track the dimensions of the window.
 
 # optional

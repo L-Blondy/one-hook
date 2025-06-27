@@ -1,8 +1,8 @@
 import 'server-only'
 import path from 'path'
 import fs from 'fs'
-import { repoUrl } from '@/utils/repo-url'
 import { ExternalLink } from 'lucide-react'
+import { repoUrl } from '@/utils/repo-url'
 
 type Props = { filename: string }
 
@@ -48,9 +48,8 @@ function BuildSize({ filename }: Props) {
 }
 
 function SourceLink({ filename }: { filename: string }) {
-  const href = path.join(repoUrl(), 'tree/main/packages', filename)
+  const href = [repoUrl(), 'tree/main/packages', filename].join('/')
 
-  console.log({ href })
   return (
     <a
       href={href}

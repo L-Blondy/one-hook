@@ -173,10 +173,7 @@ export function defineWebSocket<
     parseMessage = defaultParseMessage as any,
     serializeMessage = defaultSerializeMessage as any,
     validate = ((x: any) => x) as any,
-    onClose,
-    onError,
-    onMessage,
-    onOpen,
+    ...listeners
   }: UseWebSocketOptions<
     TParsedMessage,
     TSendMessage,
@@ -188,20 +185,18 @@ export function defineWebSocket<
       () => __state.get('current')!,
     )
 
-    const handleClose = useEventHandler(onClose)
-    const handleError = useEventHandler(onError)
-    const handleOpen = useEventHandler(onOpen)
-    const handleMessage = useEventHandler(
-      async (event: MessageEvent<unknown>) => {
-        if (!onMessage) return
-        const parsed = await parseMessage(event)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (parsed === null || parsed === undefined) return
-        const message = await validateAsync(validate, parsed as any)
-        if (message === null || message === undefined) return
-        onMessage(message, event)
-      },
-    )
+    const onClose = useEventHandler(listeners.onClose)
+    const onError = useEventHandler(listeners.onError)
+    const onOpen = useEventHandler(listeners.onOpen)
+    const onMessage = useEventHandler(async (event: MessageEvent<unknown>) => {
+      if (!listeners.onMessage) return
+      const parsed = await parseMessage(event)
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (parsed === null || parsed === undefined) return
+      const message = await validateAsync(validate, parsed as any)
+      if (message === null || message === undefined) return
+      listeners.onMessage(message, event)
+    })
 
     // `useEventHandler` is ok since `send` should never be called during render
     const send = useEventHandler((message: TSendMessage) => {
@@ -221,10 +216,10 @@ export function defineWebSocket<
       }
       instanceRef.current = instance
       const cleanup = instance.listen({
-        onClose: handleClose,
-        onOpen: handleOpen,
-        onError: handleError,
-        onMessage: handleMessage,
+        onClose,
+        onOpen,
+        onError,
+        onMessage,
         onStateChange(state) {
           __state.set('current', state)
           setState(state)
@@ -234,7 +229,7 @@ export function defineWebSocket<
         cleanup()
         instanceRef.current = null
       }
-    }, [instanceOptions, handleClose, handleError, handleOpen, handleMessage])
+    }, [instanceOptions, onClose, onError, onOpen, onMessage])
 
     return {
       state: !useIsHydrated() || !instanceOptions.url ? 'closed' : state,

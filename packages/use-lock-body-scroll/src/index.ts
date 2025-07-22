@@ -2,23 +2,25 @@ import React from 'react'
 import { getClosestScrollable, isIosDevice } from './utils'
 
 export const useLockBodyScroll = function useLockBody() {
+  const lockedRef = React.useRef(false)
   const [locked, setLocked] = React.useState(false)
   const originalBodyStyles = React.useRef<React.CSSProperties>({})
 
   const unlock = React.useCallback(() => {
     const { body } = document
-    if (body.style.overflow !== 'hidden') return // already unlocked
+    if (!lockedRef.current) return
     Object.assign(body.style, originalBodyStyles.current)
     if (isIosDevice()) {
       document.removeEventListener('touchmove', preventTouchBodyScroll)
     }
+    lockedRef.current = false
     setLocked(false)
   }, [])
 
   const lock = React.useCallback(() => {
     const { body } = document
     const computedBodyStyles = getComputedStyle(body)
-    if (computedBodyStyles.overflow === 'hidden') return // already locked
+    if (lockedRef.current) return
     originalBodyStyles.current = {
       overflow: body.style.overflow,
       paddingRight: body.style.paddingRight,
@@ -32,6 +34,7 @@ export const useLockBodyScroll = function useLockBody() {
         passive: false,
       })
     }
+    lockedRef.current = true
     setLocked(true)
     return unlock
   }, [unlock])

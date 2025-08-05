@@ -18,6 +18,9 @@ export type UseTimeoutReturn = {
   reset: () => void
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export const useTimeout = (
   callback: () => any,
   delay: number | null | false | undefined,

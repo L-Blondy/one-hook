@@ -22,6 +22,9 @@ export type UseDocumentVisibilityOptions = {
   onChange?: (isVisible: boolean) => void
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useDocumentVisibility(
   options: UseDocumentVisibilityOptions = {},
 ): boolean {

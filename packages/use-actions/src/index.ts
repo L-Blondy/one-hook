@@ -1,6 +1,9 @@
 import React from 'react'
 import type { Prettify } from '@1hook/utils/types'
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function defineActions<
   State,
   ActionsDef extends Record<string, (...args: any[]) => State>,

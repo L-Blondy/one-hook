@@ -38,6 +38,9 @@ export type UseIntersectionObserverReturn = {
   target: Element | null
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export const useIntersectionObserver = (
   callback: UseIntersectionObserverCallback,
   {

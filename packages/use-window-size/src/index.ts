@@ -48,6 +48,9 @@ export type UseWindowSizeOptions = {
 
 export type UseWindowSizeReturn<TSSR extends boolean> = Size<TSSR>
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function defineUseWindowSize<TSSR extends boolean = false>(
   options: DefineUseWindowSizeOptions<TSSR> = {},
 ) {

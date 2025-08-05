@@ -39,6 +39,9 @@ export type UseSizeReturn = Size & {
   target: Element | null
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useSize({
   trackState = true,
   onChange,

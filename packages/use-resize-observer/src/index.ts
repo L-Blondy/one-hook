@@ -38,6 +38,9 @@ export type UseResizeObserverCallback = (
   observer: ResizeObserver,
 ) => void
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export const useResizeObserver = (
   callback: UseResizeObserverCallback,
   { autoObserve = true, box }: UseResizeObserverOptions = {},

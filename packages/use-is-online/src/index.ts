@@ -18,6 +18,9 @@ function subscribe(getSnapshot: () => void) {
   }
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useIsOnline() {
   return useSyncExternalStore(
     subscribe,

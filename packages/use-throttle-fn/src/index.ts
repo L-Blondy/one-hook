@@ -27,6 +27,9 @@ export type UseThrottleFnReturn = {
   isPending: boolean
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useThrottleFn(
   defaultInterval: number,
   { trailing = true }: UseThrottleFnOptions = {},

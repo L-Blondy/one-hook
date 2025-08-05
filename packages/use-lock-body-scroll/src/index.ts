@@ -1,6 +1,9 @@
 import React from 'react'
 import { getClosestScrollable, isIosDevice } from './utils'
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export const useLockBodyScroll = function useLockBody() {
   const lockedRef = React.useRef(false)
   const [locked, setLocked] = React.useState(false)

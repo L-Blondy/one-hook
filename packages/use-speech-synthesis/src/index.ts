@@ -45,6 +45,9 @@ type SpeechActions = {
 
 export type UseSpeechSynthesisReturn = SpeechState & SpeechActions
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useSpeechSynthesis({
   lang = 'en-US',
   pitch = 1,

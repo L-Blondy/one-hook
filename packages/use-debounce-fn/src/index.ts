@@ -18,6 +18,9 @@ export type UseDebounceFnReturn = {
   isPending: boolean
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useDebounceFn(defaultDelay: number): UseDebounceFnReturn {
   const timeoutRef = React.useRef<NodeJS.Timeout | number>(0)
 

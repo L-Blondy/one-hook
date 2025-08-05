@@ -48,6 +48,9 @@ export type AudioAnalyserOptions = {
   onData?: (data: number[]) => void
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useAudioAnalyser(
   source: MediaStream | HTMLMediaElement | null,
   {

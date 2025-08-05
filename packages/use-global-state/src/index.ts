@@ -6,6 +6,9 @@ export type DefineGlobalStateConfig<State> = {
   initialState: State
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function defineGlobalState<State>(
   config: DefineGlobalStateConfig<State>,
 ) {

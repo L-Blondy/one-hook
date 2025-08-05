@@ -1,5 +1,8 @@
 import React from 'react'
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useGetIsMounted() {
   const isMounted = React.useRef(true)
 

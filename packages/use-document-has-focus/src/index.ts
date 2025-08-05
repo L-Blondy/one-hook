@@ -29,6 +29,9 @@ export type UseDocumentHasFocusOptions = {
   onChange?: (hasFocus: boolean) => void
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useDocumentHasFocus(
   options: UseDocumentHasFocusOptions = {},
 ): boolean {

@@ -9,6 +9,9 @@ export type UsePreviousOptions<T> = {
   isEqual?: (prev: T | undefined, next: T) => boolean
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function usePrevious<T>(
   value: T,
   { isEqual = Object.is }: UsePreviousOptions<T> = {} as any,

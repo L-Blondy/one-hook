@@ -72,6 +72,9 @@ export type UseUserMediaReturn = UserMedia & {
   toggleVideo: () => void
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useUserMedia(
   constraints: UseUserMediaOptions = {},
 ): UseUserMediaReturn {

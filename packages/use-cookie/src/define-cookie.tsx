@@ -111,6 +111,9 @@ export type DefineCookieReturn<TValidator extends ValidatorSync<unknown>> = [
   },
 ]
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function defineCookie<TValidator extends ValidatorSync<unknown>>({
   name,
   validate,

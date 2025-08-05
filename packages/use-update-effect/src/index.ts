@@ -1,5 +1,8 @@
 import React from 'react'
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export const useUpdateEffect: typeof React.useEffect = (effect, deps) => {
   const isFirstRef = React.useRef(true)
 

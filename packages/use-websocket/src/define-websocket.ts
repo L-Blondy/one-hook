@@ -140,6 +140,9 @@ export type UseWebSocketReturn<TSendMessage = unknown> = {
   ['~socket']: () => WebSocket | null
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function defineWebSocket<
   TDefaultParsedMessage = unknown,
   TDefaultSendMessage = unknown,

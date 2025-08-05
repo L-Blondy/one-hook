@@ -54,6 +54,9 @@ export type UseCountdownOptions<T = number> = {
   sync?: boolean
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useCountdown<T = number>({
   to,
   transform = (ms) => ms as T,

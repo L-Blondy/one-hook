@@ -73,6 +73,9 @@ export type UseGeolocationOptions = {
   maximumAge?: PositionOptions['maximumAge']
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useGeolocation(
   options?: UseGeolocationOptions,
 ): UseGeolocationReturn {

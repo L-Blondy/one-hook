@@ -72,6 +72,9 @@ export type UseDisplayMediaReturn = DisplayMedia & {
   toggleVideo: () => void
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useDisplayMedia(options: UseDisplayMediaOptions = {}) {
   const getIsMounted = useGetIsMounted()
   const [_options, _setOptions] = React.useState(options)

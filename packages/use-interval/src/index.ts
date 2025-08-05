@@ -32,6 +32,9 @@ export type UseIntervalReturn = {
   reset: () => void
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useInterval(
   callback: () => any,
   delay: number | null | false | undefined,

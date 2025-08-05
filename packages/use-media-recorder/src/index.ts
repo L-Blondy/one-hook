@@ -19,6 +19,9 @@ export type UseMediaRecorderReturn = {
   resume: () => void
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useMediaRecorder(
   stream: MediaStream | null | undefined,
   {

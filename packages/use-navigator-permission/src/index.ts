@@ -36,6 +36,9 @@ export type UseNavigatorPermissionReturn = {
   state: NavigatorPermissionState
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useNavigatorPermission(
   descriptor: UseNavigatorPermissionOptions,
 ): { state: NavigatorPermissionState } {

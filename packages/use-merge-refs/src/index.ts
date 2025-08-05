@@ -23,6 +23,9 @@ export function mergeRefs<T, U = T, V = T>(
   }
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export const useMergeRefs = <T, U = T, V = T>(
   ref1: AnyRef<T>,
   ref2: AnyRef<U>,

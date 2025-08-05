@@ -23,6 +23,9 @@ export type UseEventListenerReturn = {
   remove: () => void
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function useEventListener<
   const Target extends UseEventListenerTarget,
   Type extends UseEventListenerType<Target>,

@@ -37,6 +37,9 @@ export type UseMutationObserverReturn = {
   target: Element | null
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export const useMutationObserver = (
   callback: UseMutationObserverCallback,
   { autoObserve = true, ...options }: UseMutationObserverOptions = {},

@@ -23,6 +23,9 @@ export type UseInViewReturn = UseIntersectionObserverReturn & {
   inView: boolean | undefined
 }
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export const useInView = (options: UseInViewOptions = {}): UseInViewReturn => {
   const [inView, setInView] = React.useState<boolean>()
   const onChange = useEventHandler(options.onChange)

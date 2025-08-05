@@ -53,6 +53,9 @@ export type DefineStorageReturn<TValidator extends ValidatorSync<unknown>> = [
   },
 ]
 
+/**
+ * https://one-hook.vercel.app/docs
+ */
 export function defineStorage<TValidator extends ValidatorSync<unknown>>({
   type,
   key,

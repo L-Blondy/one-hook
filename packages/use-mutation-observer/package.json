@@ -1,6 +1,6 @@
 {
   "name": "@1hook/use-mutation-observer",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "files": [
     "dist",
     "README.md"
@@ -38,7 +38,7 @@
     "type": "git",
     "url": "git+https://github.com/L-Blondy/one-hook"
   },
-  "homepage": "https://github.com/L-Blondy/one-hook",
+  "homepage": "https://one-hook.vercel.app/docs",
   "bugs": {
     "url": "https://github.com/L-Blondy/one-hook/issues"
   },

@@ -44,7 +44,7 @@ await Promise.all(
         type: 'git',
         url: 'git+https://github.com/L-Blondy/one-hook',
       },
-      homepage: 'https://github.com/L-Blondy/one-hook',
+      homepage: 'https://one-hook.vercel.app/docs',
       bugs: {
         url: 'https://github.com/L-Blondy/one-hook/issues',
       },

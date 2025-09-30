@@ -10,6 +10,7 @@ import { createEmitter } from '@1hook/utils/emitter'
 import { isServer } from '@1hook/utils/is-server'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
 import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
+import { invariant } from '@1hook/utils/invariant'
 
 /**
  * To avoid issues with React.createContext being called
@@ -91,6 +92,11 @@ export type DefineCookieOptions<TValidator extends ValidatorSync<unknown>> = {
    * Custom deserializer for the cookie.
    */
   deserialize?: (value: string) => any
+  /**
+   * Get the cookie header from the server. \
+   * Setting this enables calling `Cookie.get()` from the server with no arguments.
+   */
+  getServerCookieHeader?: () => string
 }
 
 type Unsubscribe = () => void
@@ -120,6 +126,7 @@ export function defineCookie<TValidator extends ValidatorSync<unknown>>({
   disableEncoding,
   serialize = defaultSerializer,
   deserialize = defaultDeserializer,
+  getServerCookieHeader,
   ...cookieOptions
 }: DefineCookieOptions<TValidator>): DefineCookieReturn<TValidator> {
   type State = ValidatorOutput<TValidator>
@@ -179,8 +186,20 @@ export function defineCookie<TValidator extends ValidatorSync<unknown>>({
       emitter.emit(next)
       notifyOtherTabs()
     },
-    get(allCookies: string | null = document.cookie): State {
-      return parseCookieString(getCookieString(allCookies ?? ''))
+    get(allCookies?: string | null): State {
+      if (typeof allCookies !== 'string') {
+        if (isServer) {
+          invariant(
+            getServerCookieHeader,
+            '`getServerCookieHeader` is required when calling cookie.get() without passing the cookie header from the server',
+          )
+          allCookies = getServerCookieHeader()
+        } else {
+          allCookies = document.cookie
+        }
+      }
+
+      return parseCookieString(getCookieString(allCookies))
     },
     clear(): void {
       setCookie('' as State, { ...cookieOptions, expires: -1 })

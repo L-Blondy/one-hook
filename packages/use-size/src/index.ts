@@ -22,6 +22,8 @@ export type UseSizeOptions = {
   trackState?: boolean
   /**
    * Called with `{ width, height }` when the ResizeObserver is triggered, even if `trackState` is `false`.
+   *
+   * Executes at least once when the target is observed
    */
   onChange?: (size: Size) => void
 }

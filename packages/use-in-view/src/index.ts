@@ -13,6 +13,9 @@ export type UseInViewOptions = UseIntersectionObserverOptions & {
    * @defaultValue true
    */
   trackState?: boolean
+  /**
+   * Executes at least once when the target is observed
+   */
   onChange?: (inView: boolean) => void
 }
 

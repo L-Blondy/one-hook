@@ -37,6 +37,15 @@ test('type inference', () => {
   })
 })
 
+test('onChange should fire at least once', () => {
+  const useWindowSize = defineUseWindowSize()
+  const spy = vi.fn()
+  renderHook(() => useWindowSize({ onChange: spy }))
+
+  expect(spy).toHaveBeenCalledWith({ width: 100, height: 100 })
+  expect(spy).toHaveBeenCalledTimes(2) // strict mode
+})
+
 test('size should update with resize events', () => {
   const useWindowSize = defineUseWindowSize()
   const { result } = renderHook(() => useWindowSize())

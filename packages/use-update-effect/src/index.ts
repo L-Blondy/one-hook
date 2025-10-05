@@ -10,7 +10,7 @@ export const useUpdateEffect: typeof React.useEffect = (effect, deps) => {
     if (!isFirstRef.current) {
       return effect()
     }
-    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/rule-suppression
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 

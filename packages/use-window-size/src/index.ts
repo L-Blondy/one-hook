@@ -16,17 +16,14 @@ type Size<TSSR extends boolean = false> = TSSR extends false
 
 const listeners = new Set<(size: Size) => void>()
 
+const getSize = () => ({ width: window.innerWidth, height: window.innerHeight })
+
 if (!isServer) {
   window.addEventListener('resize', callAllListeners)
 }
 
 function callAllListeners() {
-  listeners.forEach((l) =>
-    l({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    }),
-  )
+  listeners.forEach((l) => l(getSize()))
 }
 
 export type DefineUseWindowSizeOptions<TSSR extends boolean> = {
@@ -41,7 +38,7 @@ export type UseWindowSizeOptions = {
    */
   trackState?: boolean
   /**
-   * Executes when the size changes, even if `trackState` is `false`.
+   * Executes at least once, and when the size changes, even if `trackState` is `false`.
    */
   onChange?: (size: Size) => void
 }
@@ -58,27 +55,22 @@ export function defineUseWindowSize<TSSR extends boolean = false>(
     trackState = true,
     onChange,
   }: UseWindowSizeOptions = {}): UseWindowSizeReturn<TSSR> {
-    const handleChange = useEventHandler(onChange)
+    const onChangeProp = useEventHandler(onChange)
     const [size, setSize] = React.useState<Size | null>(
-      isServer
-        ? null
-        : {
-            width: window.innerWidth,
-            height: window.innerHeight,
-          },
+      isServer ? null : getSize(),
     )
 
     useIsomorphicLayoutEffect(() => {
       function listener(size: Size) {
         trackState && setSize(size)
-        handleChange(size)
+        onChangeProp(size)
       }
-
+      onChangeProp(getSize()) // at least once
       listeners.add(listener)
       return () => {
         listeners.delete(listener)
       }
-    }, [setSize, trackState, handleChange])
+    }, [trackState, onChangeProp])
 
     return (!useIsHydrated() && options.ssr ? {} : size) as Size<TSSR>
   }

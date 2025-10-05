@@ -31,7 +31,7 @@ Setting `ssr` to `true` initializes width and height as `undefined` to prevent h
 const { width, height } = useWindowSize()
 ```
 
-Use `trackState: false` to disable state tracking, the `onChange` callback is executed whenever the window size changes.
+Use `trackState: false` to disable state tracking, the `onChange` callback is executed on mount and whenever the window size changes.
 
 ```tsx twoslash
 // @include: imports

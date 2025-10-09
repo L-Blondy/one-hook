@@ -62,7 +62,7 @@ export function defineUseWindowSize<TSSR extends boolean = false>(
 
     useIsomorphicLayoutEffect(() => {
       function listener(size: Size) {
-        trackState && setSize(size)
+        trackState && React.startTransition(() => setSize(size))
         onChangeProp(size)
       }
       onChangeProp(getSize()) // at least once

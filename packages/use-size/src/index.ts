@@ -59,7 +59,7 @@ export function useSize({
     const observer = new ResizeObserver((entries) => {
       const { inlineSize: width, blockSize: height } =
         entries[0]!.borderBoxSize[0]!
-      trackState && setSize({ width, height })
+      trackState && React.startTransition(() => setSize({ width, height }))
       handleChange({ width, height })
     })
     observer.observe(target)

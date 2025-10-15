@@ -111,6 +111,28 @@ test('`interval` changes the tick interval...', () => {
   expect(onTickSpy).toHaveBeenCalledWith(1000 * 59)
 })
 
+test.only('`interval` can be functional and receives the remaining ms', () => {
+  const onTickSpy = vi.fn()
+
+  renderHook(() => {
+    useCountdown({
+      to: new Date(Date.now() + 1000 * 60),
+      interval: (ms) => {
+        expect(ms).toBe(1000 * 60)
+        return 500
+      },
+      onTick: onTickSpy,
+    })
+  })
+
+  vi.advanceTimersByTime(499)
+  expect(onTickSpy).not.toHaveBeenCalled()
+  vi.advanceTimersByTime(1)
+  expect(onTickSpy).toHaveBeenCalledWith(1000 * 60 - 500)
+  vi.advanceTimersByTime(500)
+  expect(onTickSpy).toHaveBeenCalledWith(1000 * 59)
+})
+
 test('`onTick` should receive whatever `transform` returns', () => {
   const onTickSpy = vi.fn()
 

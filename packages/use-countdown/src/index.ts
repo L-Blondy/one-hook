@@ -25,7 +25,7 @@ export type UseCountdownOptions<T = number> = {
    *
    * @defaultValue 1000
    */
-  interval?: number
+  interval?: number | ((remainingMs: number) => number)
   /**
    * Transform the value returned by the `onTick` callback.
    */
@@ -89,7 +89,9 @@ export function useCountdown<T = number>({
         onExpire?.()
       }
     },
-    !!state.to && !!state.ms && interval,
+    !!state.to &&
+      !!state.ms &&
+      (typeof interval === 'function' ? interval(state.ms) : interval),
     { sync },
   )
 

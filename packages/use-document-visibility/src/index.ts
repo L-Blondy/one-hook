@@ -18,6 +18,8 @@ if (!isServer) {
 export type UseDocumentVisibilityOptions = {
   /**
    * Executes when the visibility changes.
+   *
+   * Does not execute when the document first loads.
    */
   onChange?: (isVisible: boolean) => void
 }

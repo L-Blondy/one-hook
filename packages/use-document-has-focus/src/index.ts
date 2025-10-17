@@ -24,7 +24,9 @@ if (!isServer) {
 
 export type UseDocumentHasFocusOptions = {
   /**
-   * Executes when the visibility changes.
+   * Executes when the document focus changes.
+   *
+   * Does not execute when the document first loads.
    */
   onChange?: (hasFocus: boolean) => void
 }

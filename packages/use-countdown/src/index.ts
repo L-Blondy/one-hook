@@ -23,11 +23,15 @@ export type UseCountdownOptions<T = number> = {
   /**
    * The interval in milliseconds between each tick.
    *
+   * When a function, it is called on mount and then on each tick.
+   *
    * @defaultValue 1000
    */
   interval?: number | ((remainingMs: number) => number)
   /**
    * Transform the value returned by the `onTick` callback.
+   *
+   * When a function, it is called on mount and then on each tick.
    */
   transform?: (ms: number, to: To) => T
   /**

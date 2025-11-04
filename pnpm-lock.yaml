@@ -745,6 +745,9 @@ importers:
       '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
+      '@1hook/use-latest-ref':
+        specifier: workspace:*
+        version: link:../use-latest-ref
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils

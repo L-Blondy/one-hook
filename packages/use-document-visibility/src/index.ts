@@ -1,7 +1,7 @@
 import React from 'react'
-import { useEventHandler } from '@1hook/use-event-handler'
 import { isServer } from '@1hook/utils/is-server'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
+import { noop } from '@1hook/utils/noop'
 
 const allListeners = new Set<(isVisible: boolean) => void>()
 
@@ -30,7 +30,7 @@ export type UseDocumentVisibilityOptions = {
 export function useDocumentVisibility(
   options: UseDocumentVisibilityOptions = {},
 ): boolean {
-  const onChange = useEventHandler(options.onChange)
+  const onChange = React.useEffectEvent(options.onChange ?? noop)
   const [state, setState] = React.useState(isServer || !document.hidden)
 
   React.useEffect(() => {
@@ -41,7 +41,7 @@ export function useDocumentVisibility(
       allListeners.delete(setState)
       allListeners.delete(onChange)
     }
-  }, [onChange])
+  }, [])
 
   return !useIsHydrated() || state
 }

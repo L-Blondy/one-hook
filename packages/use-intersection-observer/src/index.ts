@@ -1,5 +1,4 @@
 import React from 'react'
-import { useEventHandler } from '@1hook/use-event-handler'
 import { useLatestRef } from '@1hook/use-latest-ref'
 import {
   getIntersectionObserver,
@@ -48,18 +47,18 @@ export const useIntersectionObserver = (
   options: UseIntersectionObserverOptions = {},
 ) => {
   const instanceRef = React.useRef<IntersectionObserverInstance | null>(null)
-  const stableCallback = useEventHandler(callback)
+  const stableCallback = React.useEffectEvent(callback)
   const [target, ref] = React.useState<Element | null>(null)
   const optionsRef = useLatestRef(options)
   const instanceId = getInstanceId(options)
 
   const observe = React.useCallback(() => {
     target && instanceRef.current?.observe(target, stableCallback)
-  }, [stableCallback, target])
+  }, [target])
 
   const unobserve = React.useCallback(() => {
     instanceRef.current?.unobserve(target, stableCallback)
-  }, [stableCallback, target])
+  }, [target])
 
   React.useEffect(() => {
     if (!target) return

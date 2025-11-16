@@ -1,7 +1,7 @@
 import React from 'react'
-import { useEventHandler } from '@1hook/use-event-handler'
 import { isServer } from '@1hook/utils/is-server'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
+import { noop } from '@1hook/utils/noop'
 
 type Size<TSSR extends boolean = false> = TSSR extends false
   ? {
@@ -54,7 +54,7 @@ export function defineUseWindowSize<TSSR extends boolean = false>(
     trackState = true,
     onChange,
   }: UseWindowSizeOptions = {}): UseWindowSizeReturn<TSSR> {
-    const onChangeProp = useEventHandler(onChange)
+    const onChangeProp = React.useEffectEvent(onChange ?? noop)
     const [size, setSize] = React.useState<Size | null>(
       isServer ? null : getSize(),
     )
@@ -69,7 +69,7 @@ export function defineUseWindowSize<TSSR extends boolean = false>(
       return () => {
         listeners.delete(listener)
       }
-    }, [trackState, onChangeProp])
+    }, [trackState])
 
     return (!useIsHydrated() && options.ssr ? {} : size) as Size<TSSR>
   }

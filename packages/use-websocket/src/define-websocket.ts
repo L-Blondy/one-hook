@@ -16,8 +16,8 @@ import {
   type SendableMessage,
 } from './utils'
 import type { Falsy, MaybePromise } from '@1hook/utils/types'
-import { useEventHandler } from '@1hook/use-event-handler'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
+import { noop } from '@1hook/utils/noop'
 
 export type DefineWebSocketOptions<TDefaultParsedMessage, TDefaultSendMessage> =
   {
@@ -188,21 +188,23 @@ export function defineWebSocket<
       () => __state.get('current')!,
     )
 
-    const onClose = useEventHandler(listeners.onClose)
-    const onError = useEventHandler(listeners.onError)
-    const onOpen = useEventHandler(listeners.onOpen)
-    const onMessage = useEventHandler(async (event: MessageEvent<unknown>) => {
-      if (!listeners.onMessage) return
-      const parsed = await parseMessage(event)
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (parsed === null || parsed === undefined) return
-      const message = await validateAsync(validate, parsed as any)
-      if (message === null || message === undefined) return
-      listeners.onMessage(message, event)
-    })
+    const onClose = React.useEffectEvent(listeners.onClose ?? noop)
+    const onError = React.useEffectEvent(listeners.onError ?? noop)
+    const onOpen = React.useEffectEvent(listeners.onOpen ?? noop)
+    const onMessage = React.useEffectEvent(
+      async (event: MessageEvent<unknown>) => {
+        if (!listeners.onMessage) return
+        const parsed = await parseMessage(event)
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (parsed === null || parsed === undefined) return
+        const message = await validateAsync(validate, parsed as any)
+        if (message === null || message === undefined) return
+        listeners.onMessage(message, event)
+      },
+    )
 
-    // `useEventHandler` is ok since `send` should never be called during render
-    const send = useEventHandler((message: TSendMessage) => {
+    // `React.useEffectEvent` is ok since `send` should never be called during render
+    const send = React.useEffectEvent((message: TSendMessage) => {
       instanceRef.current?.send(serializeMessage(message))
     })
 
@@ -232,7 +234,7 @@ export function defineWebSocket<
         cleanup()
         instanceRef.current = null
       }
-    }, [instanceOptions, onClose, onError, onOpen, onMessage])
+    }, [instanceOptions])
 
     return {
       state: !useIsHydrated() || !instanceOptions.url ? 'closed' : state,

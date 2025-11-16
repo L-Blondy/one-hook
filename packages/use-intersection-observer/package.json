@@ -31,7 +31,6 @@
     "@1hook/use-merge-refs": "workspace:*"
   },
   "dependencies": {
-    "@1hook/use-event-handler": "workspace:*",
     "@1hook/use-latest-ref": "workspace:*",
     "@1hook/utils": "workspace:*"
   },

@@ -1,5 +1,4 @@
 import React from 'react'
-import { useEventHandler } from '@1hook/use-event-handler'
 import { set, clear, type IntervalToken } from './vanilla'
 
 export type UseIntervalOptions = {
@@ -41,7 +40,7 @@ export function useInterval(
   { leading, sync }: UseIntervalOptions = {},
 ): UseIntervalReturn {
   const [isPending, setIsPending] = React.useState(isEnabled(delay))
-  const cb = useEventHandler(callback)
+  const cb = React.useEffectEvent(callback)
   const tokenRef = React.useRef<IntervalToken>(0)
 
   const cancel = React.useCallback(() => {
@@ -63,7 +62,7 @@ export function useInterval(
         sync,
       )
     }
-  }, [delay, cb, leading, sync])
+  }, [delay, leading, sync])
 
   React.useEffect(() => {
     reset()

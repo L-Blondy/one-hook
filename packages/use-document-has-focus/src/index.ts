@@ -1,7 +1,7 @@
 import React from 'react'
-import { useEventHandler } from '@1hook/use-event-handler'
 import { isServer } from '@1hook/utils/is-server'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
+import { noop } from '@1hook/utils/noop'
 
 const allListeners = new Set<(hasFocus: boolean) => void>()
 
@@ -37,7 +37,7 @@ export type UseDocumentHasFocusOptions = {
 export function useDocumentHasFocus(
   options: UseDocumentHasFocusOptions = {},
 ): boolean {
-  const onChange = useEventHandler(options.onChange)
+  const onChange = React.useEffectEvent(options.onChange ?? noop)
   const [state, setState] = React.useState(isServer || document.hasFocus())
 
   React.useEffect(() => {
@@ -48,7 +48,7 @@ export function useDocumentHasFocus(
       allListeners.delete(setState)
       allListeners.delete(onChange)
     }
-  }, [onChange])
+  }, [])
 
   return !useIsHydrated() || state
 }

@@ -1,5 +1,4 @@
 import React from 'react'
-import { useEventHandler } from '@1hook/use-event-handler'
 
 export type UseTimeoutReturn = {
   /**
@@ -26,7 +25,7 @@ export const useTimeout = (
   delay: number | null | false | undefined,
 ): UseTimeoutReturn => {
   const [isPending, setIsPending] = React.useState(isEnabled(delay))
-  const cb = useEventHandler(callback)
+  const cb = React.useEffectEvent(callback)
   const timeoutRef = React.useRef<NodeJS.Timeout | number>(0)
 
   const cancel = React.useCallback(() => {
@@ -43,7 +42,7 @@ export const useTimeout = (
         cb()
       }, delay)
     }
-  }, [delay, cb])
+  }, [delay])
 
   React.useEffect(() => {
     reset()

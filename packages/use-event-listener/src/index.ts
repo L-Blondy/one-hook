@@ -1,5 +1,4 @@
 import React from 'react'
-import { useEventHandler } from '@1hook/use-event-handler'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
 import type {
   UseEventListenerTarget,
@@ -39,7 +38,7 @@ export function useEventListener<
   // they are undefined in the first effect.
   // To work around it we have to trigger a state update on mount
   useIsHydrated()
-  const stableListener = useEventHandler(listener)
+  const stableListener = React.useEffectEvent(listener)
   const listenerServiceRef = React.useRef<EventListenerService<
     Target,
     Type
@@ -47,11 +46,11 @@ export function useEventListener<
 
   const add = React.useCallback(() => {
     listenerServiceRef.current?.add(stableListener)
-  }, [stableListener])
+  }, [])
 
   const remove = React.useCallback(() => {
     listenerServiceRef.current?.remove(stableListener)
-  }, [stableListener])
+  }, [])
 
   React.useEffect(() => {
     const _t = target ? ('current' in target ? target.current : target) : 0

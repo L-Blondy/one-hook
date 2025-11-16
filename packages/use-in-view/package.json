@@ -31,9 +31,9 @@
     "@1hook/use-merge-refs": "workspace:*"
   },
   "dependencies": {
-    "@1hook/use-event-handler": "workspace:*",
     "@1hook/use-intersection-observer": "workspace:*",
-    "@1hook/use-previous": "workspace:*"
+    "@1hook/use-previous": "workspace:*",
+    "@1hook/utils": "workspace:*"
   },
   "repository": {
     "type": "git",

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/refs */
+/* eslint-disable react-hooks/immutability */
 import { mockMutateTargets } from '../../../test-utils/mutation-observer'
 import { afterEach, expect, expectTypeOf, test, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'

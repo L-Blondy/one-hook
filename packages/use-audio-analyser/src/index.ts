@@ -1,6 +1,6 @@
 import React from 'react'
-import { useEventHandler } from '@1hook/use-event-handler'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
+import { noop } from '@1hook/utils/noop'
 
 export type AudioAnalyserOptions = {
   /**
@@ -67,7 +67,7 @@ export function useAudioAnalyser(
   // they are undefined in the first effect.
   // To work around it we have to trigger a state update on mount
   useIsHydrated()
-  const handleData = useEventHandler(onData)
+  const handleData = React.useEffectEvent(onData ?? noop)
 
   React.useEffect(() => {
     if (!source) return
@@ -124,7 +124,6 @@ export function useAudioAnalyser(
     }
   }, [
     source,
-    handleData,
     fftSize,
     method,
     minDecibels,

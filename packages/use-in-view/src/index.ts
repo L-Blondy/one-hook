@@ -4,7 +4,7 @@ import {
   type UseIntersectionObserverOptions,
   type UseIntersectionObserverReturn,
 } from '@1hook/use-intersection-observer'
-import { useEventHandler } from '@1hook/use-event-handler'
+import { noop } from '@1hook/utils/noop'
 
 export type UseInViewOptions = UseIntersectionObserverOptions & {
   /**
@@ -31,7 +31,7 @@ export type UseInViewReturn = UseIntersectionObserverReturn & {
  */
 export const useInView = (options: UseInViewOptions = {}): UseInViewReturn => {
   const [inView, setInView] = React.useState<boolean>()
-  const onChange = useEventHandler(options.onChange)
+  const onChange = React.useEffectEvent(options.onChange ?? noop)
   let prevIntersecting = React.useRef(inView)
 
   const observer = useIntersectionObserver((entry) => {

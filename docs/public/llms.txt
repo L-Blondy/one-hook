@@ -46,4 +46,4 @@
 
 # optional
 
-- [GitHub Repository](https://github.com/L-Blondy/one-hook)
+- [GitHub Repository](https://one-hook.vercel.app/docs)

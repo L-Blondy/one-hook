@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import reactPlugin from 'eslint-plugin-react'
 
@@ -10,7 +8,6 @@ export const config_react = {
     react: reactPlugin,
   },
   rules: {
-    // @ts-expect-error invalid types
     ...reactHooksPlugin.configs.recommended.rules,
     ...reactPlugin.configs.recommended.rules,
     'react-hooks/automatic-effect-dependencies': 2,

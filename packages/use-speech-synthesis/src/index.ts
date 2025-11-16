@@ -79,7 +79,7 @@ export function useSpeechSynthesis({
 
   useUnmountEffect(() => window.speechSynthesis.cancel())
 
-  // cannot do it inline because of eslint react compiler rules
+  // cannot do it inline or in useState initializer because of eslint react compiler rules
   React.useEffect(() => {
     if (!speech.utterance) return
     Object.assign(speech.utterance, {

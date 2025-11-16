@@ -28,7 +28,6 @@
     "react-dom": ">=18.0.0 || >=19.0.0"
   },
   "dependencies": {
-    "@1hook/use-isomorphic-layout-effect": "workspace:*",
     "@1hook/utils": "workspace:*"
   },
   "repository": {

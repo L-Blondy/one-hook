@@ -1,7 +1,6 @@
 import React from 'react'
 import { useEventHandler } from '@1hook/use-event-handler'
 import { isServer } from '@1hook/utils/is-server'
-import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
 
 type Size<TSSR extends boolean = false> = TSSR extends false
@@ -60,7 +59,7 @@ export function defineUseWindowSize<TSSR extends boolean = false>(
       isServer ? null : getSize(),
     )
 
-    useIsomorphicLayoutEffect(() => {
+    React.useLayoutEffect(() => {
       function listener(size: Size) {
         trackState && React.startTransition(() => setSize(size))
         onChangeProp(size)

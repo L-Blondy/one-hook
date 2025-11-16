@@ -1,6 +1,5 @@
 import React from 'react'
-import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
-import { useEventHandler } from '@1hook/use-event-handler'
+import { noop } from '@1hook/utils/noop'
 
 export type Size = {
   /**
@@ -46,15 +45,15 @@ export type UseSizeReturn = Size & {
  */
 export function useSize({
   trackState = true,
-  onChange,
+  onChange = noop,
 }: UseSizeOptions = {}): UseSizeReturn {
   const [target, ref] = React.useState<Element | null>(null)
   const [size, setSize] = React.useState<Size>({})
-  const handleChange = useEventHandler(onChange)
+  const handleChange = React.useEffectEvent(onChange)
 
   // Since the use case is basic, in order to reduce the bundle size
   // we use ResizeObserver instead of useResizeObserver
-  useIsomorphicLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     if (!target) return
     const observer = new ResizeObserver((entries) => {
       const { inlineSize: width, blockSize: height } =
@@ -67,7 +66,7 @@ export function useSize({
       setSize({})
       observer.disconnect()
     }
-  }, [handleChange, trackState, target])
+  }, [trackState, target])
 
   return { ...size, ref, target }
 }

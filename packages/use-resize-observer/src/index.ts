@@ -1,6 +1,4 @@
 import React from 'react'
-import { useEventHandler } from '@1hook/use-event-handler'
-import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 import { isServer } from '@1hook/utils/is-server'
 
 export type UseResizeObserverOptions = ResizeObserverOptions & {
@@ -45,7 +43,7 @@ export const useResizeObserver = (
   callback: UseResizeObserverCallback,
   { autoObserve = true, box }: UseResizeObserverOptions = {},
 ): UseResizeObserverReturn => {
-  const stableCallback = useEventHandler(callback)
+  const stableCallback = React.useEffectEvent(callback)
   const [target, ref] = React.useState<Element | null>(null)
   // since observing instantly triggers the observer callback
   // we want to prevent observing if the target is already observed
@@ -59,7 +57,7 @@ export const useResizeObserver = (
         : new ResizeObserver((entries, observer) => {
             stableCallback(entries[0]!, observer)
           }),
-    [stableCallback],
+    [],
   )
 
   const observe = React.useCallback(() => {
@@ -72,10 +70,10 @@ export const useResizeObserver = (
     isObservingRef.current = false
   }, [observer, target])
 
-  useIsomorphicLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     autoObserve && observe()
     return unobserve
-  }, [stableCallback, target, observe, unobserve, autoObserve])
+  }, [target, observe, unobserve, autoObserve])
 
   return { observe, unobserve, ref, target }
 }

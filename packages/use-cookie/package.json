@@ -29,8 +29,7 @@
   },
   "dependencies": {
     "@1hook/utils": "workspace:*",
-    "@1hook/use-is-hydrated": "workspace:*",
-    "@1hook/use-isomorphic-layout-effect": "workspace:*"
+    "@1hook/use-is-hydrated": "workspace:*"
   },
   "repository": {
     "type": "git",

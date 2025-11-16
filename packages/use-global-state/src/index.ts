@@ -1,6 +1,5 @@
 import React from 'react'
 import { createEmitter } from '@1hook/utils/emitter'
-import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 
 export type DefineGlobalStateConfig<State> = {
   initialState: State
@@ -25,7 +24,7 @@ export function defineGlobalState<State>(
   function useGlobalState() {
     const [state, setState] = React.useState<State>(store.v)
 
-    useIsomorphicLayoutEffect(() => emitter.on(setState), [])
+    React.useLayoutEffect(() => emitter.on(setState), [])
 
     return [state, set] as const
   }

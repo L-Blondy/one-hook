@@ -483,9 +483,6 @@ importers:
       '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../use-is-hydrated
-      '@1hook/use-isomorphic-layout-effect':
-        specifier: workspace:*
-        version: link:../use-isomorphic-layout-effect
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
@@ -693,9 +690,6 @@ importers:
 
   packages/use-global-state:
     dependencies:
-      '@1hook/use-isomorphic-layout-effect':
-        specifier: workspace:*
-        version: link:../use-isomorphic-layout-effect
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
@@ -806,9 +800,6 @@ importers:
 
   packages/use-is-hydrated:
     dependencies:
-      '@1hook/use-isomorphic-layout-effect':
-        specifier: workspace:*
-        version: link:../use-isomorphic-layout-effect
       '@types/react':
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.2.5
@@ -840,29 +831,8 @@ importers:
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.2.0(react@19.2.0)
 
-  packages/use-isomorphic-layout-effect:
-    dependencies:
-      '@1hook/utils':
-        specifier: workspace:*
-        version: link:../utils
-      '@types/react':
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.2.5
-      '@types/react-dom':
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.2.3(@types/react@19.2.5)
-      react:
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.2.0
-      react-dom:
-        specifier: '>=18.0.0 || >=19.0.0'
-        version: 19.2.0(react@19.2.0)
-
   packages/use-latest-ref:
     dependencies:
-      '@1hook/use-isomorphic-layout-effect':
-        specifier: workspace:*
-        version: link:../use-isomorphic-layout-effect
       '@types/react':
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.2.5
@@ -1026,9 +996,6 @@ importers:
       '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@1hook/use-isomorphic-layout-effect':
-        specifier: workspace:*
-        version: link:../use-isomorphic-layout-effect
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
@@ -1054,9 +1021,9 @@ importers:
       '@1hook/use-event-handler':
         specifier: workspace:*
         version: link:../use-event-handler
-      '@1hook/use-isomorphic-layout-effect':
+      '@1hook/utils':
         specifier: workspace:*
-        version: link:../use-isomorphic-layout-effect
+        version: link:../utils
       '@types/react':
         specifier: '>=18.0.0 || >=19.0.0'
         version: 19.2.5
@@ -1099,9 +1066,6 @@ importers:
       '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../use-is-hydrated
-      '@1hook/use-isomorphic-layout-effect':
-        specifier: workspace:*
-        version: link:../use-isomorphic-layout-effect
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils
@@ -1244,9 +1208,6 @@ importers:
       '@1hook/use-is-hydrated':
         specifier: workspace:*
         version: link:../use-is-hydrated
-      '@1hook/use-isomorphic-layout-effect':
-        specifier: workspace:*
-        version: link:../use-isomorphic-layout-effect
       '@1hook/utils':
         specifier: workspace:*
         version: link:../utils

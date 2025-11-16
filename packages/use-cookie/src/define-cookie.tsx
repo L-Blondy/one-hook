@@ -9,7 +9,6 @@ import { toUTCString } from './utils'
 import { createEmitter } from '@1hook/utils/emitter'
 import { isServer } from '@1hook/utils/is-server'
 import { useIsHydrated } from '@1hook/use-is-hydrated'
-import { useIsomorphicLayoutEffect } from '@1hook/use-isomorphic-layout-effect'
 import { invariant } from '@1hook/utils/invariant'
 
 /**
@@ -216,7 +215,7 @@ export function defineCookie<TValidator extends ValidatorSync<unknown>>({
     const [state, setState] = React.useState<State>(() =>
       isHydrated ? service.get() : service.get(serverCookie),
     )
-    useIsomorphicLayoutEffect(() => service.subscribe(setState), [])
+    React.useLayoutEffect(() => service.subscribe(setState), [])
     return [state, service.set] as [
       State,
       React.Dispatch<React.SetStateAction<State>>,

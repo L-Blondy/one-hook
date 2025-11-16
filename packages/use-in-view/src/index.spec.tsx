@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 import { expect, test, afterEach, vi } from 'vitest'
 import { cleanup, render, renderHook, screen } from '@testing-library/react'
 import { useInView } from '.'

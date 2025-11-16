@@ -79,12 +79,11 @@ export function useSpeechSynthesis({
 
   useUnmountEffect(() => window.speechSynthesis.cancel())
 
+  // cannot do it inline because of eslint react compiler rules
   React.useEffect(() => {
-    const controller = new AbortController()
-    const { signal } = controller
-    speech.utterance?.addEventListener(
-      'error',
-      (error) => {
+    if (!speech.utterance) return
+    Object.assign(speech.utterance, {
+      onerror: (error: SpeechSynthesisErrorEvent) => {
         getIsMounted() &&
           setSpeech((speech) =>
             lastActionRef.current === 'cancel'
@@ -100,11 +99,7 @@ export function useSpeechSynthesis({
                 },
           )
       },
-      { signal },
-    )
-    speech.utterance?.addEventListener(
-      'end',
-      () => {
+      onend: () => {
         getIsMounted() &&
           setSpeech((speech) => ({
             ...speech,
@@ -112,11 +107,7 @@ export function useSpeechSynthesis({
             state: 'idle',
           }))
       },
-      { signal },
-    )
-    speech.utterance?.addEventListener(
-      'start',
-      () => {
+      onstart: () => {
         getIsMounted() &&
           setSpeech((speech) => ({
             ...speech,
@@ -124,10 +115,7 @@ export function useSpeechSynthesis({
             state: 'speaking',
           }))
       },
-      { signal },
-    )
-
-    return () => controller.abort()
+    })
   }, [getIsMounted, speech.utterance])
 
   const speak = React.useCallback(

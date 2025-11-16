@@ -23,7 +23,7 @@ await Promise.all(
       execSync(
         [
           `cd ${packagePath}`,
-          `pnpm publish --quiet --access public --tag ${tag} --no-git-checks`,
+          `pnpm publish --quiet --access public --tag ${tag}`,
         ].join(' && '),
       )
       consola.success(`RELEASED: v${packageJson.version} ${tag} - ${shortName}`)

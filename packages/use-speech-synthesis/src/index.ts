@@ -57,44 +57,15 @@ export function useSpeechSynthesis({
 }: UseSpeechSynthesisOptions = {}) {
   const getIsMounted = useGetIsMounted()
   const lastActionRef = React.useRef<keyof SpeechActions | null>(null)
-  const [speech, setSpeech] = React.useState<SpeechState>(() => {
-    if (isServer) return { utterance: null, state: 'idle', error: null }
-    const utterance = new SpeechSynthesisUtterance()
-    utterance.onerror = (error) => {
-      getIsMounted() &&
-        setSpeech((speech) =>
-          lastActionRef.current === 'cancel'
-            ? {
-                ...speech,
-                error: null,
-                state: 'idle',
-              }
-            : {
-                ...speech,
-                error,
-                state: 'error',
-              },
-        )
-    }
-    utterance.onend = () => {
-      getIsMounted() &&
-        setSpeech((speech) => ({
-          ...speech,
-          error: null,
+  const [speech, setSpeech] = React.useState<SpeechState>(() =>
+    isServer
+      ? { utterance: null, state: 'idle', error: null }
+      : {
+          utterance: new SpeechSynthesisUtterance(),
           state: 'idle',
-        }))
-    }
-    utterance.onstart = () => {
-      getIsMounted() &&
-        setSpeech((speech) => ({
-          ...speech,
           error: null,
-          state: 'speaking',
-        }))
-    }
-
-    return { utterance, state: 'idle', error: null }
-  })
+        },
+  )
 
   if (speech.utterance) {
     Object.assign(speech.utterance, {
@@ -107,6 +78,57 @@ export function useSpeechSynthesis({
   }
 
   useUnmountEffect(() => window.speechSynthesis.cancel())
+
+  React.useEffect(() => {
+    const controller = new AbortController()
+    const { signal } = controller
+    speech.utterance?.addEventListener(
+      'error',
+      (error) => {
+        getIsMounted() &&
+          setSpeech((speech) =>
+            lastActionRef.current === 'cancel'
+              ? {
+                  ...speech,
+                  error: null,
+                  state: 'idle',
+                }
+              : {
+                  ...speech,
+                  error,
+                  state: 'error',
+                },
+          )
+      },
+      { signal },
+    )
+    speech.utterance?.addEventListener(
+      'end',
+      () => {
+        getIsMounted() &&
+          setSpeech((speech) => ({
+            ...speech,
+            error: null,
+            state: 'idle',
+          }))
+      },
+      { signal },
+    )
+    speech.utterance?.addEventListener(
+      'start',
+      () => {
+        getIsMounted() &&
+          setSpeech((speech) => ({
+            ...speech,
+            error: null,
+            state: 'speaking',
+          }))
+      },
+      { signal },
+    )
+
+    return () => controller.abort()
+  }, [getIsMounted, speech.utterance])
 
   const speak = React.useCallback(
     (text: string) => {

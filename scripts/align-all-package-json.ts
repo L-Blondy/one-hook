@@ -27,10 +27,10 @@ await Promise.all(
       peerDependencies: json.name.includes('/utils')
         ? undefined
         : {
-            '@types/react': '>=18.0.0 || >=19.0.0',
-            '@types/react-dom': '>=18.0.0 || >=19.0.0',
-            react: '>=18.0.0 || >=19.0.0',
-            'react-dom': '>=18.0.0 || >=19.0.0',
+            '@types/react': '>=19.0.0',
+            '@types/react-dom': '>=19.0.0',
+            react: '>=19.0.0',
+            'react-dom': '>=19.0.0',
           },
       peerDependenciesMeta: {
         '@types/react': {

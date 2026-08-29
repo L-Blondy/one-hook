@@ -19,3 +19,25 @@ test('should trigger onChange when visibility changes', () => {
   triggerEvent()
   expect(spy).toHaveBeenCalledTimes(1)
 })
+
+test('{ trackState: false } should not rerender when the visibility changes', () => {
+  const onChangeSpy = vi.fn()
+  let renderCount = 0
+
+  renderHook(() => {
+    renderCount++
+    return useDocumentVisibility({ trackState: false, onChange: onChangeSpy })
+  })
+
+  const initialRenderCount = renderCount
+
+  Object.defineProperty(document, 'hidden', {
+    configurable: true,
+    get: () => true,
+  })
+  triggerEvent()
+  Reflect.deleteProperty(document, 'hidden')
+
+  expect(onChangeSpy).toHaveBeenCalledWith(false)
+  expect(renderCount).toBe(initialRenderCount)
+})

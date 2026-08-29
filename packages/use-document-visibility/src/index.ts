@@ -22,6 +22,14 @@ export type UseDocumentVisibilityOptions = {
    * Does not execute when the document first loads.
    */
   onChange?: (isVisible: boolean) => void
+  /**
+   * Set to `false` to avoid tracking the state for better performance.
+   *
+   * The returned value never updates, use the `onChange` callback instead.
+   *
+   * @defaultValue true
+   */
+  trackState?: boolean
 }
 
 /**
@@ -31,17 +39,18 @@ export function useDocumentVisibility(
   options: UseDocumentVisibilityOptions = {},
 ): boolean {
   const onChange = React.useEffectEvent(options.onChange ?? noop)
+  const trackState = options.trackState ?? true
   const [state, setState] = React.useState(isServer || !document.hidden)
 
   React.useEffect(() => {
-    allListeners.add(setState)
+    trackState && allListeners.add(setState)
     allListeners.add(onChange)
 
     return () => {
       allListeners.delete(setState)
       allListeners.delete(onChange)
     }
-  }, [])
+  }, [trackState])
 
   return !useIsHydrated() || state
 }

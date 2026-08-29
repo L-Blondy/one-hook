@@ -77,22 +77,30 @@ export function useCountdown<T = number>({
   const [state, setState] = React.useState<State<T>>(() =>
     resolveState(to, transform),
   )
+  // a ref dedupes the terminal tick even before the "done" state is committed,
+  // e.g. when a wake tick races the expiring interval tick
+  const hasExpiredRef = React.useRef(false)
 
   if (String(to) !== String(state.to)) {
+    hasExpiredRef.current = false
     setState(resolveState(to, transform))
   }
 
   const tick = () => {
     const newState = resolveState(to, transform)
-    onTick?.(newState.value)
     if (newState.ms) {
+      onTick?.(newState.value)
       trackState && setState(newState)
     } else {
       // always set the state to "done" and stop the interval
       setState(newState)
-      // do not re-fire onExpire if we were already done
-      state.ms && onExpire?.()
+      if (!hasExpiredRef.current) {
+        hasExpiredRef.current = true
+        onTick?.(newState.value)
+        onExpire?.()
+      }
     }
+    return newState
   }
 
   const { reset } = useInterval(
@@ -104,10 +112,13 @@ export function useCountdown<T = number>({
   )
 
   useDocumentVisibility({
+    // the visibility state is not consumed, avoid rerendering on visibility changes
+    trackState: false,
     onChange(isVisible) {
-      if (!isVisible || !to) return
-      tick()
-      reset()
+      // `state.ms` is 0 when the countdown is paused or already expired
+      if (!isVisible || !state.ms) return
+      // restart the interval only if the wake tick did not expire the countdown
+      if (tick().ms) reset()
     },
   })
 

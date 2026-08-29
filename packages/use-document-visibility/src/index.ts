@@ -43,7 +43,11 @@ export function useDocumentVisibility(
   const [state, setState] = React.useState(isServer || !document.hidden)
 
   React.useEffect(() => {
-    trackState && allListeners.add(setState)
+    if (trackState) {
+      allListeners.add(setState)
+      // resync the state: visibility changes are not tracked while `trackState` is `false`
+      setState(!document.hidden)
+    }
     allListeners.add(onChange)
 
     return () => {

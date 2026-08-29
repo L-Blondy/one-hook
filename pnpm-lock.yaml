@@ -501,6 +501,9 @@ importers:
 
   packages/use-countdown:
     dependencies:
+      '@1hook/use-document-visibility':
+        specifier: workspace:*
+        version: link:../use-document-visibility
       '@1hook/use-interval':
         specifier: workspace:*
         version: link:../use-interval

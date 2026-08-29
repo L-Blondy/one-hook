@@ -1,4 +1,5 @@
 import React from 'react'
+import { useDocumentVisibility } from '@1hook/use-document-visibility'
 import { useInterval } from '@1hook/use-interval'
 
 type To = string | Date | null | undefined | false
@@ -81,23 +82,34 @@ export function useCountdown<T = number>({
     setState(resolveState(to, transform))
   }
 
-  useInterval(
-    () => {
-      const newState = resolveState(to, transform)
-      onTick?.(newState.value)
-      if (newState.ms) {
-        trackState && setState(newState)
-      } else {
-        // always set the state to "done" and stop the interval
-        setState(newState)
-        onExpire?.()
-      }
-    },
+  const tick = () => {
+    const newState = resolveState(to, transform)
+    onTick?.(newState.value)
+    if (newState.ms) {
+      trackState && setState(newState)
+    } else {
+      // always set the state to "done" and stop the interval
+      setState(newState)
+      // do not re-fire onExpire if we were already done
+      state.ms && onExpire?.()
+    }
+  }
+
+  const { reset } = useInterval(
+    tick,
     !!state.to &&
       !!state.ms &&
       (typeof interval === 'function' ? interval(state.ms) : interval),
     { sync },
   )
+
+  useDocumentVisibility({
+    onChange(isVisible) {
+      if (!isVisible || !to) return
+      tick()
+      reset()
+    },
+  })
 
   return state.value
 }

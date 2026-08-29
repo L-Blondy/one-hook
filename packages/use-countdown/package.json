@@ -28,6 +28,7 @@
     "react-dom": ">=19.0.0"
   },
   "dependencies": {
+    "@1hook/use-document-visibility": "workspace:*",
     "@1hook/use-interval": "workspace:*"
   },
   "repository": {

@@ -88,6 +88,11 @@ const { seconds, state } = useCountdown({
 })
 ```
 
+## Background Tabs
+
+Browsers throttle intervals in background tabs, which can leave the countdown stale.
+When the tab becomes visible again, the countdown immediately resamples the remaining time and triggers `onTick`.
+
 ## API Reference
 
 <AutoTypeTable

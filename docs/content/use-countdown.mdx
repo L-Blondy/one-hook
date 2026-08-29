@@ -1,6 +1,6 @@
 ---
 title: useCountdown
-description: Countdown utility based on useInterval. Resamples remaining time when the tab becomes visible.
+description: Countdown utility based on useInterval.
 ---
 
 ## Installation
@@ -14,8 +14,6 @@ npm install @1hook/use-countdown
 ```tsx twoslash include imports
 import { useCountdown } from '@1hook/use-countdown'
 ```
-
-Remaining time is computed from `to - Date.now()` on each tick. Browsers throttle timers in background tabs, so the hook also resamples when the document becomes visible again.
 
 Get the remaining milliseconds:
 

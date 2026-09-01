@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react'
 import {
   afterAll,
   afterEach,
@@ -111,7 +111,7 @@ test('`interval` changes the tick interval...', () => {
   expect(onTickSpy).toHaveBeenCalledWith(1000 * 59)
 })
 
-test.only('`interval` can be functional and receives the remaining ms', () => {
+test('`interval` can be functional and receives the remaining ms', () => {
   const onTickSpy = vi.fn()
 
   renderHook(() => {
@@ -316,6 +316,135 @@ test('{ trackState?: true | undefined } the returned value should update on each
   vi.advanceTimersByTime(1)
   rerender()
   expect(result.current).toBe(String(1000 * 59))
+})
+
+test('Should retick when the tab becomes visible after the clock jumped', () => {
+  const to = new Date(Date.now() + 10_000)
+  const { result } = renderHook(() => {
+    return useCountdown({ to })
+  })
+
+  expect(result.current).toBe(10_000)
+
+  vi.setSystemTime(Date.now() + 8_000)
+  expect(result.current).toBe(10_000)
+
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+
+  expect(result.current).toBe(2_000)
+})
+
+test('Should call `onExpire` on wake if the deadline passed while hidden', () => {
+  const onExpireSpy = vi.fn()
+  const to = new Date(Date.now() + 10_000)
+
+  renderHook(() => {
+    useCountdown({
+      to,
+      onExpire: onExpireSpy,
+    })
+  })
+
+  vi.setSystemTime(Date.now() + 11_000)
+  expect(onExpireSpy).not.toHaveBeenCalled()
+
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+
+  expect(onExpireSpy).toHaveBeenCalledOnce()
+})
+
+test('Should not retick when the tab becomes visible after the countdown expired', () => {
+  const onTickSpy = vi.fn()
+  const onExpireSpy = vi.fn()
+  const to = new Date(Date.now() + 1_000)
+
+  renderHook(() => {
+    useCountdown({
+      to,
+      onTick: onTickSpy,
+      onExpire: onExpireSpy,
+    })
+  })
+
+  act(() => {
+    vi.advanceTimersByTime(1_000)
+  })
+  expect(onTickSpy).toHaveBeenCalledOnce()
+  expect(onExpireSpy).toHaveBeenCalledOnce()
+
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+
+  expect(onTickSpy).toHaveBeenCalledOnce()
+  expect(onExpireSpy).toHaveBeenCalledOnce()
+})
+
+test('Should call `onExpire` only once when a wake tick races the expiring interval tick', () => {
+  const onExpireSpy = vi.fn()
+  const to = new Date(Date.now() + 1_000)
+
+  renderHook(() => {
+    useCountdown({
+      to,
+      onExpire: onExpireSpy,
+    })
+  })
+
+  // not wrapped in act: the "done" state update is not committed yet
+  vi.advanceTimersByTime(1_000)
+  expect(onExpireSpy).toHaveBeenCalledOnce()
+
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+
+  expect(onExpireSpy).toHaveBeenCalledOnce()
+})
+
+test('{ trackState: false } should not rerender when the tab becomes visible', () => {
+  let renderCount = 0
+  const to = new Date(Date.now() + 1000 * 60)
+
+  renderHook(() => {
+    renderCount++
+    useCountdown({
+      to,
+      trackState: false,
+    })
+  })
+
+  const initialRenderCount = renderCount
+
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+
+  expect(renderCount).toBe(initialRenderCount)
+})
+
+test('Should not retick while paused, even if the tab becomes visible', () => {
+  const onTickSpy = vi.fn()
+
+  renderHook(() => {
+    useCountdown({
+      to: false,
+      onTick: onTickSpy,
+    })
+  })
+
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+
+  expect(onTickSpy).not.toHaveBeenCalled()
 })
 
 test('{ trackState: false } the returned value should never', () => {

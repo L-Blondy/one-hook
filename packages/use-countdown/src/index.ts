@@ -1,4 +1,5 @@
 import React from 'react'
+import { useDocumentVisibility } from '@1hook/use-document-visibility'
 import { useInterval } from '@1hook/use-interval'
 
 type To = string | Date | null | undefined | false
@@ -76,28 +77,50 @@ export function useCountdown<T = number>({
   const [state, setState] = React.useState<State<T>>(() =>
     resolveState(to, transform),
   )
+  // a ref dedupes the terminal tick even before the "done" state is committed,
+  // e.g. when a wake tick races the expiring interval tick
+  const hasExpiredRef = React.useRef(false)
 
   if (String(to) !== String(state.to)) {
+    hasExpiredRef.current = false
     setState(resolveState(to, transform))
   }
 
-  useInterval(
-    () => {
-      const newState = resolveState(to, transform)
+  const tick = () => {
+    const newState = resolveState(to, transform)
+    if (newState.ms) {
       onTick?.(newState.value)
-      if (newState.ms) {
-        trackState && setState(newState)
-      } else {
-        // always set the state to "done" and stop the interval
-        setState(newState)
+      trackState && setState(newState)
+    } else {
+      // always set the state to "done" and stop the interval
+      setState(newState)
+      if (!hasExpiredRef.current) {
+        hasExpiredRef.current = true
+        onTick?.(newState.value)
         onExpire?.()
       }
-    },
+    }
+    return newState
+  }
+
+  const { reset } = useInterval(
+    tick,
     !!state.to &&
       !!state.ms &&
       (typeof interval === 'function' ? interval(state.ms) : interval),
     { sync },
   )
+
+  useDocumentVisibility({
+    // the visibility state is not consumed, avoid rerendering on visibility changes
+    trackState: false,
+    onChange(isVisible) {
+      // `state.ms` is 0 when the countdown is paused or already expired
+      if (!isVisible || !state.ms) return
+      // restart the interval only if the wake tick did not expire the countdown
+      if (tick().ms) reset()
+    },
+  })
 
   return state.value
 }

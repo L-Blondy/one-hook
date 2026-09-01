@@ -23,6 +23,18 @@ Track the document visibility:
 const isVisible = useDocumentVisibility()
 ```
 
+Prevent rerendering when the visibility changes:
+
+```tsx twoslash
+const console = { log: (_: any) => {} }
+// @include: imports
+// ---cut---
+useDocumentVisibility({
+  trackState: false,
+  onChange: (isVisible) => console.log(isVisible),
+})
+```
+
 ## API Reference
 
 <AutoTypeTable

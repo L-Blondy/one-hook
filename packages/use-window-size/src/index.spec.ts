@@ -101,7 +101,7 @@ test('`trackState: false` onChange should trigger, state should not change', () 
   expect(spy).toHaveBeenCalledWith({ width: 200, height: 100 })
 })
 
-test('`trackState` toggles keep the last tracked size until the next resize', () => {
+test('`trackState: false` keeps the last tracked size; tracking again shows the current one', () => {
   const useWindowSize = defineUseWindowSize()
   const { result, rerender } = renderHook(
     ({ trackState }) => useWindowSize({ trackState }),
@@ -116,21 +116,26 @@ test('`trackState` toggles keep the last tracked size until the next resize', ()
   expect(result.current.width).toBe(200)
 
   rerender({ trackState: true })
-  expect(result.current.width).toBe(200)
-  triggerResize('width', 400)
-  expect(result.current.width).toBe(400)
+  expect(result.current.width).toBe(300)
 })
 
-test('each hook gets its own object, fresh on every resize', () => {
+test('hooks share one object per size, and a resize that keeps the size renders nothing', () => {
   const useWindowSize = defineUseWindowSize()
-  const { result: r1 } = renderHook(() => useWindowSize())
+  let renders = 0
+  const { result: r1 } = renderHook(() => {
+    renders++
+    return useWindowSize()
+  })
   const { result: r2 } = renderHook(() => useWindowSize())
-  const before = r1.current
+  expect(r1.current).toBe(r2.current)
 
+  const rendersBefore = renders
   triggerResize('width', 100) // same size
-  expect(r1.current).not.toBe(before)
-  expect(r1.current).not.toBe(r2.current)
-  expect(r1.current).toEqual(r2.current)
+  expect(renders).toBe(rendersBefore)
+
+  triggerResize('width', 200)
+  expect(r1.current).toBe(r2.current)
+  expect(r1.current).toEqual({ width: 200, height: 100 })
 })
 
 test('the size renders before the next task, not in a deferred transition', async () => {

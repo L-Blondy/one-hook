@@ -25,6 +25,8 @@ function callAllListeners() {
   listeners.forEach((l) => l(getSize()))
 }
 
+type Store = { size: Size | null; notify: () => void }
+
 export type DefineUseWindowSizeOptions<TSSR extends boolean> = {
   ssr?: TSSR
 }
@@ -55,13 +57,30 @@ export function defineUseWindowSize<TSSR extends boolean = false>(
     onChange,
   }: UseWindowSizeOptions = {}): UseWindowSizeReturn<TSSR> {
     const onChangeProp = React.useEffectEvent(onChange ?? noop)
-    const [size, setSize] = React.useState<Size | null>(
-      isServer ? null : getSize(),
+    // Each hook's own store, read by React during render: a resize renders
+    // before the next paint, where transition state would render after it.
+    const [store] = React.useState<Store>(() => ({
+      size: isServer ? null : getSize(),
+      notify: noop,
+    }))
+    const subscribe = React.useCallback(
+      (notify: () => void) => {
+        store.notify = notify
+        return () => {
+          store.notify = noop
+        }
+      },
+      [store],
     )
+    const getSnapshot = React.useCallback(() => store.size, [store])
+    const size = React.useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
 
     React.useLayoutEffect(() => {
       function listener(size: Size) {
-        trackState && React.startTransition(() => setSize(size))
+        if (trackState) {
+          store.size = size
+          store.notify()
+        }
         onChangeProp(size)
       }
       onChangeProp(getSize()) // at least once
@@ -69,7 +88,7 @@ export function defineUseWindowSize<TSSR extends boolean = false>(
       return () => {
         listeners.delete(listener)
       }
-    }, [trackState])
+    }, [store, trackState])
 
     return (!useIsHydrated() && options.ssr ? {} : size) as Size<TSSR>
   }

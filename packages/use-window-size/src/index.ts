@@ -15,40 +15,17 @@ type Size<TSSR extends boolean = false> = TSSR extends false
 
 const listeners = new Set<(size: Size) => void>()
 
-// The live size, one object per size, shared by every hook: React compares
-// snapshots by identity, so a resize that keeps the size renders nothing.
-let snapshot: Size | null = null
-function getSnapshot(): Size | null {
-  if (isServer) return null
-  const width = window.innerWidth
-  const height = window.innerHeight
-  if (
-    snapshot === null ||
-    snapshot.width !== width ||
-    snapshot.height !== height
-  ) {
-    snapshot = { width, height }
-  }
-  return snapshot
-}
+const getSize = () => ({ width: window.innerWidth, height: window.innerHeight })
 
 if (!isServer) {
   window.addEventListener('resize', callAllListeners)
 }
 
 function callAllListeners() {
-  const size = getSnapshot()
-  if (size) listeners.forEach((l) => l(size))
+  listeners.forEach((l) => l(getSize()))
 }
 
-function subscribe(listener: (size: Size) => void) {
-  listeners.add(listener)
-  return () => {
-    listeners.delete(listener)
-  }
-}
-
-const subscribeNone = () => noop
+type Store = { size: Size | null; notify: () => void }
 
 export type DefineUseWindowSizeOptions<TSSR extends boolean> = {
   ssr?: TSSR
@@ -80,24 +57,39 @@ export function defineUseWindowSize<TSSR extends boolean = false>(
     onChange,
   }: UseWindowSizeOptions = {}): UseWindowSizeReturn<TSSR> {
     const onChangeProp = React.useEffectEvent(onChange ?? noop)
-    // A store, not transition state: React renders a resize before the next
-    // paint, so layout that follows the size is never a frame behind.
-    const live = React.useSyncExternalStore(
-      trackState ? subscribe : subscribeNone,
-      getSnapshot,
-      getSnapshot,
+    // Each hook's own store, read by React during render: a resize renders
+    // before the next paint, where transition state would render after it.
+    const [store] = React.useState<Store>(() => ({
+      size: isServer ? null : getSize(),
+      notify: noop,
+    }))
+    const subscribe = React.useCallback(
+      (notify: () => void) => {
+        store.notify = notify
+        return () => {
+          store.notify = noop
+        }
+      },
+      [store],
     )
-    // The size last tracked, which `trackState: false` keeps.
-    const [frozen, setFrozen] = React.useState(live)
-    if (trackState && frozen !== live) setFrozen(live)
+    const getSnapshot = React.useCallback(() => store.size, [store])
+    const size = React.useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
 
     React.useLayoutEffect(() => {
-      const size = getSnapshot()
-      if (size) onChangeProp(size) // at least once
-      return subscribe((size) => onChangeProp(size))
-    }, [trackState])
+      function listener(size: Size) {
+        if (trackState) {
+          store.size = size
+          store.notify()
+        }
+        onChangeProp(size)
+      }
+      onChangeProp(getSize()) // at least once
+      listeners.add(listener)
+      return () => {
+        listeners.delete(listener)
+      }
+    }, [store, trackState])
 
-    const size = trackState ? live : frozen
     return (!useIsHydrated() && options.ssr ? {} : size) as Size<TSSR>
   }
 }
